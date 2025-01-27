@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
@@ -12,6 +10,7 @@ public class PivotAdjustor : ScriptableWizard
 
     private void OnWizardCreate()
     {
+        parent.transform.position = Vector3.zero;
         plusTransforms = parent.GetComponentsInChildren<Transform>();
         foreach (Transform t in plusTransforms)
         {
@@ -19,7 +18,7 @@ public class PivotAdjustor : ScriptableWizard
         }
     }
 
-    [MenuItem("Tools/My Wizard")]
+    [MenuItem("Tools/My Wizard/Transform Position Add Value")]
     static void ShowWizard()
     {
         DisplayWizard<PivotAdjustor>("Transform Position", "Adjust");
