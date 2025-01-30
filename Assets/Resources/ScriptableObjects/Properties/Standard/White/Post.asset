@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac9761bd61d87b04aa6d629944c1c4f0, type: 3}
-  m_Name: New Property
+  m_Name: Post
   m_EditorClassIdentifier: 
-  index_fromGoSpace: 0
-  purchaseCost: 0
+  indexFromGoSpace: 11
+  purchaseCost: 100
   buildCost: 0
   upgradeThreshold: 0
   upgradeCost: 0

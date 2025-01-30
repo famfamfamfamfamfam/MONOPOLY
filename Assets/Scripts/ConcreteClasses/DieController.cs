@@ -38,6 +38,7 @@ public class DieController : MonoBehaviour
             Roll();
         }
         CountPointIfDieHasStopped(out int point);
+        ResetToRoll();
     }
 
     void Roll()
@@ -65,6 +66,14 @@ public class DieController : MonoBehaviour
         if (Physics.RaycastNonAlloc(transform.position, Vector3.up, hit, maxDistance, dieDotsMask, QueryTriggerInteraction.Collide) > 0)
         {
             point = hit[0].collider.GetComponent<IPointOnSide>().point;
+        }
+    }
+
+    void ResetToRoll()
+    {
+        if (rb.IsSleeping() && rb.isKinematic && !isOnGround)
+        {
+            isOnGround = true;
         }
     }
 }

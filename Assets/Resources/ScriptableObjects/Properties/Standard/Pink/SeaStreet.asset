@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac9761bd61d87b04aa6d629944c1c4f0, type: 3}
+  m_Name: SeaStreet
+  m_EditorClassIdentifier: 
+  indexFromGoSpace: 15
+  purchaseCost: 140
+  buildCost: 0
+  upgradeThreshold: 0
+  upgradeCost: 0
+  maxBuildingInSpace: 0
+  rentCostAfterPurchase: 0
+  rentCostIncreaseAfterBuild: 0
+  rentCostIncreaseAfterUpgrade: 0
