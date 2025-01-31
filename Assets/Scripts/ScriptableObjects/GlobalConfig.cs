@@ -4,6 +4,7 @@ using UnityEngine;
 public class GlobalConfig : ScriptableObject
 {
     public int playerCount = 4;
-    public int purchasableSpaceCount = 37;
-    public int eventSpaceCount = 15;
+    public int spaceCount = 52;
+    public int passGoSpaceBonus = 200;
+    public int monopolyBonus = 1000;
 }
