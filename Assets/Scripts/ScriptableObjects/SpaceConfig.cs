@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Space", menuName = "Scriptable Objects/Space Config")]
 public class SpaceConfig : ScriptableObject
 {
-    public uint indexFromGoSpace;
+    public int indexFromGoSpace;
 }
 
 //Gemeinschaftsfeld -> CommunityChest

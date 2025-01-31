@@ -3,12 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Property", menuName = "Scriptable Objects/Property Config")]
 public class PropertyConfig : SpaceConfig
 {
-    public uint purchaseCost;
-    public uint buildCost;
-    public uint upgradeThreshold;
-    public uint upgradeCost;
-    public uint maxBuildingInSpace;
-    public uint rentCostAfterPurchase;
-    public uint rentCostIncreaseAfterBuild;
-    public uint rentCostIncreaseAfterUpgrade;
+    public int purchaseCost;
+    public int buildCost;
+    public int upgradeThreshold;
+    public int upgradeCost;
+    public int maxBuildingInSpace;
+    public int rentCostAfterPurchase;
+    public int rentCostIncreaseAfterBuild;
+    public int rentCostIncreaseAfterUpgrade;
 }

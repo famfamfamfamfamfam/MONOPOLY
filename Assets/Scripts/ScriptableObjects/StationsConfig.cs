@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Stations", menuName = "Scriptable Objects/Stations Config")]
 public class StationsConfig : SpaceGroupConfig
 {
-    public uint stationCount = 4;
-    public uint eachPurchaseCost = 200;
-    public uint eachInitialRentCost = 25;
-    public uint rentCostScaleFactor = 2;
+    public int stationCount = 4;
+    public int eachPurchaseCost = 200;
+    public int eachInitialRentCost = 25;
+    public int rentCostScaleFactor = 2;
 }
