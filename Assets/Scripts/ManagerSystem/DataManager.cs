@@ -1,45 +1,65 @@
+using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DataManager : MonoBehaviour
 {
-    [Header("CONFIGS")]
-    [Header("General configs")]
-    [SerializeField]
     GlobalConfig gameConfig;
-    [SerializeField]
     PlayerGeneralConfig playersConfig;
-    [Header("Utilities spaces")]
-    [SerializeField]
     CompaniesConfig companiesConfig;
-    [SerializeField]
     StationsConfig stationsConfig;
-    [Header("Event spaces")]
-    [SerializeField]
-    SpaceGroupConfig triggerNothingSpaces;
-    [SerializeField]
-    SpaceGroupConfig communityChestSpaces;
-    [SerializeField]
-    SpaceGroupConfig chanceSpaces;
-    [SerializeField]
-    SpaceConfig busSpace;
-    [SerializeField]
-    SpaceGroupConfig taxSpaces;
-    [SerializeField]
-    SpaceConfig auctionSpace;
-    [SerializeField]
-    SpaceGroupConfig gotoJailSpace;
-    [SerializeField]
-    SpaceConfig giftSpace;
+    SpaceGroupConfig eventSpaceGroup;
+    CommunityChestsConfig communityCards;
 
+    Dictionary<EventType, Action<PlayerData>> triggerActionsOnEventSpaces;
     PlayerData[] playersData;
     AssetData[] assetsData;
 
+    readonly string generalConfigsPath = "ScriptableObjects";
+    readonly string purchasableSpaceGroupsPath = "ScriptableObjects/PurchasableSpaces/Groups";
     readonly string purchasableSpacesPath = "ScriptableObjects/PurchasableSpaces/Spaces";
+    readonly string eventSpaceGroupPath = "ScriptableObjects/EventSpaces/EventSpaces";
 
     private void Start()
     {
+        InitGeneralConfigs();
+        InitPurchasableSpaceGroups();
+        InitEventSpaceGroup();
         InitPlayersData();
         InitAssetsData();
+    }
+
+    void InitGeneralConfigs()
+    {
+        gameConfig = Resources.LoadAll<GlobalConfig>(generalConfigsPath)[0];
+        playersConfig = Resources.LoadAll<PlayerGeneralConfig>(generalConfigsPath)[0];
+    }
+
+    void InitPurchasableSpaceGroups()
+    {
+        companiesConfig = Resources.LoadAll<CompaniesConfig>(purchasableSpaceGroupsPath)[0];
+        stationsConfig = Resources.LoadAll<StationsConfig>(purchasableSpaceGroupsPath)[0];
+    }
+
+    void InitEventSpaceGroup()
+    {
+        eventSpaceGroup = Resources.Load<SpaceGroupConfig>(eventSpaceGroupPath);
+    }
+
+    void InitActionsOnEventSpaces()
+    {
+        triggerActionsOnEventSpaces = new Dictionary<EventType, Action<PlayerData>>()
+        {
+            { EventType.Nontrigger, _ => { } },
+            { EventType.CommunityChest, data => TakeCard(communityCards) },
+            { EventType.Chance, data => { } },
+            { EventType.BusTicket, data => { } },
+            { EventType.GotoJail, data => { } },
+            { EventType.Tax, data => { } },
+            { EventType.Surtax, data => { } },
+            { EventType.GiftReceive, data => { } },
+            { EventType.Auction, data => { } },
+        };
     }
 
     void InitPlayersData()
@@ -72,30 +92,34 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public void TriggerSpace(PlayerData currentPlayer, int index)
+    public void TriggerSpace(int playerIndex, int positionIndex)
     {
-        //
-        TriggerPurchasableSpace(currentPlayer, index);
+        if (eventSpaceGroup.eventDictionary.ContainsKey(positionIndex))
+        {
+
+            return;
+        }
+        TriggerPurchasableSpace(playersData[playerIndex], positionIndex);
     }
 
-    void TriggerPurchasableSpace(PlayerData currentPlayer, int index)
+    void TriggerPurchasableSpace(PlayerData currentPlayer, int positionIndex)
     {
         bool isPurchased = true;
         foreach (var player in playersData)
         {
-            if (player.IsOwner(assetsData[index]))
+            if (player.IsOwner(assetsData[positionIndex]))
             {
                 if (player == currentPlayer)
                 {
                     break;
                 }
-                if (companiesConfig.spacesIndices.Contains(index))
+                if (companiesConfig.spacesIndices.Contains(positionIndex))
                 {
-                    CompanyCost(player, currentPlayer, (CompanyData)assetsData[index]);
+                    CompanyCost(player, currentPlayer, (CompanyData)assetsData[positionIndex]);
                 }
                 else
                 {
-                    Cost(player, currentPlayer, assetsData[index]);
+                    Cost(player, currentPlayer, assetsData[positionIndex]);
                 }
                 break;
             }
@@ -122,5 +146,10 @@ public class DataManager : MonoBehaviour
     public void PassGoSpace(PlayerData data)
     {
         data.SetCurrentCoin(gameConfig.passGoSpaceBonus);
+    }
+
+    void TakeCard(CardsConfig cards)
+    {
+
     }
 }
