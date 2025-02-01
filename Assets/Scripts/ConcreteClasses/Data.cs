@@ -95,7 +95,7 @@ public class PropertyData : AssetData
                 SetRentCost(config.rentCostIncreaseAfterBuild);
                 return;
             case BuildType.Upgrade:
-                currentBuildingCount -= config.upgradeThreshold;
+                currentBuildingCount -= config.upgradeThreshold - 1;
                 SetRentCost(config.rentCostIncreaseAfterUpgrade);
                 return;
         }

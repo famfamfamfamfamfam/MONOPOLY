@@ -51,7 +51,7 @@ public class DataManager : MonoBehaviour
         triggerActionsOnEventSpaces = new Dictionary<EventType, Action<PlayerData>>()
         {
             { EventType.Nontrigger, _ => { } },
-            { EventType.CommunityChest, data => TakeCard(communityCards) },
+            { EventType.CommunityChest, data => TakeCard(data, communityCards) },
             { EventType.Chance, data => { } },
             { EventType.BusTicket, data => { } },
             { EventType.GotoJail, data => { } },
@@ -148,8 +148,9 @@ public class DataManager : MonoBehaviour
         data.SetCurrentCoin(gameConfig.passGoSpaceBonus);
     }
 
-    void TakeCard(CardsConfig cards)
+    void TakeCard(PlayerData data, CardsConfig cards)
     {
-
+        int index = UnityEngine.Random.Range(0, gameConfig.communityChestCard + 1);
+        cards.AccessTheCard(data, playersData, index);
     }
 }
