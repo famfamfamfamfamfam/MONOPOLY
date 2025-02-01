@@ -5,6 +5,7 @@ public class PlayerData
 {
     int currentCoin;
     HashSet<AssetData> assets;
+    List<int> busTickets;
     int currentDicePoint;
     public int currentCompanyCount { get; private set; }
     public int currentStationCount { get; private set; }
@@ -12,6 +13,7 @@ public class PlayerData
     {
         currentCoin = config.initialCoin;
         assets = new HashSet<AssetData>();
+        busTickets = new List<int>();
     }
 
     public void AddAsset(AssetData space)
@@ -34,6 +36,16 @@ public class PlayerData
                 }
                 return;
         }
+    }
+
+    public void KeepTicket(int ticket)
+    {
+        busTickets.Add(ticket);
+    }
+
+    public void GiveBackTicket(int index)
+    {
+        busTickets.Remove(index);
     }
 
     public bool IsOwner(AssetData space)

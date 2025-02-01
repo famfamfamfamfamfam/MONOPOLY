@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ReceiveGiftSpace
   m_EditorClassIdentifier: 
   indexFromGoSpace: 47
-  eventType: 6
+  eventType: 7

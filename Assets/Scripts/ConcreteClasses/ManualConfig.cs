@@ -3,7 +3,7 @@
 [Serializable]
 public struct CommunityChest
 {
-    public enum MoneyChangeType
+    public enum MoneyChangeType : byte
     {
         AllChange,
         Opposite,
@@ -45,5 +45,65 @@ public class CommunityChestAction
             }
             player.SetCurrentCoin(-value / divisor);
         }
+    }
+}
+
+[Serializable]
+public class ChanceAction
+{
+    Action<PlayerData> changeToCommunityCard;
+    Action<PlayerData> changeToBusTicket;
+
+    public void ChangeCoin(PlayerData data, int value)
+    {
+        data.SetCurrentCoin(value);
+    }
+
+    public void ChangeToCommunityCard(PlayerData data)
+    {
+        changeToCommunityCard.Invoke(data);
+    }
+
+    public void ChangeToBusTicket(PlayerData data)
+    {
+        changeToBusTicket.Invoke(data);
+    }
+
+    public void OnChangeToCommunityCard(Action<PlayerData> action)
+    {
+        changeToCommunityCard = action;
+    }
+
+    public void OnChangeToBusTicket(Action<PlayerData> action)
+    {
+        changeToBusTicket = action;
+    }
+}
+
+[Serializable]
+public class BusTicketAction
+{
+    Action<PlayerData> takeBusTicket;
+
+    public void GoToJail()
+    {
+
+    }
+    public void BackToGoSpace()
+    {
+
+    }
+    public void MoveToAUtilitySpace()
+    {
+
+    }
+
+    public void TakeTicket(PlayerData data)
+    {
+        takeBusTicket.Invoke(data);
+    }
+    public void OnTakeTicket(Action<PlayerData> action)
+    {
+        takeBusTicket = action;
     }
 }

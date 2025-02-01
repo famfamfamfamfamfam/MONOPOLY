@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: AuctionSpace
   m_EditorClassIdentifier: 
   indexFromGoSpace: 14
-  eventType: 7
+  eventType: 8

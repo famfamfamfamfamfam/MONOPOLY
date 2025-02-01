@@ -3,13 +3,13 @@ public interface IPointOnSide
     int point { get; }
 }
 
-public enum BuildType
+public enum BuildType : byte
 {
     BuildNew,
     Upgrade
 }
 
-public enum EventType
+public enum EventType : byte
 {
     Nontrigger,
     CommunityChest,
