@@ -30,7 +30,7 @@ public class SpaceGroupConfig : ScriptableObject
         {
             if (_spacesDictionary == null)
             {
-                _spacesDictionary = new Dictionary<int, EventType>();
+                _spacesDictionary = new Dictionary<int, EventType>((int)(spaces.Length / GlobalFieldContainer.RESIZE_THRESHOLD) + 1);
                 foreach (var space in spaces)
                 {
                     if (space is EventSpaceConfig eventSpace)
@@ -43,6 +43,7 @@ public class SpaceGroupConfig : ScriptableObject
                         return null;
                     }
                 }
+                _spacesDictionary.TrimExcess();
             }
             return _spacesDictionary;
         }

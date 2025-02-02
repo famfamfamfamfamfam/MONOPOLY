@@ -7,9 +7,9 @@ public class BusTicketsConfig : CardsConfig
 
     enum InstantUseTicket : byte
     {
-        GoToJail,
-        RandomUtilitySpace,
-        GoSpace
+        GoToJail = 0,
+        RandomUtilitySpace = 1,
+        GoSpace = 2
     }
     enum KeepToUseTicket : byte
     {
@@ -26,11 +26,12 @@ public class BusTicketsConfig : CardsConfig
     {
         if (ticketIndex < instantUseTickets.Length)
         {
-
+            action.TriggerInstantUseTicket((int)instantUseTickets[ticketIndex]);
         }
         else
         {
-            action.TakeTicket(player);
+            action.GiveTicket(player, ticketIndex,
+                (int)keepToUseTickets[ticketIndex % instantUseTickets.Length]);
         }
     }
 }

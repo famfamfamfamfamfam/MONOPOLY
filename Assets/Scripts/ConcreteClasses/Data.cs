@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class PlayerData
@@ -72,6 +73,7 @@ public class PlayerData
 public class AssetData
 {
     protected int currentRentCost;
+    bool isOwned;
     public int GetRentCost()
     {
         return currentRentCost;
@@ -79,6 +81,12 @@ public class AssetData
     protected void SetRentCost(int addValue)
     {
         currentRentCost += addValue;
+    }
+    public virtual void BePurchased(PlayerData _) { }
+    protected void ToBeOwned(PlayerData purchaser, int costValue)
+    {
+        purchaser.SetCurrentCoin(-costValue);
+        isOwned = true;
     }
 }
 
@@ -91,6 +99,11 @@ public class PropertyData : AssetData
     {
         currentRentCost = instance.rentCostAfterPurchase;
         config = instance;
+    }
+
+    public override void BePurchased(PlayerData purchaser)
+    {
+        ToBeOwned(purchaser, config.purchaseCost);
     }
 
     public void AddBuilding(BuildType type)
@@ -122,6 +135,11 @@ public class CompanyData : AssetData
         config = instance;
     }
 
+    public override void BePurchased(PlayerData purchaser)
+    {
+        ToBeOwned(purchaser, config.eachPurchaseCost);
+    }
+
     public void UpdateRentCost(int dicePoint, int companyCount)
     {
         if (companyCount > config.companyCount)
@@ -140,13 +158,18 @@ public class CompanyData : AssetData
 
 public class StationData : AssetData
 {
-    int rentCostScaleFactor;
+    StationsConfig config;
     int maxRentCost;
-    public StationData(StationsConfig config)
+    public StationData(StationsConfig instance)
     {
-        maxRentCost = (int)Mathf.Pow(config.rentCostScaleFactor, config.stationCount - 1) * config.eachInitialRentCost;
-        rentCostScaleFactor = config.rentCostScaleFactor;
-        currentRentCost = config.eachInitialRentCost;
+        maxRentCost = (int)Mathf.Pow(instance.rentCostScaleFactor, instance.stationCount - 1) * instance.eachInitialRentCost;
+        currentRentCost = instance.eachInitialRentCost;
+        config = instance;
+    }
+
+    public override void BePurchased(PlayerData purchaser)
+    {
+        ToBeOwned(purchaser, config.eachPurchaseCost);
     }
 
     public void IncreaseRentCost(out bool hasIncreased)
@@ -157,7 +180,7 @@ public class StationData : AssetData
             hasIncreased = false;
             return;
         }
-        SetRentCost(currentRentCost * (rentCostScaleFactor - 1));
+        SetRentCost(currentRentCost * (config.rentCostScaleFactor - 1));
         hasIncreased = true;
     }
 }

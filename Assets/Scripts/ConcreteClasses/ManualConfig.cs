@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 [Serializable]
 public struct CommunityChest
@@ -83,27 +84,72 @@ public class ChanceAction
 [Serializable]
 public class BusTicketAction
 {
-    Action<PlayerData> takeBusTicket;
+    Action<PlayerData, int> playerTakeBusTicket;
 
-    public void GoToJail()
+    Action[] actions;
+
+    Dictionary<int, int> actionAccessor;
+
+    public void GoToJail(Action go)
     {
-
+        Init(0, go);
     }
-    public void BackToGoSpace()
+    public void MoveToAUtilitySpace(Action move)
     {
-
+        Init(1, move);
     }
-    public void MoveToAUtilitySpace()
+    public void BackToGoSpace(Action back)
     {
-
+        Init(2, back);
+    }
+    public void RollThirdDieToMove(Action rollAndMove)
+    {
+        Init(3, rollAndMove);
+    }
+    public void MoveToAuction(Action move)
+    {
+        Init(4, move);
+    }
+    public void QuitFromJail(Action quit)
+    {
+        Init(5, quit);
+    }
+    void Init(int index, Action action)
+    {
+        if (actions == null)
+        {
+            actions = new Action[GlobalFieldContainer.allTicketType];
+        }
+        actions[index] = action;
     }
 
-    public void TakeTicket(PlayerData data)
+    public void GiveTicket(PlayerData data, int ticketIndex, int actionIndex)
     {
-        takeBusTicket.Invoke(data);
+        playerTakeBusTicket.Invoke(data, ticketIndex);
+        if (actionAccessor == null)
+        {
+            actionAccessor = new Dictionary<int, int>((int)(GlobalFieldContainer.allKeepToUseTicket / GlobalFieldContainer.RESIZE_THRESHOLD) + 1);
+        }
+        else
+        {
+            if (actionAccessor.TryAdd(ticketIndex, actionIndex) && actionAccessor.Count == GlobalFieldContainer.allKeepToUseTicket)
+            {
+                actionAccessor.TrimExcess();
+            }
+        }
     }
-    public void OnTakeTicket(Action<PlayerData> action)
+    public void OnGiveTicket(Action<PlayerData, int> action)
     {
-        takeBusTicket = action;
+        playerTakeBusTicket = action;
+    }
+
+    public void TriggerInstantUseTicket(int actionIndex)
+    {
+        actions[actionIndex].Invoke();
+    }
+
+    public void TriggerKeepToUseTicket(int ticketIndex)
+    {
+        actions[actionAccessor[ticketIndex]].Invoke();
     }
 }

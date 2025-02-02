@@ -1,12 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 
 public class DataManager : MonoBehaviour
 {
-    //public static DataManager instance;
-    //bool canRelease = true;
-
     GlobalConfig gameConfig;
     PlayerGeneralConfig playersConfig;
     CompaniesConfig companiesConfig;
@@ -15,48 +12,20 @@ public class DataManager : MonoBehaviour
     CommunityChestsConfig communityCards;
     ChancesConfig chanceCards;
     BusTicketsConfig busTickets;
+    TaxConfig taxConfig;
+    TaxConfig surtaxConfig;
 
-    HashSet<int> currentBusTickets;
-    Dictionary<EventType, Action<PlayerData>> triggerActionsOnEventSpaces;
+    HashSet<int> currentTakableBusTickets;
+    List<AssetData> currentPurchasableSpaces;
+    Action<PlayerData>[] triggerActionsOnEventSpaces;
     PlayerData[] playersData;
     AssetData[] assetsData;
-
-    readonly string globalConfigPath = "ScriptableObjects/GlobalSetting";
-    readonly string playerGeneralConfigPath = "ScriptableObjects/GeneralPlayer";
-    readonly string companiesGroupPath = "ScriptableObjects/PurchasableSpaces/Groups/Companies";
-    readonly string stationsGroupPath = "ScriptableObjects/PurchasableSpaces/Groups/Stations";
-    readonly string purchasableSpacesPath = "ScriptableObjects/PurchasableSpaces/Spaces";
-    readonly string eventSpaceGroupPath = "ScriptableObjects/EventSpaces/EventSpaces";
-    readonly string communityChestCardsPath = "ScriptableObjects/Cards/CommunityChests";
-    readonly string chanceCardsPath = "ScriptableObjects/Cards/Chances";
-    readonly string busTicketsPath = "ScriptableObjects/Cards/BusTickets";
-
-    //private void Awake()
-    //{
-    //    if (instance == null)
-    //    {
-    //        instance = this;
-    //    }
-    //    else
-    //    {
-    //        canRelease = false;
-    //        Destroy(gameObject);
-    //    }
-    //}
-
-    //private void OnDisable()
-    //{
-    //    if (canRelease)
-    //    {
-    //        instance = null;
-    //    }
-    //}
 
     private void Start()
     {
         InitGeneralConfigs();
         InitPurchasableSpaceGroups();
-        InitEventSpaceGroup();
+        InitEventSpaces();
         InitEventCards();
         InitActionsOnEventSpaces();
         InitPlayersData();
@@ -65,48 +34,53 @@ public class DataManager : MonoBehaviour
 
     void InitGeneralConfigs()
     {
-        gameConfig = Resources.Load<GlobalConfig>(globalConfigPath);
-        playersConfig = Resources.Load<PlayerGeneralConfig>(playerGeneralConfigPath);
+        gameConfig = Resources.Load<GlobalConfig>(GlobalFieldContainer.globalConfigPath);
+        playersConfig = Resources.Load<PlayerGeneralConfig>(GlobalFieldContainer.playerGeneralConfigPath);
     }
     void InitPurchasableSpaceGroups()
     {
-        companiesConfig = Resources.Load<CompaniesConfig>(companiesGroupPath);
-        stationsConfig = Resources.Load<StationsConfig>(stationsGroupPath);
+        companiesConfig = Resources.Load<CompaniesConfig>(GlobalFieldContainer.companiesGroupPath);
+        stationsConfig = Resources.Load<StationsConfig>(GlobalFieldContainer.stationsGroupPath);
     }
-    void InitEventSpaceGroup()
+    void InitEventSpaces()
     {
-        eventSpaceGroup = Resources.Load<SpaceGroupConfig>(eventSpaceGroupPath);
+        eventSpaceGroup = Resources.Load<SpaceGroupConfig>(GlobalFieldContainer.eventSpaceGroupPath);
+        taxConfig = Resources.Load<TaxConfig>(GlobalFieldContainer.taxSpacePath);
+        surtaxConfig = Resources.Load<TaxConfig>(GlobalFieldContainer.surtaxSpacePath);
     }
     void InitEventCards()
     {
-        communityCards = Resources.Load<CommunityChestsConfig>(communityChestCardsPath);
-        chanceCards = Resources.Load<ChancesConfig>(chanceCardsPath);
-        busTickets = Resources.Load<BusTicketsConfig>(busTicketsPath);
+        communityCards = Resources.Load<CommunityChestsConfig>(GlobalFieldContainer.communityChestCardsPath);
+        chanceCards = Resources.Load<ChancesConfig>(GlobalFieldContainer.chanceCardsPath);
+        busTickets = Resources.Load<BusTicketsConfig>(GlobalFieldContainer.busTicketsPath);
 
         int[] tempArray = new int[gameConfig.busTicket];
         for (int i = 0; i < tempArray.Length; i++)
         {
             tempArray[i] = i;
         }
-        currentBusTickets = new HashSet<int>(tempArray);
+        currentTakableBusTickets = new HashSet<int>(tempArray);
     }
     void InitActionsOnEventSpaces()
     {
-        triggerActionsOnEventSpaces = new Dictionary<EventType, Action<PlayerData>>()
+        triggerActionsOnEventSpaces = new Action<PlayerData>[]
         {
-            { EventType.Nontrigger, _ => { } },
-            { EventType.CommunityChest, data => TakeCard(data, communityCards, gameConfig.communityChestCard) },
-            { EventType.Chance, data => TakeCard(data, chanceCards, gameConfig.chanceCard) },
-            { EventType.BusTicket, data => TakeCard(data, busTickets, gameConfig.busTicket, currentBusTickets) },
-            { EventType.GotoJail, data => { } },
-            { EventType.Tax, data => data.SetCurrentCoin(-2) },
-            { EventType.Surtax, data => data.SetCurrentCoin(-2) },
-            { EventType.GiftReceive, data => data.SetCurrentCoin(2) },
-            { EventType.Auction, data => { } },
+            _ => { },//Nontrigger
+            data => TakeCard(data, communityCards, gameConfig.communityChestCard),//CommunityChest
+            data => TakeCard(data, chanceCards, gameConfig.chanceCard),//Chance
+            data => TakeCard(data, busTickets, gameConfig.busTicket, currentTakableBusTickets),//BusTicket
+            _ => { },//GotoJail
+            data => data.SetCurrentCoin(taxConfig.cost),//Tax
+            data => data.SetCurrentCoin(surtaxConfig.cost),//Surtax
+            data => TakeAsset(data, currentPurchasableSpaces[UnityEngine.Random.Range(0, currentPurchasableSpaces.Count)], false),//GiftReceive
+            _ => { },//Auction
         };
 
-        chanceCards.action.OnChangeToCommunityCard(triggerActionsOnEventSpaces[EventType.CommunityChest]);
-        chanceCards.action.OnChangeToBusTicket(triggerActionsOnEventSpaces[EventType.BusTicket]);
+        chanceCards.action.OnChangeToCommunityCard(triggerActionsOnEventSpaces[(int)EventType.CommunityChest]);
+        chanceCards.action.OnChangeToBusTicket(triggerActionsOnEventSpaces[(int)EventType.BusTicket]);
+
+        busTickets.action.OnGiveTicket((data, ticketIndex) => TakeBusTicket(data, ticketIndex));
+        
     }
     void InitPlayersData()
     {
@@ -119,7 +93,8 @@ public class DataManager : MonoBehaviour
     void InitAssetsData()
     {
         assetsData = new AssetData[gameConfig.spaceCount];
-        SpaceConfig[] purchasableSpaces = Resources.LoadAll<SpaceConfig>(purchasableSpacesPath);
+        currentPurchasableSpaces = new List<AssetData>();
+        SpaceConfig[] purchasableSpaces = Resources.LoadAll<SpaceConfig>(GlobalFieldContainer.purchasableSpacesPath);
         foreach (var space in purchasableSpaces)
         {
             if (companiesConfig.spacesIndices.Contains(space.indexFromGoSpace))
@@ -134,6 +109,7 @@ public class DataManager : MonoBehaviour
             {
                 assetsData[space.indexFromGoSpace] = new PropertyData((PropertyConfig)space);
             }
+            currentPurchasableSpaces.Add(assetsData[space.indexFromGoSpace]);
         }
     }
 
@@ -141,7 +117,7 @@ public class DataManager : MonoBehaviour
     {
         if (eventSpaceGroup.eventDictionary.TryGetValue(positionIndex, out EventType theEvent))
         {
-            triggerActionsOnEventSpaces[theEvent](playersData[playerIndex]);
+            triggerActionsOnEventSpaces[(int)theEvent](playersData[playerIndex]);
             return;
         }
         TriggerPurchasableSpace(playersData[playerIndex], positionIndex);
@@ -172,7 +148,7 @@ public class DataManager : MonoBehaviour
         }
         if (!isPurchased)
         {
-
+            TakeAsset(currentPlayer, assetsData[positionIndex], true);
         }
     }
 
@@ -188,9 +164,19 @@ public class DataManager : MonoBehaviour
         lessor.SetCurrentCoin(asset.GetRentCost());
     }
 
-    public void PassGoSpace(PlayerData data)
+    void TakeAsset(PlayerData player, AssetData asset, bool byPurchasing)
     {
-        data.SetCurrentCoin(gameConfig.passGoSpaceBonus);
+        if (byPurchasing)
+        {
+            asset.BePurchased(player);
+        }
+        player.AddAsset(asset);
+        currentPurchasableSpaces.Remove(asset);
+    }
+
+    public void PassGoSpace(int playerIndex)
+    {
+        playersData[playerIndex].SetCurrentCoin(gameConfig.passGoSpaceBonus);
     }
 
     void TakeCard(PlayerData data, CardsConfig cards, int maxRandomValue, HashSet<int> validIndices = null)
@@ -204,16 +190,16 @@ public class DataManager : MonoBehaviour
         cards.AccessTheCard(data, playersData, index);
     }
 
-    void TakeBusTicket(PlayerData data, int ticketIndex)
+    void TakeBusTicket(PlayerData player, int ticketIndex)
     {
-        currentBusTickets.Remove(ticketIndex);
-        data.KeepTicket(ticketIndex);
+        currentTakableBusTickets.Remove(ticketIndex);
+        player.KeepTicket(ticketIndex);
     }
 
-    void UseBusTicket(PlayerData data, int ticketIndex)
+    public void UseBusTicket(int playerIndex, int ticketIndex)
     {
-        //busTickets.action
-        currentBusTickets.Add(ticketIndex);
-        data.GiveBackTicket(ticketIndex);
+        busTickets.action.TriggerKeepToUseTicket(ticketIndex);
+        playersData[playerIndex].GiveBackTicket(ticketIndex);
+        currentTakableBusTickets.Add(ticketIndex);
     }
 }
