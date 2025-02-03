@@ -2,39 +2,32 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerData
+public class PlayerData : IChangeCoin, ICanKeepTicket, ICanBeInJail
 {
     int currentCoin;
-    HashSet<AssetData> assets;
+    bool isInJail;
+    HashSet<ISelfCountable> assets;
     List<int> busTickets;
     int currentDicePoint;
-    public int currentCompanyCount { get; private set; }
-    public int currentStationCount { get; private set; }
+    int currentCompanyCount;
+    int currentStationCount;
     public PlayerData(PlayerGeneralConfig config)
     {
         currentCoin = config.initialCoin;
-        assets = new HashSet<AssetData>();
+        assets = new HashSet<ISelfCountable>();
         busTickets = new List<int>();
     }
 
-    public void AddAsset(AssetData space)
+    public void AddAsset(ISelfCountable space, AssetType type)
     {
         assets.Add(space);
-        switch (space)
+        switch (type)
         {
-            case CompanyData:
-                currentCompanyCount++;
+            case AssetType.Company:
+                space.UpdateTheNumber(ref currentCompanyCount);
                 return;
-            case StationData station:
-                currentStationCount++;
-                if (currentStationCount > 1)
-                {
-                    station.IncreaseRentCost(out bool hasIncreased);
-                    if (!hasIncreased)
-                    {
-                        currentStationCount--;
-                    }
-                }
+            case AssetType.Station:
+                space.UpdateTheNumber(ref currentStationCount);
                 return;
         }
     }
@@ -49,7 +42,7 @@ public class PlayerData
         busTickets.Remove(index);
     }
 
-    public bool IsOwner(AssetData space)
+    public bool IsOwner(ISelfCountable space)
     {
         return assets.Contains(space);
     }
@@ -68,9 +61,29 @@ public class PlayerData
     {
         currentDicePoint = point;
     }
+
+    public int GetCurrentCompanyCount()
+    {
+        return currentCompanyCount;
+    }
+
+    public int GetCurrentStationCount()
+    {
+        return currentStationCount;
+    }
+
+    public void BeInJail()
+    {
+        isInJail = true;
+    }
+
+    public void QuitFromJail()
+    {
+        isInJail = false;
+    }
 }
 
-public class AssetData
+public class AssetData : ISelfCountable
 {
     protected int currentRentCost;
     public int GetRentCost()
@@ -81,7 +94,12 @@ public class AssetData
     {
         currentRentCost += addValue;
     }
-    public virtual void BePurchased(Action<int> _) { }
+    public virtual void BePurchased(Action<int> onPurchase) { }
+
+    public virtual void UpdateTheNumber(ref int currentCount)
+    {
+        currentCount++;
+    }
 }
 
 public class PropertyData : AssetData
@@ -166,7 +184,7 @@ public class StationData : AssetData
         onPurchase.Invoke(config.eachPurchaseCost);
     }
 
-    public void IncreaseRentCost(out bool hasIncreased)
+    void IncreaseRentCost(out bool hasIncreased)
     {
         if (currentRentCost == maxRentCost)
         {
@@ -176,5 +194,18 @@ public class StationData : AssetData
         }
         SetRentCost(currentRentCost * (config.rentCostScaleFactor - 1));
         hasIncreased = true;
+    }
+
+    public override void UpdateTheNumber(ref int currentCount)
+    {
+        base.UpdateTheNumber(ref currentCount);
+        if (currentCount > 1)
+        {
+            IncreaseRentCost(out bool hasIncreased);
+            if (!hasIncreased)
+            {
+                currentCount--;
+            }
+        }
     }
 }

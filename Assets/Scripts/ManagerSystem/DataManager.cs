@@ -17,9 +17,12 @@ public class DataManager : MonoBehaviour
 
     HashSet<int> currentTakableBusTickets;
     List<AssetData> currentPurchasableSpaces;
-    Action<PlayerData>[] triggerActionsOnEventSpaces;
+    Action<IOnEvent>[] actionsOnEventSpaces;
     PlayerData[] playersData;
     AssetData[] assetsData;
+
+    Action<Vector3, int> moveTo;
+    Action rollThirdDieAndStep;
 
     private void Start()
     {
@@ -63,25 +66,85 @@ public class DataManager : MonoBehaviour
     }
     void InitActionsOnEventSpaces()
     {
-        triggerActionsOnEventSpaces = new Action<PlayerData>[]
+        actionsOnEventSpaces = new Action<IOnEvent>[]
         {
             _ => { },//Nontrigger
             data => TakeCard(data, communityCards, gameConfig.communityChestCard),//CommunityChest
             data => TakeCard(data, chanceCards, gameConfig.chanceCard),//Chance
             data => TakeCard(data, busTickets, gameConfig.busTicket, currentTakableBusTickets),//BusTicket
-            _ => { },//GotoJail
-            data => data.SetCurrentCoin(taxConfig.cost),//Tax
-            data => data.SetCurrentCoin(surtaxConfig.cost),//Surtax
-            data => TakeAsset(data, currentPurchasableSpaces[UnityEngine.Random.Range(0, currentPurchasableSpaces.Count)], false),//GiftReceive
+            data => GoToJail(data as ICanBeInJail),//GotoJail
+            data => PayTaxes(data as IChangeCoin, taxConfig.cost),//Tax
+            data => PayTaxes(data as IChangeCoin, surtaxConfig.cost),//Surtax
+            data => TakeAsset(data as PlayerData, currentPurchasableSpaces[UnityEngine.Random.Range(0, currentPurchasableSpaces.Count)], false),//GiftReceive
             _ => { },//Auction
         };
 
-        chanceCards.action.OnChangeToCommunityCard(triggerActionsOnEventSpaces[(int)EventType.CommunityChest]);
-        chanceCards.action.OnChangeToBusTicket(triggerActionsOnEventSpaces[(int)EventType.BusTicket]);
+        chanceCards.action.OnChangeToCommunityCard(actionsOnEventSpaces[(int)EventType.CommunityChest]);
+        chanceCards.action.OnChangeToBusTicket(actionsOnEventSpaces[(int)EventType.BusTicket]);
 
         busTickets.action.OnGiveTicket((data, ticketIndex) => TakeBusTicket(data, ticketIndex));
-        
+        busTickets.action.BackToGoSpace(_ => moveTo(Vector3.zero, 0));
+        busTickets.action.GoToJail(actionsOnEventSpaces[(int)EventType.GotoJail]);
+        busTickets.action.MoveToAUtilitySpace(_ => moveTo(GetRandomUtilitySpace(out int newPosition), newPosition));
+        busTickets.action.RollThirdDieToMove(_ => rollThirdDieAndStep());
+        busTickets.action.MoveToAuction(data =>
+        {
+            moveTo(Vector3.zero, 14);
+            actionsOnEventSpaces[(int)EventType.Auction].Invoke(data);
+        });
+        busTickets.action.QuitFromJail(data => QuitFromJail(data as ICanBeInJail));
     }
+
+    void GoToJail(ICanBeInJail player)
+    {
+        player.BeInJail();
+        moveTo(Vector3.zero, 39);
+    }
+    void QuitFromJail(ICanBeInJail player)
+    {
+        player.QuitFromJail();
+        moveTo(Vector3.zero, 13);
+    }
+    Vector3 GetRandomUtilitySpace(out int position)
+    {
+        int pick = UnityEngine.Random.Range(0, 2);
+        int result;
+        if (pick == 0)
+        {
+            result = UnityEngine.Random.Range(0, companiesConfig.companyCount);
+            position = 0;
+            return Vector3.zero;
+        }
+        else
+        {
+            result = UnityEngine.Random.Range(0, stationsConfig.stationCount);
+            position = 0;
+            return Vector3.zero;
+        }
+    }
+
+    void PayTaxes(IChangeCoin player, int cost)
+    {
+        player.SetCurrentCoin(-cost);
+    }
+
+    void TakeCard(IOnEvent data, CardsConfig cards, int maxRandomValue, HashSet<int> validIndices = null)
+    {
+        int index;
+        do
+        {
+            index = UnityEngine.Random.Range(0, maxRandomValue);
+        }
+        while (validIndices != null && !validIndices.Contains(index));
+        cards.AccessTheCard(data, playersData, index);
+    }
+
+    void TakeBusTicket(ICanKeepTicket player, int ticketIndex)
+    {
+        currentTakableBusTickets.Remove(ticketIndex);
+        player.KeepTicket(ticketIndex);
+    }
+
     void InitPlayersData()
     {
         playersData = new PlayerData[gameConfig.playerCount];
@@ -117,7 +180,7 @@ public class DataManager : MonoBehaviour
     {
         if (eventSpaceGroup.eventDictionary.TryGetValue(positionIndex, out EventType theEvent))
         {
-            triggerActionsOnEventSpaces[(int)theEvent](playersData[playerIndex]);
+            actionsOnEventSpaces[(int)theEvent](playersData[playerIndex]);
             return;
         }
         TriggerPurchasableSpace(playersData[playerIndex], positionIndex);
@@ -154,7 +217,7 @@ public class DataManager : MonoBehaviour
 
     void CompanyCost(PlayerData lessor, PlayerData lessee, CompanyData asset)
     {
-        asset.UpdateRentCost(lessee.GetDicePoint(), lessor.currentCompanyCount);
+        asset.UpdateRentCost(lessee.GetDicePoint(), lessor.GetCurrentCompanyCount());
         Cost(lessor, lessee, asset);
     }
 
@@ -170,7 +233,18 @@ public class DataManager : MonoBehaviour
         {
             asset.BePurchased(cost => player.SetCurrentCoin(-cost));
         }
-        player.AddAsset(asset);
+        if (asset is CompanyData)
+        {
+            player.AddAsset(asset, AssetType.Company);
+        }
+        else if (asset is StationData)
+        {
+            player.AddAsset(asset, AssetType.Station);
+        }
+        else
+        {
+            player.AddAsset(asset, AssetType.Property);
+        }
         currentPurchasableSpaces.Remove(asset);
     }
 
@@ -179,27 +253,19 @@ public class DataManager : MonoBehaviour
         playersData[playerIndex].SetCurrentCoin(gameConfig.passGoSpaceBonus);
     }
 
-    void TakeCard(PlayerData data, CardsConfig cards, int maxRandomValue, HashSet<int> validIndices = null)
-    {
-        int index;
-        do
-        {
-            index = UnityEngine.Random.Range(0, maxRandomValue);
-        }
-        while (validIndices != null && !validIndices.Contains(index));
-        cards.AccessTheCard(data, playersData, index);
-    }
-
-    void TakeBusTicket(PlayerData player, int ticketIndex)
-    {
-        currentTakableBusTickets.Remove(ticketIndex);
-        player.KeepTicket(ticketIndex);
-    }
-
     public void UseBusTicket(int playerIndex, int ticketIndex)
     {
-        busTickets.action.TriggerKeepToUseTicket(ticketIndex);
+        busTickets.action.TriggerKeepToUseTicket(playersData[playerIndex], ticketIndex);
         playersData[playerIndex].GiveBackTicket(ticketIndex);
         currentTakableBusTickets.Add(ticketIndex);
+    }
+
+    public void OnEventMove(Action<Vector3, int> move)
+    {
+        moveTo = move;
+    }
+    public void OnRollThirdDieAndStep(Action rollAndStep)
+    {
+        rollThirdDieAndStep = rollAndStep;
     }
 }

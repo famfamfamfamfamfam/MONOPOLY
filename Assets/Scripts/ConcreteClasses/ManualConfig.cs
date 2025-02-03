@@ -17,7 +17,7 @@ public struct CommunityChest
 [Serializable]
 public class CommunityChestAction
 {
-    public void ChangeAllCoin(PlayerData[] players, int value)
+    public void ChangeAllCoin(IChangeCoin[] players, int value)
     {
         foreach (var player in players)
         {
@@ -25,17 +25,17 @@ public class CommunityChestAction
         }
     }
 
-    public void OppositelyChangeCoin(PlayerData currentPlayer, PlayerData[] players, int value)
+    public void OppositelyChangeCoin(IChangeCoin currentPlayer, IChangeCoin[] players, int value)
     {
         ChangeCoin(currentPlayer, players, value, 1);
     }
 
-    public void ChangeCoinByDonate(PlayerData currentPlayer, PlayerData[] players, int value)
+    public void ChangeCoinByDonate(IChangeCoin currentPlayer, IChangeCoin[] players, int value)
     {
         ChangeCoin(currentPlayer, players, value, players.Length - 1);
     }
 
-    void ChangeCoin(PlayerData currentPlayer, PlayerData[] players, int value, int divisor)
+    void ChangeCoin(IChangeCoin currentPlayer, IChangeCoin[] players, int value, int divisor)
     {
         foreach (var player in players)
         {
@@ -52,30 +52,30 @@ public class CommunityChestAction
 [Serializable]
 public class ChanceAction
 {
-    Action<PlayerData> changeToCommunityCard;
-    Action<PlayerData> changeToBusTicket;
+    Action<IChangeCoin> changeToCommunityCard;
+    Action<IChangeCoin> changeToBusTicket;
 
-    public void ChangeCoin(PlayerData data, int value)
+    public void ChangeCoin(IChangeCoin data, int value)
     {
         data.SetCurrentCoin(value);
     }
 
-    public void ChangeToCommunityCard(PlayerData data)
+    public void ChangeToCommunityCard(IChangeCoin data)
     {
         changeToCommunityCard.Invoke(data);
     }
 
-    public void ChangeToBusTicket(PlayerData data)
+    public void ChangeToBusTicket(IChangeCoin data)
     {
         changeToBusTicket.Invoke(data);
     }
 
-    public void OnChangeToCommunityCard(Action<PlayerData> action)
+    public void OnChangeToCommunityCard(Action<IChangeCoin> action)
     {
         changeToCommunityCard = action;
     }
 
-    public void OnChangeToBusTicket(Action<PlayerData> action)
+    public void OnChangeToBusTicket(Action<IChangeCoin> action)
     {
         changeToBusTicket = action;
     }
@@ -84,46 +84,46 @@ public class ChanceAction
 [Serializable]
 public class BusTicketAction
 {
-    Action<PlayerData, int> playerTakeBusTicket;
+    Action<ICanKeepTicket, int> playerTakeBusTicket;
 
-    Action[] actions;
+    Action<IOnEvent>[] actions;
 
     Dictionary<int, int> actionAccessor;
 
-    public void GoToJail(Action go)
+    public void GoToJail(Action<IOnEvent> go)
     {
         Init(0, go);
     }
-    public void MoveToAUtilitySpace(Action move)
+    public void MoveToAUtilitySpace(Action<IOnEvent> move)
     {
         Init(1, move);
     }
-    public void BackToGoSpace(Action back)
+    public void BackToGoSpace(Action<IOnEvent> back)
     {
         Init(2, back);
     }
-    public void RollThirdDieToMove(Action rollAndMove)
+    public void RollThirdDieToMove(Action<IOnEvent> rollAndMove)
     {
         Init(3, rollAndMove);
     }
-    public void MoveToAuction(Action move)
+    public void MoveToAuction(Action<IOnEvent> move)
     {
         Init(4, move);
     }
-    public void QuitFromJail(Action quit)
+    public void QuitFromJail(Action<IOnEvent> quit)
     {
         Init(5, quit);
     }
-    void Init(int index, Action action)
+    void Init(int index, Action<IOnEvent> action)
     {
         if (actions == null)
         {
-            actions = new Action[GlobalFieldContainer.allTicketType];
+            actions = new Action<IOnEvent>[GlobalFieldContainer.allTicketType];
         }
         actions[index] = action;
     }
 
-    public void GiveTicket(PlayerData data, int ticketIndex, int actionIndex)
+    public void GiveTicket(ICanKeepTicket data, int ticketIndex, int actionIndex)
     {
         playerTakeBusTicket.Invoke(data, ticketIndex);
         if (actionAccessor == null)
@@ -138,18 +138,18 @@ public class BusTicketAction
             }
         }
     }
-    public void OnGiveTicket(Action<PlayerData, int> action)
+    public void OnGiveTicket(Action<ICanKeepTicket, int> action)
     {
         playerTakeBusTicket = action;
     }
 
-    public void TriggerInstantUseTicket(int actionIndex)
+    public void TriggerInstantUseTicket(IOnEvent currentPlayer, int actionIndex)
     {
-        actions[actionIndex].Invoke();
+        actions[actionIndex].Invoke(currentPlayer);
     }
 
-    public void TriggerKeepToUseTicket(int ticketIndex)
+    public void TriggerKeepToUseTicket(IOnEvent currentPlayer, int ticketIndex)
     {
-        actions[actionAccessor[ticketIndex]].Invoke();
+        actions[actionAccessor[ticketIndex]].Invoke(currentPlayer);
     }
 }

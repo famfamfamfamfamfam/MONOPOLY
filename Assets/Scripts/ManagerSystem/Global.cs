@@ -3,6 +3,36 @@ public interface IPointOnSide
     int point { get; }
 }
 
+public interface IOnEvent { }
+
+public interface IChangeCoin : IOnEvent
+{
+    void SetCurrentCoin(int addValue);
+}
+
+public interface ICanKeepTicket : IOnEvent
+{
+    void KeepTicket(int ticketIndex);
+}
+
+public interface ICanBeInJail : IOnEvent
+{
+    void BeInJail();
+    void QuitFromJail();
+}
+
+public interface ISelfCountable
+{
+    void UpdateTheNumber(ref int currentCount);
+}
+
+public enum AssetType : byte
+{
+    Property,
+    Company,
+    Station
+}
+
 public enum BuildType : byte
 {
     BuildNew,

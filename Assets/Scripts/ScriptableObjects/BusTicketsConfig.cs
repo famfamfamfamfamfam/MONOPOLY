@@ -22,15 +22,15 @@ public class BusTicketsConfig : CardsConfig
     [SerializeField]
     KeepToUseTicket[] keepToUseTickets;
 
-    public override void AccessTheCard(PlayerData player, PlayerData[] _, int ticketIndex)
+    public override void AccessTheCard(IOnEvent player, IChangeCoin[] _, int ticketIndex)
     {
         if (ticketIndex < instantUseTickets.Length)
         {
-            action.TriggerInstantUseTicket((int)instantUseTickets[ticketIndex]);
+            action.TriggerInstantUseTicket(player, (int)instantUseTickets[ticketIndex]);
         }
         else
         {
-            action.GiveTicket(player, ticketIndex,
+            action.GiveTicket(player as ICanKeepTicket, ticketIndex,
                 (int)keepToUseTickets[ticketIndex % instantUseTickets.Length]);
         }
     }

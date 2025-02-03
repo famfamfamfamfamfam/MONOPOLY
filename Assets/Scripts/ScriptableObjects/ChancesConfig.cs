@@ -14,21 +14,21 @@ public class ChancesConfig : CardsConfig
     [SerializeField]
     CardChangeType[] changeCards;
 
-    public override void AccessTheCard(PlayerData player, PlayerData[] _, int cardIndex)
+    public override void AccessTheCard(IOnEvent player, IChangeCoin[] _, int cardIndex)
     {
         if (cardIndex < changeMoneyValues.Length)
         {
-            action.ChangeCoin(player, changeMoneyValues[cardIndex]);
+            action.ChangeCoin(player as IChangeCoin, changeMoneyValues[cardIndex]);
         }
         else
         {
             switch (changeCards[cardIndex % changeMoneyValues.Length])
             {
                 case CardChangeType.CommunityChest:
-                    action.ChangeToCommunityCard(player);
+                    action.ChangeToCommunityCard(player as IChangeCoin);
                     return;
                 case CardChangeType.BusTicket:
-                    action.ChangeToBusTicket(player);
+                    action.ChangeToBusTicket(player as IChangeCoin);
                     return;
             }
         }

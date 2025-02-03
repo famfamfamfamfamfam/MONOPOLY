@@ -8,7 +8,7 @@ public class CommunityChestsConfig : CardsConfig
     [SerializeField]
     CommunityChest[] chests;
 
-    public override void AccessTheCard(PlayerData currentPlayer, PlayerData[] players, int chestIndex)
+    public override void AccessTheCard(IOnEvent currentPlayer, IChangeCoin[] players, int chestIndex)
     {
         switch (chests[chestIndex].moneyChange)
         {
@@ -16,10 +16,10 @@ public class CommunityChestsConfig : CardsConfig
                 action.ChangeAllCoin(players, chests[chestIndex].value);
                 return;
             case CommunityChest.MoneyChangeType.Opposite:
-                action.OppositelyChangeCoin(currentPlayer, players, chests[chestIndex].value);
+                action.OppositelyChangeCoin(currentPlayer as IChangeCoin, players, chests[chestIndex].value);
                 return;
             case CommunityChest.MoneyChangeType.Donate:
-                action.ChangeCoinByDonate(currentPlayer, players, chests[chestIndex].value);
+                action.ChangeCoinByDonate(currentPlayer as IChangeCoin, players, chests[chestIndex].value);
                 return;
         }
     }

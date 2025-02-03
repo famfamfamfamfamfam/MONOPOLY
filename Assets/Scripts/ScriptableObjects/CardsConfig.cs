@@ -2,6 +2,6 @@ using UnityEngine;
 
 public class CardsConfig : ScriptableObject
 {
-    public virtual void AccessTheCard(PlayerData currentPlayer, PlayerData[] players, int cardIndex)
+    public virtual void AccessTheCard(IOnEvent currentPlayer, IChangeCoin[] players, int cardIndex)
     { }
 }
