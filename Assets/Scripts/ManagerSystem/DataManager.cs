@@ -168,7 +168,7 @@ public class DataManager : MonoBehaviour
     {
         if (byPurchasing)
         {
-            asset.BePurchased(player);
+            asset.BePurchased(cost => player.SetCurrentCoin(-cost));
         }
         player.AddAsset(asset);
         currentPurchasableSpaces.Remove(asset);

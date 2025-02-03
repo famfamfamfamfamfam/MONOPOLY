@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class PlayerData
@@ -73,7 +73,6 @@ public class PlayerData
 public class AssetData
 {
     protected int currentRentCost;
-    bool isOwned;
     public int GetRentCost()
     {
         return currentRentCost;
@@ -82,12 +81,7 @@ public class AssetData
     {
         currentRentCost += addValue;
     }
-    public virtual void BePurchased(PlayerData _) { }
-    protected void ToBeOwned(PlayerData purchaser, int costValue)
-    {
-        purchaser.SetCurrentCoin(-costValue);
-        isOwned = true;
-    }
+    public virtual void BePurchased(Action<int> _) { }
 }
 
 public class PropertyData : AssetData
@@ -101,9 +95,9 @@ public class PropertyData : AssetData
         config = instance;
     }
 
-    public override void BePurchased(PlayerData purchaser)
+    public override void BePurchased(Action<int> onPurchase)
     {
-        ToBeOwned(purchaser, config.purchaseCost);
+        onPurchase.Invoke(config.purchaseCost);
     }
 
     public void AddBuilding(BuildType type)
@@ -135,9 +129,9 @@ public class CompanyData : AssetData
         config = instance;
     }
 
-    public override void BePurchased(PlayerData purchaser)
+    public override void BePurchased(Action<int> onPurchase)
     {
-        ToBeOwned(purchaser, config.eachPurchaseCost);
+        onPurchase.Invoke(config.eachPurchaseCost);
     }
 
     public void UpdateRentCost(int dicePoint, int companyCount)
@@ -167,9 +161,9 @@ public class StationData : AssetData
         config = instance;
     }
 
-    public override void BePurchased(PlayerData purchaser)
+    public override void BePurchased(Action<int> onPurchase)
     {
-        ToBeOwned(purchaser, config.eachPurchaseCost);
+        onPurchase.Invoke(config.eachPurchaseCost);
     }
 
     public void IncreaseRentCost(out bool hasIncreased)
