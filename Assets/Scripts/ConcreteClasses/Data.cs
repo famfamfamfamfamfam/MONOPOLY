@@ -6,7 +6,7 @@ public class PlayerData : IChangeCoin, ICanKeepTicket, ICanBeInJail
 {
     int currentCoin;
     bool isInJail;
-    HashSet<ISelfCountable> assets;
+    HashSet<IAsset> assets;
     List<int> busTickets;
     int currentDicePoint;
     int currentCompanyCount;
@@ -14,11 +14,11 @@ public class PlayerData : IChangeCoin, ICanKeepTicket, ICanBeInJail
     public PlayerData(PlayerGeneralConfig config)
     {
         currentCoin = config.initialCoin;
-        assets = new HashSet<ISelfCountable>();
+        assets = new HashSet<IAsset>();
         busTickets = new List<int>();
     }
 
-    public void AddAsset(ISelfCountable space, AssetType type)
+    public void AddAsset(IAsset space, AssetType type)
     {
         assets.Add(space);
         switch (type)
@@ -42,7 +42,7 @@ public class PlayerData : IChangeCoin, ICanKeepTicket, ICanBeInJail
         busTickets.Remove(index);
     }
 
-    public bool IsOwner(ISelfCountable space)
+    public bool IsOwner(IAsset space)
     {
         return assets.Contains(space);
     }
@@ -72,6 +72,11 @@ public class PlayerData : IChangeCoin, ICanKeepTicket, ICanBeInJail
         return currentStationCount;
     }
 
+    public bool IsInJail()
+    {
+        return isInJail;
+    }
+
     public void BeInJail()
     {
         isInJail = true;
@@ -83,7 +88,7 @@ public class PlayerData : IChangeCoin, ICanKeepTicket, ICanBeInJail
     }
 }
 
-public class AssetData : ISelfCountable
+public class AssetData : IAsset
 {
     protected int currentRentCost;
     public int GetRentCost()

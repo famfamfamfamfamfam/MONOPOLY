@@ -123,9 +123,9 @@ public class BusTicketAction
         actions[index] = action;
     }
 
-    public void GiveTicket(ICanKeepTicket data, int ticketIndex, int actionIndex)
+    public void GiveTicket(ICanKeepTicket player, int ticketIndex, int actionIndex)
     {
-        playerTakeBusTicket.Invoke(data, ticketIndex);
+        playerTakeBusTicket.Invoke(player, ticketIndex);
         if (actionAccessor == null)
         {
             actionAccessor = new Dictionary<int, int>((int)(GlobalFieldContainer.allKeepToUseTicket / GlobalFieldContainer.RESIZE_THRESHOLD) + 1);

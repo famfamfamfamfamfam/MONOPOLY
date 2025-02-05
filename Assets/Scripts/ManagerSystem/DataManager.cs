@@ -14,6 +14,7 @@ public class DataManager : MonoBehaviour
     BusTicketsConfig busTickets;
     TaxConfig taxConfig;
     TaxConfig surtaxConfig;
+    SpaceConfig goSpace, gotoJailSpace, prisonVisitSpace, auctionSpace;
 
     HashSet<int> currentTakableBusTickets;
     List<AssetData> currentPurchasableSpaces;
@@ -50,6 +51,10 @@ public class DataManager : MonoBehaviour
         eventSpaceGroup = Resources.Load<SpaceGroupConfig>(GlobalFieldContainer.eventSpaceGroupPath);
         taxConfig = Resources.Load<TaxConfig>(GlobalFieldContainer.taxSpacePath);
         surtaxConfig = Resources.Load<TaxConfig>(GlobalFieldContainer.surtaxSpacePath);
+        goSpace = Resources.Load<SpaceConfig>(GlobalFieldContainer.goSpacePath);
+        gotoJailSpace = Resources.Load<SpaceConfig>(GlobalFieldContainer.gotoJailSpacePath);
+        prisonVisitSpace = Resources.Load<SpaceConfig>(GlobalFieldContainer.prisonVisitSpacePath);
+        auctionSpace = Resources.Load<SpaceConfig>(GlobalFieldContainer.auctionSpacePath);
     }
     void InitEventCards()
     {
@@ -83,13 +88,13 @@ public class DataManager : MonoBehaviour
         chanceCards.action.OnChangeToBusTicket(actionsOnEventSpaces[(int)EventType.BusTicket]);
 
         busTickets.action.OnGiveTicket((data, ticketIndex) => TakeBusTicket(data, ticketIndex));
-        busTickets.action.BackToGoSpace(_ => moveTo(Vector3.zero, 0));
+        busTickets.action.BackToGoSpace(_ => moveTo(goSpace.position, goSpace.indexFromGoSpace));
         busTickets.action.GoToJail(actionsOnEventSpaces[(int)EventType.GotoJail]);
         busTickets.action.MoveToAUtilitySpace(_ => moveTo(GetRandomUtilitySpace(out int newPosition), newPosition));
         busTickets.action.RollThirdDieToMove(_ => rollThirdDieAndStep());
         busTickets.action.MoveToAuction(data =>
         {
-            moveTo(Vector3.zero, 14);
+            moveTo(auctionSpace.position, auctionSpace.indexFromGoSpace);
             actionsOnEventSpaces[(int)EventType.Auction].Invoke(data);
         });
         busTickets.action.QuitFromJail(data => QuitFromJail(data as ICanBeInJail));
@@ -98,29 +103,32 @@ public class DataManager : MonoBehaviour
     void GoToJail(ICanBeInJail player)
     {
         player.BeInJail();
-        moveTo(Vector3.zero, 39);
+        moveTo(gotoJailSpace.position, gotoJailSpace.indexFromGoSpace);
     }
     void QuitFromJail(ICanBeInJail player)
     {
         player.QuitFromJail();
-        moveTo(Vector3.zero, 13);
+        moveTo(prisonVisitSpace.position, prisonVisitSpace.indexFromGoSpace);
     }
-    Vector3 GetRandomUtilitySpace(out int position)
+    Vector3 GetRandomUtilitySpace(out int positionIndex)
     {
         int pick = UnityEngine.Random.Range(0, 2);
-        int result;
         if (pick == 0)
         {
-            result = UnityEngine.Random.Range(0, companiesConfig.companyCount);
-            position = 0;
-            return Vector3.zero;
+            positionIndex = GetPositionIndex(companiesConfig, out Vector3 position);
+            return position;
         }
         else
         {
-            result = UnityEngine.Random.Range(0, stationsConfig.stationCount);
-            position = 0;
-            return Vector3.zero;
+            positionIndex = GetPositionIndex(stationsConfig, out Vector3 position);
+            return position;
         }
+    }
+    int GetPositionIndex(SpaceGroupConfig spaceGroup, out Vector3 position)
+    {
+        int result = UnityEngine.Random.Range(0, companiesConfig.companyCount);
+        position = spaceGroup.spaces[result].position;
+        return spaceGroup.spaces[result].indexFromGoSpace;
     }
 
     void PayTaxes(IChangeCoin player, int cost)

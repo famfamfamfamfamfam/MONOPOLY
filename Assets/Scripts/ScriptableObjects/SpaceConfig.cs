@@ -4,6 +4,7 @@ using UnityEngine;
 public class SpaceConfig : ScriptableObject
 {
     public int indexFromGoSpace;
+    public Vector3 position;
 }
 
 //Gemeinschaftsfeld -> CommunityChest

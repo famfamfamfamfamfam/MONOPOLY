@@ -21,7 +21,7 @@ public interface ICanBeInJail : IOnEvent
     void QuitFromJail();
 }
 
-public interface ISelfCountable
+public interface IAsset
 {
     void UpdateTheNumber(ref int currentCount);
 }
@@ -64,7 +64,11 @@ public class GlobalFieldContainer
     public readonly static string chanceCardsPath = "ScriptableObjects/Cards/Chances";
     public readonly static string busTicketsPath = "ScriptableObjects/Cards/BusTickets";
     public readonly static string taxSpacePath = "ScriptableObjects/EventSpaces/Spaces/TaxSpace";
-    public readonly static string surtaxSpacePath = "ScriptableObjects/EventSpaces/Spaces/SurtaxSpace.asset";
+    public readonly static string surtaxSpacePath = "ScriptableObjects/EventSpaces/Spaces/SurtaxSpace";
+    public readonly static string goSpacePath = "ScriptableObjects/EventSpaces/Spaces/Go";
+    public readonly static string gotoJailSpacePath = "ScriptableObjects/EventSpaces/Spaces/GoToJail";
+    public readonly static string prisonVisitSpacePath = "ScriptableObjects/EventSpaces/Spaces/PrisonVisit";
+    public readonly static string auctionSpacePath = "ScriptableObjects/EventSpaces/Spaces/AuctionSpace";
 
     public readonly static int allTicketType = 6;
     public readonly static int allKeepToUseTicket = 5;
