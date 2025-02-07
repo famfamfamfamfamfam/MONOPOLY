@@ -1,0 +1,14 @@
+Data:
+- Repository cho data <- Configs
+GameLogic:
+- Service classes cho xử lý data <- Data từ repo
+- Behaviours <- Xử lý data
+Controller:
+- Input <- Behaviours
+Driver:
+- Events từ data services
+UI:
+- Update UI <- Driver events
+
+DataInitilizer:
+- Khởi tạo configs -> data repo -> data services
