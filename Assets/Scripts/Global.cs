@@ -1,44 +1,3 @@
-public interface IPointOnSide
-{
-    int point { get; }
-}
-
-public interface IOnEvent { }
-
-public interface IChangeCoin : IOnEvent
-{
-    void SetCurrentCoin(int addValue);
-}
-
-public interface ICanKeepTicket : IOnEvent
-{
-    void KeepTicket(int ticketIndex);
-}
-
-public interface ICanBeInJail : IOnEvent
-{
-    void BeInJail();
-    void QuitFromJail();
-}
-
-public interface IAsset
-{
-    void UpdateTheNumber(ref int currentCount);
-}
-
-public enum AssetType : byte
-{
-    Property,
-    Company,
-    Station
-}
-
-public enum BuildType : byte
-{
-    BuildNew,
-    Upgrade
-}
-
 public enum EventType : byte
 {
     Nontrigger = 0,
@@ -72,5 +31,4 @@ public class GlobalFieldContainer
 
     public readonly static int allTicketType = 6;
     public readonly static int allKeepToUseTicket = 5;
-    public const float RESIZE_THRESHOLD = 75 / 100;
 }

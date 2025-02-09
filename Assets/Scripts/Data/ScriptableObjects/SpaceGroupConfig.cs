@@ -23,19 +23,19 @@ public class SpaceGroupConfig : ScriptableObject
         }
     }
 
-    Dictionary<int, EventType> _spacesDictionary;
+    Dictionary<int, EventType> _eventSpaceDictionary;
     public Dictionary<int, EventType> eventDictionary
     {
         get
         {
-            if (_spacesDictionary == null)
+            if (_eventSpaceDictionary == null)
             {
-                _spacesDictionary = new Dictionary<int, EventType>((int)(spaces.Length / GlobalFieldContainer.RESIZE_THRESHOLD) + 1);
+                _eventSpaceDictionary = new Dictionary<int, EventType>(spaces.Length * 100 / 75 + 1);
                 foreach (var space in spaces)
                 {
                     if (space is EventSpaceConfig eventSpace)
                     {
-                        _spacesDictionary.Add(eventSpace.indexFromGoSpace, eventSpace.eventType);
+                        _eventSpaceDictionary.Add(eventSpace.indexFromGoSpace, eventSpace.eventType);
                     }
                     else
                     {
@@ -43,9 +43,9 @@ public class SpaceGroupConfig : ScriptableObject
                         return null;
                     }
                 }
-                _spacesDictionary.TrimExcess();
+                _eventSpaceDictionary.TrimExcess();
             }
-            return _spacesDictionary;
+            return _eventSpaceDictionary;
         }
     }
 }

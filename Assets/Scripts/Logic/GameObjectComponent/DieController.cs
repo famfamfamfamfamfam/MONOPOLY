@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DieController : MonoBehaviour
@@ -14,6 +15,8 @@ public class DieController : MonoBehaviour
 
     RaycastHit[] hit;
     float maxDistance = 0.5f;
+    Dictionary<Collider, int> pointDictionary;
+    readonly int pointDictBestSize = 6;
 
     bool isOnGround = true;
 
@@ -29,6 +32,7 @@ public class DieController : MonoBehaviour
     void Start()
     {
         hit = new RaycastHit[1];
+        pointDictionary = new Dictionary<Collider, int>(pointDictBestSize * 100 / 75 + 1);
     }
 
     void Update()
@@ -65,7 +69,17 @@ public class DieController : MonoBehaviour
     {
         if (Physics.RaycastNonAlloc(transform.position, Vector3.up, hit, maxDistance, dieDotsMask, QueryTriggerInteraction.Collide) > 0)
         {
-            point = hit[0].collider.GetComponent<IPointOnSide>().point;
+            if (pointDictionary.TryGetValue(hit[0].collider, out int value))
+            {
+                point = value;
+                return;
+            }
+            point = hit[0].collider.GetComponent<DieSidePointProperty>().point;
+            pointDictionary.Add(hit[0].collider, point);
+            if (pointDictionary.Count == pointDictBestSize)
+            {
+                pointDictionary.TrimExcess();
+            }
         }
     }
 
