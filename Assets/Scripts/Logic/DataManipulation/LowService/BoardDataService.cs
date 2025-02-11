@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class BoardDataService : IBusTicketBoardService, ISpaceBoardService
+public class BoardDataService
 {
     BoardData data;
     public BoardDataService(BoardData data)
@@ -9,9 +9,9 @@ public class BoardDataService : IBusTicketBoardService, ISpaceBoardService
         this.data = data;
     }
 
-    public void GiveBusTicket(out int ticketValue)
+    public void GiveBusTicket(out int ticketIndex)
     {
-        SetUpToGive(data.currentTakableBusTickets, out ticketValue);
+        SetUpToGive(data.currentTakableBusTickets, out ticketIndex);
     }
     public bool GiftASpace(out int spaceIndex)
     {
@@ -31,25 +31,13 @@ public class BoardDataService : IBusTicketBoardService, ISpaceBoardService
         holder.RemoveAt(randomIndex);
     }
 
-    public void TakeBackBusTicket(int ticket)
+    public void TakeBackBusTicket(int ticketIndex)
     {
-        data.currentTakableBusTickets.Add(ticket);
+        data.currentTakableBusTickets.Add(ticketIndex);
     }
 
     public void GrantSpace(int spaceIndex)
     {
         data.currentPurchasableSpaces.Remove(spaceIndex);
     }
-}
-
-public interface IBusTicketBoardService
-{
-    void GiveBusTicket(out int ticketValue);
-    void TakeBackBusTicket(int ticket);
-}
-
-public interface ISpaceBoardService
-{
-    bool GiftASpace(out int spaceIndex);
-    void GrantSpace(int spaceIndex);
 }

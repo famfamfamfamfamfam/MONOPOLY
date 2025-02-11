@@ -2,16 +2,22 @@ using System;
 
 public class PlayerDataService
 {
-    public void AddAsset(PlayerData data, IAsset asset, Action stationCostUpdate)
+    PlayerData[] allPlayersData;
+    public PlayerDataService(PlayerData[] playersData)
     {
-        data.assets.Add(asset);
+        allPlayersData = playersData;
+    }
+
+    public void AddAsset(int playerIndex, IAsset asset, Action stationCostUpdate)
+    {
+        allPlayersData[playerIndex].assets.Add(asset);
         switch (asset.type)
         {
             case IAsset.AssetType.Station:
-                OnAddAStation(data, stationCostUpdate);
+                OnAddAStation(allPlayersData[playerIndex], stationCostUpdate);
                 return;
             case IAsset.AssetType.Company:
-                OnAddACompany(data);
+                OnAddACompany(allPlayersData[playerIndex]);
                 return;
         }
     }
@@ -31,59 +37,81 @@ public class PlayerDataService
         data.currentCompanyCount++;
     }
 
-    public void KeepTicket(PlayerData data, int ticket)
+    public void KeepTicket(int playerIndex, int ticketIndex)
     {
-        data.busTickets.Add(ticket);
+        allPlayersData[playerIndex].busTickets.Add(ticketIndex);
     }
 
-    public void GiveBackTicket(PlayerData data, int ticket)
+    public void GiveBackTicket(int playerIndex, int ticketIndex)
     {
-        data.busTickets.Remove(ticket);
+        allPlayersData[playerIndex].busTickets.Remove(ticketIndex);
     }
 
-    public bool IsOwner(PlayerData data, IAsset asset)
+    public bool IsOwner(int playerIndex, IAsset asset)
     {
-        return data.assets.Contains(asset);
+        return allPlayersData[playerIndex].assets.Contains(asset);
     }
 
-    public void SetCurrentCoin(PlayerData data, int addValue)
+    public void SetCurrentCoin(int playerIndex, int addValue)
     {
-        data.currentCoin += addValue;
+        allPlayersData[playerIndex].currentCoin += addValue;
     }
 
-    public int GetDicePoint(PlayerData data)
+    public void ChangeAllPlayersCoin(int changeValue)
     {
-        return data.currentDicePoint;
+        for(int i = 0; i < allPlayersData.Length; i++)
+        {
+            SetCurrentCoin(i, changeValue);
+        }
     }
 
-    public void SetDicePoint(PlayerData data, int point)
+    public void ChangePlayersCoinWithSelection(int accessorIndex, int changeValue, int divisorForTheOthers = 1)
     {
-        data.currentDicePoint = point;
+        for (int i = 0; i < allPlayersData.Length; i++)
+        {
+            if (i == accessorIndex)
+            {
+                SetCurrentCoin(accessorIndex, changeValue);
+                continue;
+            }
+            SetCurrentCoin(accessorIndex, -changeValue / divisorForTheOthers);
+        }
     }
 
-    public int GetCurrentCompanyCount(PlayerData data)
+
+    public int GetDicePoint(int playerIndex)
     {
-        return data.currentCompanyCount;
+        return allPlayersData[playerIndex].currentDicePoint;
     }
 
-    public int GetCurrentStationCount(PlayerData data)
+    public void SetDicePoint(int playerIndex, int point)
     {
-        return data.currentStationCount;
+        allPlayersData[playerIndex].currentDicePoint = point;
     }
 
-    public bool IsInJail(PlayerData data)
+    public int GetCurrentCompanyCount(int playerIndex)
     {
-        return data.isInJail;
+        return allPlayersData[playerIndex].currentCompanyCount;
     }
 
-    public void BeInJail(PlayerData data)
+    public int GetCurrentStationCount(int playerIndex)
     {
-        data.isInJail = true;
+        return allPlayersData[playerIndex].currentStationCount;
     }
 
-    public void QuitFromJail(PlayerData data)
+    public bool IsInJail(int playerIndex)
     {
-        data.isInJail = false;
+        return allPlayersData[playerIndex].isInJail;
+    }
+
+    public void BeInJail(int playerIndex)
+    {
+        allPlayersData[playerIndex].isInJail = true;
+    }
+
+    public void QuitFromJail(int playerIndex)
+    {
+        allPlayersData[playerIndex].isInJail = false;
     }
 
 }
