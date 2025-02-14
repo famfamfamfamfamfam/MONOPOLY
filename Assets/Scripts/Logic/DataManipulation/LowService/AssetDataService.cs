@@ -1,18 +1,42 @@
 using System;
 using UnityEngine;
 
+public class AssetDataRepo
+{
+    AssetData[] assetsData;
+    public AssetDataRepo(AssetData[] assetsData)
+    {
+        this.assetsData = assetsData;
+    }
+    public AssetData GetData(int index)
+    {
+        return assetsData[index];
+    }
+}
+
+public class AssetRentCostAccessor
+{
+    AssetDataRepo assetDataRepo;
+    public AssetRentCostAccessor(AssetDataRepo repo)
+    {
+        assetDataRepo = repo;
+    }
+    public int GetRentCost(int assetIndex)
+    {
+        return assetDataRepo.GetData(assetIndex).currentRentCost;
+    }
+}
+
 public abstract class AssetDataService<T>
 {
     protected readonly T config;
-    protected AssetDataService(T config)
+    protected AssetDataRepo assetDataRepo;
+    protected AssetDataService(T config, AssetDataRepo repo = null)
     {
         this.config = config;
+        assetDataRepo = repo;
     }
 
-    public int GetRentCost(AssetData data)
-    {
-        return data.currentRentCost;
-    }
     protected void SetRentCost(AssetData data, int addValue)
     {
         data.currentRentCost += addValue;
@@ -23,7 +47,7 @@ public abstract class AssetDataService<T>
 
 public class PropertyDataService : AssetDataService<PropertyConfig>
 {
-    public PropertyDataService(PropertyConfig config) : base(config) { }
+    public PropertyDataService(PropertyConfig config, AssetDataRepo repo) : base(config, repo) { }
 
     public enum BuildType : byte
     {
@@ -31,8 +55,14 @@ public class PropertyDataService : AssetDataService<PropertyConfig>
         Upgrade
     }
 
-    public void AddBuilding(PropertyData data, BuildType type)
+    public void AddBuilding(int propertyIndex, BuildType type)
     {
+        PropertyData data = assetDataRepo.GetData(propertyIndex) as PropertyData;
+        if (data == null)
+        {
+            Debug.LogError("Not a property");
+            return;
+        }
         if (data.currentBuildingCount == config.maxBuildingInSpace)
         {
             Debug.LogError("No build cause of reaching max");
@@ -59,10 +89,16 @@ public class PropertyDataService : AssetDataService<PropertyConfig>
 
 public class CompanyDataService : AssetDataService<CompaniesConfig>
 {
-    public CompanyDataService(CompaniesConfig config) : base(config) { }
+    public CompanyDataService(CompaniesConfig config, AssetDataRepo repo) : base(config, repo) { }
 
-    public void UpdateRentCost(CompanyData data, int dicePoint, int companyCount)
+    public void UpdateRentCost(int companyIndex, int dicePoint, int companyCount)
     {
+        CompanyData data = assetDataRepo.GetData(companyIndex) as CompanyData;
+        if (data == null)
+        {
+            Debug.LogError("Not a company");
+            return;
+        }
         if (companyCount == 0)
         {
             Debug.LogError("Has no company");
