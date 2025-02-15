@@ -57,27 +57,17 @@ public class PlayerDataService
         allPlayersData[playerIndex].currentCoin += addValue;
     }
 
-    public void ChangeAllPlayersCoin(int changeValue)
-    {
-        for(int i = 0; i < allPlayersData.Length; i++)
-        {
-            SetCurrentCoin(i, changeValue);
-        }
-    }
-
-    public void ChangePlayersCoinWithSelection(int accessorIndex, int changeValue, int divisorForTheOthers = 1)
+    public void IterateAllPlayers(Action<int> actionForEachPlayer, Func<bool> canBreak = null)
     {
         for (int i = 0; i < allPlayersData.Length; i++)
         {
-            if (i == accessorIndex)
+            actionForEachPlayer.Invoke(i);
+            if (canBreak != null && canBreak.Invoke())
             {
-                SetCurrentCoin(accessorIndex, changeValue);
-                continue;
+                break;
             }
-            SetCurrentCoin(accessorIndex, -changeValue / divisorForTheOthers);
         }
     }
-
 
     public int GetDicePoint(int playerIndex)
     {

@@ -21,14 +21,29 @@ public class CommunityChestService : CardService<CommunityChestsConfig>
         playerService = service;
         communityActions = new()
         {
-            { CommunityChestsConfig.CommunityChest.MoneyChangeType.AllChange,
-                (_, value) => playerService.ChangeAllPlayersCoin(value) },
+            { CommunityChestsConfig.CommunityChest.MoneyChangeType.AllChange, 
+                (_, value) => playerService.IterateAllPlayers(indexInLoop => ChangeAllPlayersCoin(value, indexInLoop)) },
             { CommunityChestsConfig.CommunityChest.MoneyChangeType.Opposite,
-                (index, value) => playerService.ChangePlayersCoinWithSelection(index, value) },
+                (index, value) => playerService.IterateAllPlayers(indexInLoop => ChangePlayersCoinWithSelection(index, value, indexInLoop)) },
             { CommunityChestsConfig.CommunityChest.MoneyChangeType.Donate,
-                (index, value) => playerService.ChangePlayersCoinWithSelection(index, value, gameConfig.playerCount - 1) }
+                (index, value) => playerService.IterateAllPlayers(indexInLoop => ChangePlayersCoinWithSelection(index, value, indexInLoop, gameConfig.playerCount - 1)) }
         };
         communityActions.TrimExcess();
+    }
+
+    void ChangeAllPlayersCoin(int changeValue, int currentIndexInLoop)
+    {
+        playerService.SetCurrentCoin(currentIndexInLoop, changeValue);
+    }
+
+    void ChangePlayersCoinWithSelection(int accessorIndex, int changeValue, int currentIndexInLoop, int divisorForTheOthers = 1)
+    {
+        if (currentIndexInLoop == accessorIndex)
+        {
+            playerService.SetCurrentCoin(accessorIndex, changeValue);
+            return;
+        }
+        playerService.SetCurrentCoin(accessorIndex, -changeValue / divisorForTheOthers);
     }
 
     public override void TriggerACard(int accessorIndex)

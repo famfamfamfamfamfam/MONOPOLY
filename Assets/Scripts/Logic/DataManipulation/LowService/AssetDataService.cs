@@ -1,40 +1,31 @@
 using System;
 using UnityEngine;
 
-public class AssetDataRepo
+public class AssetAccessor
 {
     AssetData[] assetsData;
-    public AssetDataRepo(AssetData[] assetsData)
+    public AssetAccessor(AssetData[] assetsData)
     {
         this.assetsData = assetsData;
     }
-    public AssetData GetData(int index)
-    {
-        return assetsData[index];
-    }
-}
-
-public class AssetRentCostAccessor
-{
-    AssetDataRepo assetDataRepo;
-    public AssetRentCostAccessor(AssetDataRepo repo)
-    {
-        assetDataRepo = repo;
-    }
     public int GetRentCost(int assetIndex)
     {
-        return assetDataRepo.GetData(assetIndex).currentRentCost;
+        return assetsData[assetIndex].currentRentCost;
+    }
+    public IAsset GetAsset(int assetIndex)
+    {
+        return assetsData[assetIndex] as IAsset;
     }
 }
 
 public abstract class AssetDataService<T>
 {
     protected readonly T config;
-    protected AssetDataRepo assetDataRepo;
-    protected AssetDataService(T config, AssetDataRepo repo = null)
+    protected AssetData[] assetsData;
+    protected AssetDataService(T config, AssetData[] assetsData = null)
     {
         this.config = config;
-        assetDataRepo = repo;
+        this.assetsData = assetsData;
     }
 
     protected void SetRentCost(AssetData data, int addValue)
@@ -47,7 +38,7 @@ public abstract class AssetDataService<T>
 
 public class PropertyDataService : AssetDataService<PropertyConfig>
 {
-    public PropertyDataService(PropertyConfig config, AssetDataRepo repo) : base(config, repo) { }
+    public PropertyDataService(PropertyConfig config, AssetData[] assetsData) : base(config, assetsData) { }
 
     public enum BuildType : byte
     {
@@ -57,7 +48,7 @@ public class PropertyDataService : AssetDataService<PropertyConfig>
 
     public void AddBuilding(int propertyIndex, BuildType type)
     {
-        PropertyData data = assetDataRepo.GetData(propertyIndex) as PropertyData;
+        PropertyData data = assetsData[propertyIndex] as PropertyData;
         if (data == null)
         {
             Debug.LogError("Not a property");
@@ -89,11 +80,11 @@ public class PropertyDataService : AssetDataService<PropertyConfig>
 
 public class CompanyDataService : AssetDataService<CompaniesConfig>
 {
-    public CompanyDataService(CompaniesConfig config, AssetDataRepo repo) : base(config, repo) { }
+    public CompanyDataService(CompaniesConfig config, AssetData[] assetsData) : base(config, assetsData) { }
 
     public void UpdateRentCost(int companyIndex, int dicePoint, int companyCount)
     {
-        CompanyData data = assetDataRepo.GetData(companyIndex) as CompanyData;
+        CompanyData data = assetsData[companyIndex] as CompanyData;
         if (data == null)
         {
             Debug.LogError("Not a company");

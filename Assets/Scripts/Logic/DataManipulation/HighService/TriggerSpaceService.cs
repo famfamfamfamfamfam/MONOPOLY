@@ -12,7 +12,7 @@ public class TriggerSpaceService
         public ChanceService chanceService;
         public BusTicketService busService;
         public CompanyDataService companyService;
-        public AssetRentCostAccessor assetService;
+        public AssetAccessor assetService;
 
         public PlayerDataService playerService;
     }
@@ -32,6 +32,7 @@ public class TriggerSpaceService
         {
             return;
         }
+        TriggerPurchasableSpaces(playerIndex, spaceIndex);
     }
     void TriggerEventSpaces(int spaceIndex, out bool hasTriggered)
     {
@@ -42,9 +43,30 @@ public class TriggerSpaceService
             hasTriggered = true;
         }
     }
-    void TriggerPurchasableSpaces()
+    void TriggerPurchasableSpaces(int playerIndex, int spaceIndex)
     {
-
+        bool canBreak = false;
+        inputs.playerService.IterateAllPlayers(currentIndex => ActionOnAssetOwnership(playerIndex, spaceIndex, currentIndex, out canBreak), () => canBreak);
+    }
+    void ActionOnAssetOwnership(int playerIndex, int spaceIndex, int indexInLoop, out bool canBreak)
+    {
+        canBreak = false;
+        if (inputs.playerService.IsOwner(indexInLoop, inputs.assetService.GetAsset(spaceIndex)))
+        {
+            canBreak = true;
+            if (playerIndex == indexInLoop)
+            {
+                return;
+            }
+            if (inputs.companies.spacesIndices.Contains(spaceIndex))
+            {
+                CompanyCost(indexInLoop, playerIndex, spaceIndex);
+            }
+            else
+            {
+                Cost(indexInLoop, playerIndex, spaceIndex);
+            }
+        }
     }
 
     void CompanyCost(int lessorIndex, int lesseeIndex, int companyIndex)
