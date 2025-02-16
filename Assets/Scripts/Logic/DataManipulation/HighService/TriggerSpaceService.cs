@@ -46,11 +46,17 @@ public class TriggerSpaceService
     void TriggerPurchasableSpaces(int playerIndex, int spaceIndex)
     {
         bool canBreak = false;
-        inputs.playerService.IterateAllPlayers(currentIndex => ActionOnAssetOwnership(playerIndex, spaceIndex, currentIndex, out canBreak), () => canBreak);
+        bool isPurchased = true;
+        inputs.playerService.IterateAllPlayers(
+            currentIndex => ActionOnAssetOwnership(playerIndex, spaceIndex, ref isPurchased, currentIndex, ref canBreak),
+            () => canBreak);
+        if (!isPurchased)
+        {
+            
+        }
     }
-    void ActionOnAssetOwnership(int playerIndex, int spaceIndex, int indexInLoop, out bool canBreak)
+    void ActionOnAssetOwnership(int playerIndex, int spaceIndex, ref bool isPurchased, int indexInLoop, ref bool canBreak)
     {
-        canBreak = false;
         if (inputs.playerService.IsOwner(indexInLoop, inputs.assetService.GetAsset(spaceIndex)))
         {
             canBreak = true;
@@ -66,7 +72,9 @@ public class TriggerSpaceService
             {
                 Cost(indexInLoop, playerIndex, spaceIndex);
             }
+            return;
         }
+        isPurchased = false;
     }
 
     void CompanyCost(int lessorIndex, int lesseeIndex, int companyIndex)

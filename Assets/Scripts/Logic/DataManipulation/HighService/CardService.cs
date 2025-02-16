@@ -146,18 +146,22 @@ public class BusTicketService : CardService<BusTicketsConfig>
         stations = inputs.stations;
         playerService = inputs.playerService;
         boardService = inputs.boardService;
-        busTicketActions = new Action[BusTicketsConfig.NUMBER_OF_TICKET_TYPE];
-        busTicketActions[BusTicketsConfig.GO_TO_JAIL]
+
+        int actionCount = Enum.GetValues(typeof(BusTicketsConfig.InstantUseTicket)).Length
+            + Enum.GetValues(typeof(BusTicketsConfig.KeepToUseTicket)).Length;
+        busTicketActions = new Action[actionCount];
+        
+        busTicketActions[(byte)BusTicketsConfig.InstantUseTicket.GoToJail]
             = () => inputs.moveAction.Invoke(inputs.jail.position, inputs.jail.indexFromGoSpace);
-        busTicketActions[BusTicketsConfig.RANDOM_UTILITY_SPACE]
+        busTicketActions[(byte)BusTicketsConfig.InstantUseTicket.RandomUtilitySpace]
             = () => GoToAUtility(inputs);
-        busTicketActions[BusTicketsConfig.GO_SPACE]
+        busTicketActions[(byte)BusTicketsConfig.InstantUseTicket.GoSpace]
             = () => inputs.moveAction.Invoke(inputs.goSpace.position, inputs.goSpace.indexFromGoSpace);
-        busTicketActions[BusTicketsConfig.THIRD_DIE_ROLL]
+        busTicketActions[(byte)BusTicketsConfig.KeepToUseTicket.ThirdDieRoll]
             = () => inputs.rollThirdDieAndStepAction.Invoke();
-        busTicketActions[BusTicketsConfig.AUCTION_SPACE]
+        busTicketActions[(byte)BusTicketsConfig.KeepToUseTicket.AuctionSpace]
             = () => inputs.moveAction.Invoke(inputs.auctionSpace.position, inputs.auctionSpace.indexFromGoSpace);
-        busTicketActions[BusTicketsConfig.QUIT_FROM_JAIL]
+        busTicketActions[(byte)BusTicketsConfig.KeepToUseTicket.QuitFromJail]
             = () => inputs.moveAction.Invoke(inputs.prison.position, inputs.prison.indexFromGoSpace);
     }
 
@@ -211,12 +215,12 @@ public class BusTicketService : CardService<BusTicketsConfig>
     {
         if (isInstantUseTicket)
         {
-            latestActionAccessKey = (int)cardsConfig.instantUseTickets[ticketIndex];
+            latestActionAccessKey = (byte)cardsConfig.instantUseTickets[ticketIndex];
             busTicketActions[latestActionAccessKey].Invoke();
         }
         else
         {
-            latestActionAccessKey = (int)cardsConfig.keepToUseTickets[ticketIndex % cardsConfig.instantUseTickets.Length];
+            latestActionAccessKey = (byte)cardsConfig.keepToUseTickets[ticketIndex % cardsConfig.instantUseTickets.Length];
             busTicketActions[latestActionAccessKey].Invoke();
             playerService.GiveBackTicket(accessorIndex, ticketIndex);
         }
