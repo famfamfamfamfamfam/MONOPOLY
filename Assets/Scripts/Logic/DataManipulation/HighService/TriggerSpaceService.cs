@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class TriggerSpaceService
 {
@@ -8,38 +9,71 @@ public class TriggerSpaceService
         public CompaniesConfig companies;
         public StationsConfig stations;
 
+        public TaxConfig taxConfig;
+        public TaxConfig surtaxConfig;
+
+        public Vector3 theJailPosition;
+        public Action<Vector3> moveToJail;
+
         public CommunityChestService communityService;
         public ChanceService chanceService;
         public BusTicketService busService;
         public CompanyDataService companyService;
+        public StationDataService stationService;
         public AssetAccessor assetService;
-
+        public BoardDataService boardService;
         public PlayerDataService playerService;
     }
 
     ConstructorParams inputs;
-    Action[] actionOnEventSpaces;
+    Action<int>[] actionOnEventSpaces;
     public TriggerSpaceService(ConstructorParams inputs)
     {
         this.inputs = inputs;
-        actionOnEventSpaces = new Action[Enum.GetValues(typeof(EventType)).Length];
+        actionOnEventSpaces = new Action<int>[Enum.GetValues(typeof(EventType)).Length];
+        actionOnEventSpaces[(byte)EventType.Nontrigger] = _ => { };
+        actionOnEventSpaces[(byte)EventType.CommunityChest] = index => inputs.communityService.TriggerACard(index);
+        actionOnEventSpaces[(byte)EventType.Chance] = index => inputs.chanceService.TriggerACard(index);
+        actionOnEventSpaces[(byte)EventType.BusTicket] = index => inputs.busService.TriggerACard(index);
+        actionOnEventSpaces[(byte)EventType.GotoJail] = index => GoToJail(index);
+        actionOnEventSpaces[(byte)EventType.Tax] = index => inputs.playerService.SetCurrentCoin(index, -inputs.taxConfig.cost);
+        actionOnEventSpaces[(byte)EventType.Surtax] = index => inputs.playerService.SetCurrentCoin(index, -inputs.surtaxConfig.cost);
+        actionOnEventSpaces[(byte)EventType.GiftReceive] = index => {};
+        actionOnEventSpaces[(byte)EventType.Auction] = index => { };
+    }
+
+    void GoToJail(int prisonerIndex)
+    {
+        inputs.moveToJail.Invoke(inputs.theJailPosition);
+        inputs.playerService.BeInJail(prisonerIndex);
+    }
+    void GiftReceive(int receiverIndex)
+    {
+        if (inputs.boardService.GiftASpace(out int giftIndex))
+        {
+            inputs.boardService.GrantSpace(giftIndex);
+            inputs.playerService.AddAsset(receiverIndex,
+                inputs.assetService.GetAsset(giftIndex),
+                // sai logic
+                () => inputs.stationService.IncreaseRentCost((StationData)inputs.assetService.GetAsset(giftIndex), out bool a));
+        }
     }
 
     public void TriggerSpace(int playerIndex, int spaceIndex)
     {
-        TriggerEventSpaces(spaceIndex, out bool hasTriggered);
+        TriggerEventSpaces(playerIndex, spaceIndex, out bool hasTriggered);
         if (hasTriggered)
         {
             return;
         }
         TriggerPurchasableSpaces(playerIndex, spaceIndex);
     }
-    void TriggerEventSpaces(int spaceIndex, out bool hasTriggered)
+    void TriggerEventSpaces(int playerIndex, int spaceIndex, out bool hasTriggered)
     {
         hasTriggered = false;
         if (inputs.eventSpaces.eventDictionary.TryGetValue(spaceIndex, out EventType theEvent))
         {
-            actionOnEventSpaces[(int)theEvent].Invoke();
+            actionOnEventSpaces[(byte)theEvent].Invoke(playerIndex);
             hasTriggered = true;
         }
     }

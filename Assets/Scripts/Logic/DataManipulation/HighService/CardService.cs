@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 public abstract class CardService<T>
@@ -126,7 +126,7 @@ public class BusTicketService : CardService<BusTicketsConfig>
         public StationsConfig stations;
         public SpaceConfig goSpace;
         public SpaceConfig auctionSpace;
-        public SpaceConfig jail;
+        public SpaceConfig goToJailSpace;
         public SpaceConfig prison;
         public PlayerDataService playerService;
         public BoardDataService boardService;
@@ -139,7 +139,7 @@ public class BusTicketService : CardService<BusTicketsConfig>
     PlayerDataService playerService;
     BoardDataService boardService;
     Action[] busTicketActions;
-    int latestActionAccessKey;
+    int latestActionAccessKey; // để kích hoạt hành động sau khi di chuyển vì action của bus ticket chỉ di chuyển
     public BusTicketService(ConstructorParams inputs) : base(inputs.config)
     {
         companies = inputs.companies;
@@ -152,7 +152,7 @@ public class BusTicketService : CardService<BusTicketsConfig>
         busTicketActions = new Action[actionCount];
         
         busTicketActions[(byte)BusTicketsConfig.InstantUseTicket.GoToJail]
-            = () => inputs.moveAction.Invoke(inputs.jail.position, inputs.jail.indexFromGoSpace);
+            = () => inputs.moveAction.Invoke(inputs.goToJailSpace.position, inputs.goToJailSpace.indexFromGoSpace);
         busTicketActions[(byte)BusTicketsConfig.InstantUseTicket.RandomUtilitySpace]
             = () => GoToAUtility(inputs);
         busTicketActions[(byte)BusTicketsConfig.InstantUseTicket.GoSpace]

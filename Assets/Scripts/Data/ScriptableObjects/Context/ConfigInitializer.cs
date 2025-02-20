@@ -37,9 +37,9 @@ public class ConfigInitializer
         public SpaceConfig[] purchasableSpaces;
     }
 
-    public ConfigInitializer(out ConstructorParams output)
+    public ConfigInitializer(out ConstructorParams outputs)
     {
-        output = new ConstructorParams()
+        outputs = new ConstructorParams()
         {
             gameConfig = Resources.Load<GlobalConfig>(globalConfigPath),
             playersConfig = Resources.Load<PlayerGeneralConfig>(playerGeneralConfigPath),
