@@ -4,9 +4,11 @@ using System.Collections.Generic;
 public abstract class CardService<T>
 {
     protected T cardsConfig;
-    protected CardService(T config)
+    protected PlayerDataService playerService;
+    protected CardService(T config, PlayerDataService service)
     {
         cardsConfig = config;
+        playerService = service;
     }
 
     public abstract void TriggerACard(int accessorIndex);
@@ -14,9 +16,8 @@ public abstract class CardService<T>
 
 public class CommunityChestService : CardService<CommunityChestsConfig>
 {
-    PlayerDataService playerService;
     Dictionary<CommunityChestsConfig.CommunityChest.MoneyChangeType, Action<int, int>> communityActions;
-    public CommunityChestService(CommunityChestsConfig config, GlobalConfig gameConfig, PlayerDataService service) : base(config)
+    public CommunityChestService(CommunityChestsConfig config, GlobalConfig gameConfig, PlayerDataService service) : base(config, service)
     {
         playerService = service;
         communityActions = new()
@@ -69,10 +70,9 @@ public class ChanceService : CardService<ChancesConfig>
     }
 
     int chanceCardCount;
-    PlayerDataService playerService;
     Action triggerCommunityCard;
     Action triggerBusTicket;
-    public ChanceService(ConstructorParams inputs) : base(inputs.config)
+    public ChanceService(ConstructorParams inputs) : base(inputs.config, inputs.service)
     {
         chanceCardCount = inputs.gameConfig.chanceCard;
         playerService = inputs.service;
@@ -136,11 +136,10 @@ public class BusTicketService : CardService<BusTicketsConfig>
 
     CompaniesConfig companies;
     StationsConfig stations;
-    PlayerDataService playerService;
     BoardDataService boardService;
     Action[] busTicketActions;
     int latestActionAccessKey; // để kích hoạt hành động sau khi di chuyển vì action của bus ticket chỉ di chuyển
-    public BusTicketService(ConstructorParams inputs) : base(inputs.config)
+    public BusTicketService(ConstructorParams inputs) : base(inputs.config, inputs.playerService)
     {
         companies = inputs.companies;
         stations = inputs.stations;

@@ -39,7 +39,7 @@ public class SpaceGroupConfig : ScriptableObject
                     }
                     else
                     {
-                        Debug.LogError("This group is not an event spaces group");
+                        Debug.LogAssertion("This group is not an event spaces group");
                         return null;
                     }
                 }

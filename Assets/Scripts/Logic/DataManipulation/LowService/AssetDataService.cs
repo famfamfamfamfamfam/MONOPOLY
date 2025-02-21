@@ -16,6 +16,10 @@ public class AssetAccessor
     {
         return assetsData[assetIndex] as IAsset;
     }
+    public T GetAsset<T>(int assetIndex) where T : AssetData
+    {
+        return assetsData[assetIndex] as T;
+    }
 }
 
 public abstract class AssetDataService<T>
@@ -51,7 +55,7 @@ public class PropertyDataService : AssetDataService<PropertyConfig>
         PropertyData data = assetsData[propertyIndex] as PropertyData;
         if (data == null)
         {
-            Debug.LogError("Not a property");
+            Debug.LogAssertion("Not a property");
             return;
         }
         if (data.currentBuildingCount == config.maxBuildingInSpace)
@@ -87,17 +91,17 @@ public class CompanyDataService : AssetDataService<CompaniesConfig>
         CompanyData data = assetsData[companyIndex] as CompanyData;
         if (data == null)
         {
-            Debug.LogError("Not a company");
+            Debug.LogAssertion("Not a company");
             return;
         }
         if (companyCount == 0)
         {
-            Debug.LogError("Has no company");
+            Debug.LogAssertion("Has no company");
             return;
         }
         if (companyCount > config.companyCount || companyCount < 0)
         {
-            Debug.LogError("Invalid number of company");
+            Debug.LogAssertion("Invalid number of company");
             return;
         }
         if (companyCount == 1)
@@ -124,16 +128,14 @@ public class StationDataService : AssetDataService<StationsConfig>
         maxRentCost = (int)Mathf.Pow(config.rentCostScaleFactor, config.stationCount - 1) * config.eachInitialRentCost;
     }
 
-    public void IncreaseRentCost(StationData data, out bool hasIncreased)
+    public void IncreaseRentCost(StationData data)
     {
         if (data.currentRentCost == maxRentCost)
         {
-            Debug.LogError("Station rent cost has reached max");
-            hasIncreased = false;
+            Debug.LogAssertion("Station rent cost has reached max");
             return;
         }
         SetRentCost(data, data.currentRentCost * (config.rentCostScaleFactor - 1));
-        hasIncreased = true;
     }
 
     public override void BePurchased(Action<int> payToPurchase)

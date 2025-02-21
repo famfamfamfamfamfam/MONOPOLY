@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
 
-public class TriggerSpaceService
+public class TriggerSpaceService // có thể cần tách thành các composition
 {
     public struct ConstructorParams
     {
@@ -38,8 +38,8 @@ public class TriggerSpaceService
         actionOnEventSpaces[(byte)EventType.GotoJail] = index => GoToJail(index);
         actionOnEventSpaces[(byte)EventType.Tax] = index => inputs.playerService.SetCurrentCoin(index, -inputs.taxConfig.cost);
         actionOnEventSpaces[(byte)EventType.Surtax] = index => inputs.playerService.SetCurrentCoin(index, -inputs.surtaxConfig.cost);
-        actionOnEventSpaces[(byte)EventType.GiftReceive] = index => {};
-        actionOnEventSpaces[(byte)EventType.Auction] = index => { };
+        actionOnEventSpaces[(byte)EventType.GiftReceive] = index => ReceiveGift(index);
+        actionOnEventSpaces[(byte)EventType.Auction] = index => Debug.LogWarning("COMING");
     }
 
     void GoToJail(int prisonerIndex)
@@ -47,15 +47,31 @@ public class TriggerSpaceService
         inputs.moveToJail.Invoke(inputs.theJailPosition);
         inputs.playerService.BeInJail(prisonerIndex);
     }
-    void GiftReceive(int receiverIndex)
+
+    void ReceiveGift(int receiverIndex)
     {
         if (inputs.boardService.GiftASpace(out int giftIndex))
         {
-            inputs.boardService.GrantSpace(giftIndex);
-            inputs.playerService.AddAsset(receiverIndex,
-                inputs.assetService.GetAsset(giftIndex),
-                // sai logic
-                () => inputs.stationService.IncreaseRentCost((StationData)inputs.assetService.GetAsset(giftIndex), out bool a));
+            PlayerOwnsSpace(receiverIndex, giftIndex);
+        }
+    }
+
+    void PlayerOwnsSpace(int playerIndex, int spaceIndex)
+    {
+        inputs.boardService.GrantSpace(spaceIndex);
+        inputs.playerService.AddAsset(playerIndex,
+            inputs.assetService.GetAsset(spaceIndex),
+            () => SetUpStationRentCost(playerIndex));
+    }
+    void SetUpStationRentCost(int ownerIndex)
+    {
+        foreach (var index in inputs.stations.spacesIndices)
+        {
+            StationData currentStation = inputs.assetService.GetAsset<StationData>(index);
+            if (inputs.playerService.IsOwner(ownerIndex, currentStation))
+            {
+                inputs.stationService.IncreaseRentCost(currentStation);
+            }
         }
     }
 
@@ -86,7 +102,7 @@ public class TriggerSpaceService
             () => canBreak);
         if (!isPurchased)
         {
-            
+            PlayerOwnsSpace(playerIndex, spaceIndex);
         }
     }
     void ActionOnAssetOwnership(int playerIndex, int spaceIndex, ref bool isPurchased, int indexInLoop, ref bool canBreak)
