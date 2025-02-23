@@ -18,6 +18,7 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         public CommunityChestService communityService;
         public ChanceService chanceService;
         public BusTicketService busService;
+        public PropertyDataService propertyService;
         public CompanyDataService companyService;
         public StationDataService stationService;
         public AssetAccessor assetService;
@@ -27,6 +28,8 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
 
     ConstructorParams inputs;
     Action<int>[] actionOnEventSpaces;
+    Action<int> setUpStationRentCost;
+    Action<int> payToPurchase;
     public TriggerSpaceService(ConstructorParams inputs)
     {
         this.inputs = inputs;
@@ -40,6 +43,19 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         actionOnEventSpaces[(byte)EventType.Surtax] = index => inputs.playerService.SetCurrentCoin(index, -inputs.surtaxConfig.cost);
         actionOnEventSpaces[(byte)EventType.GiftReceive] = index => ReceiveGift(index);
         actionOnEventSpaces[(byte)EventType.Auction] = index => Debug.LogWarning("COMING");
+
+        setUpStationRentCost = ownerIndex =>
+        {
+            foreach (var index in inputs.stations.spacesIndices)
+            {
+                StationData currentStation = inputs.assetService.GetAsset<StationData>(index);
+                if (inputs.playerService.IsOwner(ownerIndex, currentStation))
+                {
+                    inputs.stationService.IncreaseRentCost(currentStation);
+                }
+            }
+        };
+        payToPurchase = cost => inputs.playerService.SetCurrentCoin(0, -cost);
     }
 
     void GoToJail(int prisonerIndex)
@@ -61,18 +77,7 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         inputs.boardService.GrantSpace(spaceIndex);
         inputs.playerService.AddAsset(playerIndex,
             inputs.assetService.GetAsset(spaceIndex),
-            () => SetUpStationRentCost(playerIndex));
-    }
-    void SetUpStationRentCost(int ownerIndex)
-    {
-        foreach (var index in inputs.stations.spacesIndices)
-        {
-            StationData currentStation = inputs.assetService.GetAsset<StationData>(index);
-            if (inputs.playerService.IsOwner(ownerIndex, currentStation))
-            {
-                inputs.stationService.IncreaseRentCost(currentStation);
-            }
-        }
+            setUpStationRentCost);
     }
 
     public void TriggerSpace(int playerIndex, int spaceIndex)
@@ -102,6 +107,10 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
             () => canBreak);
         if (!isPurchased)
         {
+            inputs.propertyService.SetCurrentPropertyIndex(spaceIndex);
+            inputs.assetService.PickTheService(
+                spaceIndex, inputs.propertyService, inputs.stationService, inputs.companyService
+                ).BePurchased(payToPurchase);
             PlayerOwnsSpace(playerIndex, spaceIndex);
         }
     }

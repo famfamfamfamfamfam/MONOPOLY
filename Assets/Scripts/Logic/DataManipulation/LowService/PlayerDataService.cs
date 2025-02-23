@@ -8,13 +8,13 @@ public class PlayerDataService
         allPlayersData = playersData;
     }
 
-    public void AddAsset(int playerIndex, IAsset asset, Action stationCostUpdate)
+    public void AddAsset(int playerIndex, IAsset asset, Action<int> stationCostUpdate)
     {
         allPlayersData[playerIndex].assets.Add(asset);
         switch (asset.type)
         {
             case IAsset.AssetType.Station:
-                OnAddAStation(allPlayersData[playerIndex], stationCostUpdate);
+                OnAddAStation(playerIndex, stationCostUpdate);
                 return;
             case IAsset.AssetType.Company:
                 OnAddACompany(allPlayersData[playerIndex]);
@@ -22,14 +22,14 @@ public class PlayerDataService
         }
     }
 
-    void OnAddAStation(PlayerData data, Action stationCostUpdate)
+    void OnAddAStation(int playerIndex, Action<int> stationCostUpdate)
     {
-        if (data.currentStationCount == 0)
+        if (allPlayersData[playerIndex].currentStationCount == 0)
         {
-            data.currentStationCount++;
+            allPlayersData[playerIndex].currentStationCount++;
             return;
         }
-        stationCostUpdate.Invoke();
+        stationCostUpdate.Invoke(playerIndex);
     }
 
     void OnAddACompany(PlayerData data)

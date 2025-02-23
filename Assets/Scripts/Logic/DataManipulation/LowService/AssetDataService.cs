@@ -20,9 +20,27 @@ public class AssetAccessor
     {
         return assetsData[assetIndex] as T;
     }
+    public IAssetDataService PickTheService(int assetIndex, PropertyDataService propertyService, StationDataService stationService, CompanyDataService companyService)
+    {
+        switch (assetsData[assetIndex])
+        {
+            case PropertyData property:
+                return propertyService;
+            case StationData station:
+                return stationService;
+            case CompanyData company:
+                return companyService;
+            default:
+                Debug.LogAssertion("Not a valid asset");
+                return null;
+        }
+    }
 }
-
-public abstract class AssetDataService<T>
+public interface IAssetDataService
+{
+    void BePurchased(Action<int> payToPurchase);
+}
+public abstract class AssetDataService<T> : IAssetDataService
 {
     protected readonly T config;
     protected AssetData[] assetsData;
@@ -40,9 +58,10 @@ public abstract class AssetDataService<T>
     public abstract void BePurchased(Action<int> payToPurchase);
 }
 
-public class PropertyDataService : AssetDataService<PropertyConfig>
+public class PropertyDataService : AssetDataService<PropertyConfig[]>
 {
-    public PropertyDataService(PropertyConfig config, AssetData[] assetsData) : base(config, assetsData) { }
+    int currentPropertyIndex;
+    public PropertyDataService(PropertyConfig[] configs, AssetData[] assetsData) : base(configs, assetsData) { }
 
     public enum BuildType : byte
     {
@@ -58,7 +77,7 @@ public class PropertyDataService : AssetDataService<PropertyConfig>
             Debug.LogAssertion("Not a property");
             return;
         }
-        if (data.currentBuildingCount == config.maxBuildingInSpace)
+        if (data.currentBuildingCount == config[propertyIndex].maxBuildingInSpace)
         {
             Debug.LogError("No build cause of reaching max");
             return;
@@ -67,18 +86,22 @@ public class PropertyDataService : AssetDataService<PropertyConfig>
         switch (type)
         {
             case BuildType.BuildNew:
-                SetRentCost(data, config.rentCostIncreaseAfterBuild);
+                SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterBuild);
                 return;
             case BuildType.Upgrade:
-                data.currentBuildingCount -= config.upgradeThreshold - 1;
-                SetRentCost(data, config.rentCostIncreaseAfterUpgrade);
+                data.currentBuildingCount -= config[propertyIndex].upgradeThreshold - 1;
+                SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterUpgrade);
                 return;
         }
     }
 
+    public void SetCurrentPropertyIndex(int propertyIndex)
+    {
+        currentPropertyIndex = propertyIndex;
+    }
     public override void BePurchased(Action<int> payToPurchase)
     {
-        payToPurchase.Invoke(config.purchaseCost);
+        payToPurchase.Invoke(config[currentPropertyIndex].purchaseCost);
     }
 }
 

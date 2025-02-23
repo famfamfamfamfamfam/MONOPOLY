@@ -34,7 +34,7 @@ public class ConfigInitializer
         public SpaceConfig gotoJailSpace;
         public SpaceConfig prisonVisitSpace;
         public SpaceConfig auctionSpace;
-        public SpaceConfig[] purchasableSpaces;
+        public PropertyConfig[] propertySpaces;
     }
 
     public ConfigInitializer(out ConstructorParams outputs)
@@ -47,7 +47,7 @@ public class ConfigInitializer
             companiesConfig = Resources.Load<CompaniesConfig>(companyGroupPath),
             stationsConfig = Resources.Load<StationsConfig>(stationGroupPath),
 
-            purchasableSpaces = Resources.LoadAll<SpaceConfig>(purchasableSpacesPath),
+            propertySpaces = Resources.LoadAll<PropertyConfig>(purchasableSpacesPath),
 
             eventSpaceGroup = Resources.Load<SpaceGroupConfig>(eventSpaceGroupPath),
             taxConfig = Resources.Load<TaxConfig>(taxSpacePath),
