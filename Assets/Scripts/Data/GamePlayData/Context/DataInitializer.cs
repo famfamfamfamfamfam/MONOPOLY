@@ -1,8 +1,11 @@
+using System.Diagnostics;
+
 public class DataInitializer
 {
     public struct ConstructorParams
     {
         public GlobalConfig gameConfig;
+        public PlayerGeneralConfig playersConfig;
         public SpaceGroupConfig eventSpaces;
         public CompaniesConfig companies;
         public StationsConfig stations;
@@ -12,10 +15,18 @@ public class DataInitializer
     public DataInitializer(ConstructorParams configs, out PlayerData[] playersData, out AssetData[] assetsData, out BoardData boardData)
     {
         playersData = new PlayerData[configs.gameConfig.playerCount];
-        assetsData = new AssetData[configs.gameConfig.spaceCount];
+        for (int i = 0; i < playersData.Length; i++)
+        {
+            playersData[i] = new PlayerData(configs.playersConfig);
+        }
 
+        assetsData = new AssetData[configs.gameConfig.spaceCount];
         foreach (var property in configs.properties)
         {
+            if (property == null)
+            {
+                continue;
+            }
             assetsData[property.indexFromGoSpace] = new PropertyData(property);
         }
         for (int i = 0; i < assetsData.Length; i++)

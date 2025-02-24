@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 public class PlayerDataService
 {
@@ -55,6 +56,7 @@ public class PlayerDataService
     public void SetCurrentCoin(int playerIndex, int addValue)
     {
         allPlayersData[playerIndex].currentCoin += addValue;
+        UnityEngine.Debug.Log(allPlayersData[playerIndex].currentCoin);
     }
 
     public void IterateAllPlayers(Action<int> actionForEachPlayer, Func<bool> canBreak = null)

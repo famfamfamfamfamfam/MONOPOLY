@@ -112,6 +112,7 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
                 spaceIndex, inputs.propertyService, inputs.stationService, inputs.companyService
                 ).BePurchased(payToPurchase);
             PlayerOwnsSpace(playerIndex, spaceIndex);
+            Debug.Log("Purchased");
         }
     }
     void ActionOnAssetOwnership(int playerIndex, int spaceIndex, ref bool isPurchased, int indexInLoop, ref bool canBreak)

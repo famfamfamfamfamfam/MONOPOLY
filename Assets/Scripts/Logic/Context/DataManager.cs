@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    GlobalConfig gameConfig;
+    ConfigInitializer configInitializer;
+    ConfigInitializer.ConstructorParams configs;
     TriggerSpaceService triggerSpaceService;
     PlayerDataService playerService;
     PlayerData[] playersData;
@@ -10,13 +11,13 @@ public class DataManager : MonoBehaviour
     void Start()
     {
         #region Create Configs
-        ConfigInitializer configInitializer = new ConfigInitializer(out ConfigInitializer.ConstructorParams configs);
-        gameConfig = configs.gameConfig;
+        configInitializer = new ConfigInitializer(out configs);
         #endregion
         #region Create Datas
         DataInitializer.ConstructorParams inputForData = new DataInitializer.ConstructorParams()
         {
-            gameConfig = gameConfig,
+            gameConfig = configs.gameConfig,
+            playersConfig = configs.playersConfig,
             eventSpaces = configs.eventSpaceGroup,
             companies = configs.companiesConfig,
             stations = configs.stationsConfig,
@@ -29,12 +30,12 @@ public class DataManager : MonoBehaviour
 
         BoardDataService boardService = new BoardDataService(boardData);
 
-        CommunityChestService communityService = new CommunityChestService(configs.communityCards, gameConfig, playerService);
+        CommunityChestService communityService = new CommunityChestService(configs.communityCards, configs.gameConfig, playerService);
         
         ChanceService.ConstructorParams inputForChanceService = new ChanceService.ConstructorParams()
         {
             config = configs.chanceCards,
-            gameConfig = gameConfig,
+            gameConfig = configs.gameConfig,
             service = playerService,
             triggerCommunityCard = () => Debug.Log("Trigger Community Card"),
             triggerBusTicket = () => Debug.Log("Trigger Bus Ticket")
@@ -86,10 +87,29 @@ public class DataManager : MonoBehaviour
 
     public void TriggerSpace(int playerIndex, ref int spaceIndex)
     {
-        if (spaceIndex == gameConfig.spaceCount)
+        if (spaceIndex == configs.gameConfig.spaceCount)
         {
             spaceIndex = 0;
         }
         triggerSpaceService.TriggerSpace(playerIndex, spaceIndex);
+    }
+
+    int curPosIndex;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            curPosIndex++;
+            Debug.Log(curPosIndex);
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TriggerSpace(0, ref curPosIndex);
+        }
+    }
+
+    private void OnDisable()
+    {
+        configInitializer.UnloadAssets(configs);
     }
 }

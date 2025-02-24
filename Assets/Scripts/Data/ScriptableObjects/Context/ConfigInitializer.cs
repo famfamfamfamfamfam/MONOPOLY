@@ -47,8 +47,6 @@ public class ConfigInitializer
             companiesConfig = Resources.Load<CompaniesConfig>(companyGroupPath),
             stationsConfig = Resources.Load<StationsConfig>(stationGroupPath),
 
-            propertySpaces = Resources.LoadAll<PropertyConfig>(purchasableSpacesPath),
-
             eventSpaceGroup = Resources.Load<SpaceGroupConfig>(eventSpaceGroupPath),
             taxConfig = Resources.Load<TaxConfig>(taxSpacePath),
             surtaxConfig = Resources.Load<TaxConfig>(surtaxSpacePath),
@@ -61,5 +59,34 @@ public class ConfigInitializer
             chanceCards = Resources.Load<ChancesConfig>(chanceCardsPath),
             busTickets = Resources.Load<BusTicketsConfig>(busTicketsPath),
         };
+
+        PropertyConfig[] temp = Resources.LoadAll<PropertyConfig>(purchasableSpacesPath);
+        outputs.propertySpaces = new PropertyConfig[outputs.gameConfig.spaceCount];
+        foreach (var property in temp)
+        {
+            outputs.propertySpaces[property.indexFromGoSpace] = property;
+        }
+    }
+
+    public void UnloadAssets(ConstructorParams inputs)
+    {
+        Resources.UnloadAsset(inputs.gameConfig);
+        Resources.UnloadAsset(inputs.playersConfig);
+        Resources.UnloadAsset(inputs.companiesConfig);
+        Resources.UnloadAsset(inputs.stationsConfig);
+        Resources.UnloadAsset(inputs.eventSpaceGroup);
+        Resources.UnloadAsset(inputs.taxConfig);
+        Resources.UnloadAsset(inputs.surtaxConfig);
+        Resources.UnloadAsset(inputs.goSpace);
+        Resources.UnloadAsset(inputs.gotoJailSpace);
+        Resources.UnloadAsset(inputs.prisonVisitSpace);
+        Resources.UnloadAsset(inputs.auctionSpace);
+        Resources.UnloadAsset(inputs.communityCards);
+        Resources.UnloadAsset(inputs.chanceCards);
+        Resources.UnloadAsset(inputs.busTickets);
+        foreach (var property in inputs.propertySpaces)
+        {
+            Resources.UnloadAsset(property);
+        }
     }
 }

@@ -102,6 +102,7 @@ public class PropertyDataService : AssetDataService<PropertyConfig[]>
     public override void BePurchased(Action<int> payToPurchase)
     {
         payToPurchase.Invoke(config[currentPropertyIndex].purchaseCost);
+        Debug.Log("Be purchasing property with " + config[currentPropertyIndex].purchaseCost);
     }
 }
 
