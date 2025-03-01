@@ -31,17 +31,7 @@ public class DataManager : MonoBehaviour
         BoardDataService boardService = new BoardDataService(boardData);
 
         CommunityChestService communityService = new CommunityChestService(configs.communityCards, configs.gameConfig, playerService);
-        
-        ChanceService.ConstructorParams inputForChanceService = new ChanceService.ConstructorParams()
-        {
-            config = configs.chanceCards,
-            gameConfig = configs.gameConfig,
-            service = playerService,
-            triggerCommunityCard = () => Debug.Log("Trigger Community Card"),
-            triggerBusTicket = () => Debug.Log("Trigger Bus Ticket")
-        };
-        ChanceService chanceService = new ChanceService(inputForChanceService);
-        
+
         BusTicketService.ConstructorParams inputForBusService = new BusTicketService.ConstructorParams()
         {
             config = configs.busTickets,
@@ -57,7 +47,17 @@ public class DataManager : MonoBehaviour
             rollThirdDieAndStepAction = () => Debug.Log("Roll third die and step")
         };
         BusTicketService busService = new BusTicketService(inputForBusService);
-        
+
+        ChanceService.ConstructorParams inputForChanceService = new ChanceService.ConstructorParams()
+        {
+            config = configs.chanceCards,
+            gameConfig = configs.gameConfig,
+            service = playerService,
+            triggerCommunityCard = index => communityService.TriggerACard(index),
+            triggerBusTicket = index => busService.TriggerACard(index)
+        };
+        ChanceService chanceService = new ChanceService(inputForChanceService);
+                
         AssetAccessor assetService = new AssetAccessor(assetsData);
         PropertyDataService propertyService = new PropertyDataService(configs.propertySpaces, assetsData);
         CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, assetsData);

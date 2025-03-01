@@ -21,13 +21,13 @@ public class DataInitializer
         }
 
         assetsData = new AssetData[configs.gameConfig.spaceCount];
-        foreach (var property in configs.properties)
+        for (int i = 0; i < configs.properties.Length; i++)
         {
-            if (property == null)
+            if (configs.properties[i] == null)
             {
                 continue;
             }
-            assetsData[property.indexFromGoSpace] = new PropertyData(property);
+            assetsData[i] = new PropertyData(configs.properties[i]);
         }
         for (int i = 0; i < assetsData.Length; i++)
         {

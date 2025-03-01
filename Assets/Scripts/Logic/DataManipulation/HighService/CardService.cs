@@ -12,6 +12,7 @@ public abstract class CardService<T>
     }
 
     public abstract void TriggerACard(int accessorIndex);
+    // các collection để ánh xạ các Action trong các lớp con có thể cần được thiết kế lại, tuân thủ OCP
 }
 
 public class CommunityChestService : CardService<CommunityChestsConfig>
@@ -23,7 +24,7 @@ public class CommunityChestService : CardService<CommunityChestsConfig>
         communityActions = new()
         {
             { CommunityChestsConfig.CommunityChest.MoneyChangeType.AllChange, 
-                (_, value) => playerService.IterateAllPlayers(indexInLoop => ChangeAllPlayersCoin(value, indexInLoop)) },
+                (_, value) => playerService.IterateAllPlayers(indexInLoop => ChangeEveryPlayerCoin(value, indexInLoop)) },
             { CommunityChestsConfig.CommunityChest.MoneyChangeType.Opposite,
                 (index, value) => playerService.IterateAllPlayers(indexInLoop => ChangePlayersCoinWithSelection(index, value, indexInLoop)) },
             { CommunityChestsConfig.CommunityChest.MoneyChangeType.Donate,
@@ -32,24 +33,30 @@ public class CommunityChestService : CardService<CommunityChestsConfig>
         communityActions.TrimExcess();
     }
 
-    void ChangeAllPlayersCoin(int changeValue, int currentIndexInLoop)
+    void ChangeEveryPlayerCoin(int changeValue, int currentIndexInLoop)
     {
+        UnityEngine.Debug.Log("ChangeEveryPlayerCoin-method runs from CommunityChestService");
         playerService.SetCurrentCoin(currentIndexInLoop, changeValue);
     }
 
     void ChangePlayersCoinWithSelection(int accessorIndex, int changeValue, int currentIndexInLoop, int divisorForTheOthers = 1)
     {
+        UnityEngine.Debug.Log("ChangePlayersCoinWithSelection-method runs from CommunityChestService");
         if (currentIndexInLoop == accessorIndex)
         {
             playerService.SetCurrentCoin(accessorIndex, changeValue);
+            UnityEngine.Debug.Log("Card drawer's coin changed by " + changeValue);
             return;
         }
         playerService.SetCurrentCoin(accessorIndex, -changeValue / divisorForTheOthers);
+        UnityEngine.Debug.Log($"Coin of the player at index {accessorIndex} changed by {-changeValue / divisorForTheOthers}");
     }
 
     public override void TriggerACard(int accessorIndex)
     {
+        UnityEngine.Debug.Log("TriggerACard-method runs from CommunityChestService");
         CommunityChestsConfig.CommunityChest card = GetRandomCard();
+        UnityEngine.Debug.Log($"Got a community chest : {card.moneyChange} with {card.value}");
         communityActions[card.moneyChange].Invoke(accessorIndex, card.value);
     }
     CommunityChestsConfig.CommunityChest GetRandomCard()
@@ -65,13 +72,13 @@ public class ChanceService : CardService<ChancesConfig>
         public ChancesConfig config;
         public GlobalConfig gameConfig;
         public PlayerDataService service;
-        public Action triggerCommunityCard;
-        public Action triggerBusTicket;
+        public Action<int> triggerCommunityCard;
+        public Action<int> triggerBusTicket;
     }
 
     int chanceCardCount;
-    Action triggerCommunityCard;
-    Action triggerBusTicket;
+    Action<int> triggerCommunityCard;
+    Action<int> triggerBusTicket;
     public ChanceService(ConstructorParams inputs) : base(inputs.config, inputs.service)
     {
         chanceCardCount = inputs.gameConfig.chanceCard;
@@ -82,36 +89,42 @@ public class ChanceService : CardService<ChancesConfig>
 
     public override void TriggerACard(int accessorIndex)
     {
-        int index = GetRandomCardIndex(out bool isChangeCardIndex);
+        UnityEngine.Debug.Log("TriggerACard-method runs from ChanceService");
+        int cardIndex = GetRandomCardIndex(out bool isChangeCardIndex);
         if (isChangeCardIndex)
         {
-            TriggerNewCard(index);
+            TriggerNewCard(accessorIndex, cardIndex);
         }
         else
         {
-            playerService.SetCurrentCoin(accessorIndex, cardsConfig.changeMoneyValues[index]);
+            playerService.SetCurrentCoin(accessorIndex, cardsConfig.changeMoneyValues[cardIndex]);
         }
     }
     int GetRandomCardIndex(out bool isChangeCardIndex)
     {
+        UnityEngine.Debug.Log("GetRandomCardIndex-method runs from ChanceService");
         int result = UnityEngine.Random.Range(0, chanceCardCount);
         if (result < cardsConfig.changeMoneyValues.Length)
         {
             isChangeCardIndex = false;
+            UnityEngine.Debug.Log($"Got a chance card to change coin: {cardsConfig.changeMoneyValues[result]}");
             return result;
         }
         isChangeCardIndex = true;
         return result % cardsConfig.changeMoneyValues.Length;
     }
-    void TriggerNewCard(int index)
+    void TriggerNewCard(int accessorIndex, int cardIndex)
     {
-        switch (cardsConfig.changeCards[index])
+        UnityEngine.Debug.Log("TriggerNewCard-method runs from ChanceService");
+        switch (cardsConfig.changeCards[cardIndex])
         {
             case ChancesConfig.CardChangeType.CommunityChest:
-                triggerCommunityCard.Invoke();
+                UnityEngine.Debug.Log($"Got a chance card : change to a community card");
+                triggerCommunityCard.Invoke(accessorIndex);
                 return;
             case ChancesConfig.CardChangeType.BusTicket:
-                triggerBusTicket.Invoke();
+                UnityEngine.Debug.Log($"Got a chance card : change to a bus ticket");
+                triggerBusTicket.Invoke(accessorIndex);
                 return;
         }
     }
@@ -166,6 +179,7 @@ public class BusTicketService : CardService<BusTicketsConfig>
 
     void GoToAUtility(ConstructorParams inputs)
     {
+        UnityEngine.Debug.Log("GoToAUtility-method runs from BusTicketService");
         int rand = UnityEngine.Random.Range(0, 2);
         if (GetAUtilityPosition(rand, out (UnityEngine.Vector3 pos, int index) newPosition))
         {
@@ -174,6 +188,7 @@ public class BusTicketService : CardService<BusTicketsConfig>
     }
     bool GetAUtilityPosition(int randZeroOrOne, out (UnityEngine.Vector3 pos, int index) result)
     {
+        UnityEngine.Debug.Log("GetAUtilityPosition-method runs from BusTicketService");
         result = default;
         switch (randZeroOrOne)
         {
@@ -193,6 +208,7 @@ public class BusTicketService : CardService<BusTicketsConfig>
 
     public override void TriggerACard(int accessorIndex)
     {
+        UnityEngine.Debug.Log("TriggerACard-method runs from BusTicketService");
         boardService.GiveBusTicket(out int ticketIndex);
         if (ticketIndex < cardsConfig.instantUseTickets.Length)
         {
@@ -214,11 +230,13 @@ public class BusTicketService : CardService<BusTicketsConfig>
     {
         if (isInstantUseTicket)
         {
+            UnityEngine.Debug.Log($"Got a bus ticket : {cardsConfig.instantUseTickets[ticketIndex]}");
             latestActionAccessKey = (byte)cardsConfig.instantUseTickets[ticketIndex];
             busTicketActions[latestActionAccessKey].Invoke();
         }
         else
         {
+            UnityEngine.Debug.Log($"Got a bus ticket : {cardsConfig.instantUseTickets[ticketIndex]}");
             latestActionAccessKey = (byte)cardsConfig.keepToUseTickets[ticketIndex % cardsConfig.instantUseTickets.Length];
             busTicketActions[latestActionAccessKey].Invoke();
             playerService.GiveBackTicket(accessorIndex, ticketIndex);

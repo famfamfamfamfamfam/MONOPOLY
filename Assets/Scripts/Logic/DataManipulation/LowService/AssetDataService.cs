@@ -10,25 +10,33 @@ public class AssetAccessor
     }
     public int GetRentCost(int assetIndex)
     {
+        Debug.Log("GetRentCost-method runs from AssetAccessor");
         return assetsData[assetIndex].currentRentCost;
     }
     public IAsset GetAsset(int assetIndex)
     {
+        Debug.Log("GetAsset(interface)-method runs from AssetAccessor");
         return assetsData[assetIndex] as IAsset;
     }
     public T GetAsset<T>(int assetIndex) where T : AssetData
     {
+        Debug.Log("GetAsset(generic type constrained to AssetData)-method runs from AssetAccessor");
+        Debug.Log("Be returning : " + typeof(T));
         return assetsData[assetIndex] as T;
     }
     public IAssetDataService PickTheService(int assetIndex, PropertyDataService propertyService, StationDataService stationService, CompanyDataService companyService)
     {
+        Debug.Log("PickTheService-method runs from AssetAccessor");
         switch (assetsData[assetIndex])
         {
             case PropertyData property:
+                Debug.Log("Be picking Property");
                 return propertyService;
             case StationData station:
+                Debug.Log("Be picking Station");
                 return stationService;
             case CompanyData company:
+                Debug.Log("Be picking Company");
                 return companyService;
             default:
                 Debug.LogAssertion("Not a valid asset");
@@ -52,7 +60,9 @@ public abstract class AssetDataService<T> : IAssetDataService
 
     protected void SetRentCost(AssetData data, int addValue)
     {
+        Debug.Log("SetRentCost-method runs from AssetDataService");
         data.currentRentCost += addValue;
+        Debug.Log("Rent cost after change : " + data.currentRentCost);
     }
 
     public abstract void BePurchased(Action<int> payToPurchase);
@@ -71,6 +81,7 @@ public class PropertyDataService : AssetDataService<PropertyConfig[]>
 
     public void AddBuilding(int propertyIndex, BuildType type)
     {
+        Debug.Log("AddBuilding-method runs from PropertyDataService");
         PropertyData data = assetsData[propertyIndex] as PropertyData;
         if (data == null)
         {
@@ -87,22 +98,29 @@ public class PropertyDataService : AssetDataService<PropertyConfig[]>
         {
             case BuildType.BuildNew:
                 SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterBuild);
+                Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterBuild);
+                Debug.Log($"There are {data.currentBuildingCount} in property currently");
                 return;
             case BuildType.Upgrade:
                 data.currentBuildingCount -= config[propertyIndex].upgradeThreshold - 1;
                 SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterUpgrade);
+                Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterUpgrade);
+                Debug.Log($"There are {data.currentBuildingCount} in property currently");
                 return;
         }
     }
 
     public void SetCurrentPropertyIndex(int propertyIndex)
     {
+        Debug.Log("SetCurrentPropertyIndex-method runs from PropertyDataService");
+        Debug.Log("Current space index to assign : " + propertyIndex);
         currentPropertyIndex = propertyIndex;
     }
     public override void BePurchased(Action<int> payToPurchase)
     {
+        Debug.Log("BePurchased-method runs from PropertyDataService");
         payToPurchase.Invoke(config[currentPropertyIndex].purchaseCost);
-        Debug.Log("Be purchasing property with " + config[currentPropertyIndex].purchaseCost);
+        Debug.Log("Purchased with " + config[currentPropertyIndex].purchaseCost);
     }
 }
 
@@ -112,6 +130,7 @@ public class CompanyDataService : AssetDataService<CompaniesConfig>
 
     public void UpdateRentCost(int companyIndex, int dicePoint, int companyCount)
     {
+        Debug.Log("UpdateRentCost-method runs from CompanyDataService");
         CompanyData data = assetsData[companyIndex] as CompanyData;
         if (data == null)
         {
@@ -128,6 +147,7 @@ public class CompanyDataService : AssetDataService<CompaniesConfig>
             Debug.LogAssertion("Invalid number of company");
             return;
         }
+        data.currentRentCost = 0;
         if (companyCount == 1)
         {
             SetRentCost(data, dicePoint * config.dicePointMultiplierIfHasOne);
@@ -140,7 +160,9 @@ public class CompanyDataService : AssetDataService<CompaniesConfig>
 
     public override void BePurchased(Action<int> payToPurchase)
     {
+        Debug.Log("BePurchased-method runs from CompanyDataService");
         payToPurchase.Invoke(config.eachPurchaseCost);
+        Debug.Log("Purchased with " + config.eachPurchaseCost);
     }
 }
 
@@ -154,6 +176,7 @@ public class StationDataService : AssetDataService<StationsConfig>
 
     public void IncreaseRentCost(StationData data)
     {
+        Debug.Log("IncreaseRentCost-method runs from StationDataService");
         if (data.currentRentCost == maxRentCost)
         {
             Debug.LogAssertion("Station rent cost has reached max");
@@ -164,6 +187,8 @@ public class StationDataService : AssetDataService<StationsConfig>
 
     public override void BePurchased(Action<int> payToPurchase)
     {
+        Debug.Log("BePurchased-method runs from StationDataService");
         payToPurchase.Invoke(config.eachPurchaseCost);
+        Debug.Log("Purchased with " + config.eachPurchaseCost);
     }
 }
