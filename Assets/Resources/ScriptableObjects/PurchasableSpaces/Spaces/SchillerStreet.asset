@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SchillerStreet
   m_EditorClassIdentifier: 
   indexFromGoSpace: 35
+  position: {x: 0.29, y: 0.01, z: -0.887}
   purchaseCost: 260
   buildCost: 0
   upgradeThreshold: 0

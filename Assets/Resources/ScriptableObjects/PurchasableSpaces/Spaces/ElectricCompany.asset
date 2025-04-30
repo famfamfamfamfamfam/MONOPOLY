@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: ElectricCompany
   m_EditorClassIdentifier: 
   indexFromGoSpace: 17
+  position: {x: -0.48, y: 0.01, z: -0.11}

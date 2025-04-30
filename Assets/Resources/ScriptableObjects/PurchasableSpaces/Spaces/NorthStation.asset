@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: NorthStation
   m_EditorClassIdentifier: 
   indexFromGoSpace: 33
+  position: {x: 0.29, y: 0.01, z: -0.72}

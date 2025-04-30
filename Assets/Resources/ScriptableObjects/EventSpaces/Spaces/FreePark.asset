@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: FreePark
   m_EditorClassIdentifier: 
   indexFromGoSpace: 26
+  position: {x: 0.275, y: 0.01, z: -0.13}
   eventType: 0

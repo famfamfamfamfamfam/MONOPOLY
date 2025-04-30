@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hamburg
   m_EditorClassIdentifier: 
   indexFromGoSpace: 25
+  position: {x: 0.17, y: 0.01, z: -0.11}
   purchaseCost: 200
   buildCost: 0
   upgradeThreshold: 0

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GoetheStreet
   m_EditorClassIdentifier: 
   indexFromGoSpace: 37
+  position: {x: 0.29, y: 0.01, z: -1.05}
   purchaseCost: 280
   buildCost: 0
   upgradeThreshold: 0

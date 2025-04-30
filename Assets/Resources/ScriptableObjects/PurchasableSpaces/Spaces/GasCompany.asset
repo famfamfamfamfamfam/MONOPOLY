@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: GasCompany
   m_EditorClassIdentifier: 
   indexFromGoSpace: 10
+  position: {x: -0.84, y: 0.01, z: -0.39}

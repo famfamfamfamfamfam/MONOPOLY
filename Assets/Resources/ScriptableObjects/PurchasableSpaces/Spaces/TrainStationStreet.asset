@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TrainStationStreet
   m_EditorClassIdentifier: 
   indexFromGoSpace: 44
+  position: {x: -0.155, y: 0.01, z: -1.25}
   purchaseCost: 320
   buildCost: 0
   upgradeThreshold: 0

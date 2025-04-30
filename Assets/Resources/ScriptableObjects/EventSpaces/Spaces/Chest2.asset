@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Chest2
   m_EditorClassIdentifier: 
   indexFromGoSpace: 22
+  position: {x: -0.075, y: 0.01, z: -0.12}
   eventType: 1

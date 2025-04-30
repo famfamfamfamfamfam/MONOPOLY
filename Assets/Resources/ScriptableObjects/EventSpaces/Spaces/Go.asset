@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Go
   m_EditorClassIdentifier: 
   indexFromGoSpace: 0
+  position: {x: -0.83, y: 0.01, z: -1.225}
   eventType: 0

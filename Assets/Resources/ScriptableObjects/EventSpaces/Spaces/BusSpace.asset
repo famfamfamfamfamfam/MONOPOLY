@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BusSpace
   m_EditorClassIdentifier: 
   indexFromGoSpace: 32
+  position: {x: 0.285, y: 0.01, z: -0.64}
   eventType: 3

@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: EastStation
   m_EditorClassIdentifier: 
   indexFromGoSpace: 45
+  position: {x: -0.236, y: 0.01, z: -1.25}

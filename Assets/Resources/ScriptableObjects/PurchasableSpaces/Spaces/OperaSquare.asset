@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: OperaSquare
   m_EditorClassIdentifier: 
   indexFromGoSpace: 30
+  position: {x: 0.29, y: 0.01, z: -0.476}
   purchaseCost: 240
   buildCost: 0
   upgradeThreshold: 0

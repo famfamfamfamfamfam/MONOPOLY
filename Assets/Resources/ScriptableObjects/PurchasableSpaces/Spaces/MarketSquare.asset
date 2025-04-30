@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MarketSquare
   m_EditorClassIdentifier: 
   indexFromGoSpace: 19
+  position: {x: -0.3175, y: 0.01, z: -0.11}
   purchaseCost: 160
   buildCost: 0
   upgradeThreshold: 0

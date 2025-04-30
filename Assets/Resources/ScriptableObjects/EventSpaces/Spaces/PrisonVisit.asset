@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: PrisonVisit
   m_EditorClassIdentifier: 
   indexFromGoSpace: 13
+  position: {x: -0.835, y: 0.01, z: -0.125}
   eventType: 0

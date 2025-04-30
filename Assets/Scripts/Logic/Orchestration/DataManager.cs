@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
@@ -58,7 +58,7 @@ public class DataManager : MonoBehaviour
         };
         ChanceService chanceService = new ChanceService(inputForChanceService);
                 
-        AssetAccessor assetService = new AssetAccessor(assetsData);
+        AssetAccessor assetService = new AssetAccessor(assetsData); //assetsData đã được tạo ở dòng 26
         PropertyDataService propertyService = new PropertyDataService(configs.propertySpaces, assetsData);
         CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, assetsData);
         StationDataService stationService = new StationDataService(configs.stationsConfig);
@@ -85,26 +85,51 @@ public class DataManager : MonoBehaviour
         #endregion
     }
 
-    public void TriggerSpace(int playerIndex, ref int spaceIndex)
+    public void TriggerSpace(int playerIndex, int spaceIndex)
     {
-        if (spaceIndex == configs.gameConfig.spaceCount)
-        {
-            spaceIndex = 0;
-        }
         triggerSpaceService.TriggerSpace(playerIndex, spaceIndex);
     }
 
+    [SerializeField]
+    Transform tempPlayer;
     int curPosIndex;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.V))
         {
             curPosIndex++;
-            Debug.Log(curPosIndex);
+
+            if (configs.eventSpaceGroup.spacesIndices.Contains(curPosIndex % 52))
+            {
+                FindPosAndMove(curPosIndex % 52, configs.eventSpaceGroup.spaces);
+            }
+            else if (configs.companiesConfig.spacesIndices.Contains(curPosIndex % 52))
+            {
+                FindPosAndMove(curPosIndex % 52, configs.companiesConfig.spaces);
+            }
+            else if (configs.stationsConfig.spacesIndices.Contains(curPosIndex % 52))
+            {
+                FindPosAndMove(curPosIndex % 52, configs.stationsConfig.spaces);
+            }
+            else
+            {
+                tempPlayer.position = configs.propertySpaces[curPosIndex % 52].position;
+            }
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            TriggerSpace(0, ref curPosIndex);
+            TriggerSpace(0, curPosIndex % 52);
+        }
+    }
+    void FindPosAndMove(int index, SpaceConfig[] spaces)
+    {
+        for (int i = 0; i < spaces.Length; i++)
+        {
+            if (spaces[i].indexFromGoSpace == index)
+            {
+                tempPlayer.position = spaces[i].position;
+                return;
+            }
         }
     }
 

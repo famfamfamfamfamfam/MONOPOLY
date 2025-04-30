@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: OrangeChance
   m_EditorClassIdentifier: 
   indexFromGoSpace: 46
+  position: {x: -0.318, y: 0.01, z: -1.24}
   eventType: 2

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BlueChance
   m_EditorClassIdentifier: 
   indexFromGoSpace: 28
+  position: {x: 0.285, y: 0.01, z: -0.314}
   eventType: 2

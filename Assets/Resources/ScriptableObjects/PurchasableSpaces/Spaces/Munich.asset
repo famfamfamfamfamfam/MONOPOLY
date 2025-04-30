@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Munich
   m_EditorClassIdentifier: 
   indexFromGoSpace: 21
+  position: {x: -0.157, y: 0.01, z: -0.11}
   purchaseCost: 180
   buildCost: 0
   upgradeThreshold: 0

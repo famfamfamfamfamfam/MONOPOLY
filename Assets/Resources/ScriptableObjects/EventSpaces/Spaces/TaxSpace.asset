@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: TaxSpace
   m_EditorClassIdentifier: 
   indexFromGoSpace: 5
+  position: {x: -0.836, y: 0.01, z: -0.8}
   eventType: 5
   cost: 200

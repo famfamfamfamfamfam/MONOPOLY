@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: SurtaxSpace
   m_EditorClassIdentifier: 
   indexFromGoSpace: 50
+  position: {x: -0.645, y: 0.01, z: -1.24}
   eventType: 6
   cost: 75
