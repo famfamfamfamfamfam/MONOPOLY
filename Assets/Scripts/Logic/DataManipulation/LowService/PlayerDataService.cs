@@ -2,6 +2,7 @@ using System;
 
 public class PlayerDataService
 {
+    public Action<int, int> coinChanged { get; set; }
     PlayerData[] allPlayersData;
     public PlayerDataService(PlayerData[] playersData)
     {
@@ -69,6 +70,7 @@ public class PlayerDataService
         UnityEngine.Debug.Log("SetCurrentCoin-method runs from PlayerDataService");
         allPlayersData[playerIndex].currentCoin += addValue;
         UnityEngine.Debug.Log($"Set coin of the player at index {playerIndex} to {allPlayersData[playerIndex].currentCoin}");
+        coinChanged.Invoke(playerIndex, allPlayersData[playerIndex].currentCoin);
     }
 
     public void IterateAllPlayers(Action<int> actionForEachPlayer, Func<bool> breakCondition = null)

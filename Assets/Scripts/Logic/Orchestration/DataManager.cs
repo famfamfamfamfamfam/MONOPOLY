@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class DataManager : MonoBehaviour
     PlayerDataService playerService;
     PlayerData[] playersData;
     AssetData[] assetsData;
-    void Start()
+    void Awake()
     {
         #region Create Configs
         configInitializer = new ConfigInitializer(out configs);
@@ -57,7 +58,7 @@ public class DataManager : MonoBehaviour
             triggerBusTicket = index => busService.TriggerACard(index)
         };
         ChanceService chanceService = new ChanceService(inputForChanceService);
-                
+
         AssetAccessor assetService = new AssetAccessor(assetsData); //assetsData đã được tạo ở dòng 26
         PropertyDataService propertyService = new PropertyDataService(configs.propertySpaces, assetsData);
         CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, assetsData);
@@ -90,6 +91,7 @@ public class DataManager : MonoBehaviour
         triggerSpaceService.TriggerSpace(playerIndex, spaceIndex);
     }
 
+    #region Test
     [SerializeField]
     Transform tempPlayer;
     int curPosIndex;
@@ -132,6 +134,30 @@ public class DataManager : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region For UI First Implementation
+    public int PlayersInitialCoin()
+    {
+        return configs.playersConfig.initialCoin;
+    }
+
+    public void OnPlayerCoinChange(Action<int, int> onPlayerCoinChange)
+    {
+        playerService.coinChanged = onPlayerCoinChange;
+    }
+
+    public void AskToPurchaseSpace(Action hasChoices)
+    {
+        triggerSpaceService.onNotYetPurchaseSpace = hasChoices;
+    }
+
+    public void PurchaseTheSpace()
+    {
+        triggerSpaceService.PurchaseSpace(0, curPosIndex % 52);
+    }
+
+    #endregion
 
     private void OnDisable()
     {

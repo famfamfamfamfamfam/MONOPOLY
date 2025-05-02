@@ -26,6 +26,8 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         public PlayerDataService playerService;
     }
 
+    public Action onNotYetPurchaseSpace;
+
     ConstructorParams inputs;
     Action<int>[] actionOnEventSpaces;
     Action<int> setUpStationRentCost;
@@ -123,12 +125,7 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
             () => canBreak);
         if (!isPurchased)
         {
-            inputs.propertyService.SetCurrentPropertyIndex(spaceIndex);
-            inputs.assetService.PickTheService(
-                spaceIndex, inputs.propertyService, inputs.stationService, inputs.companyService
-                ).BePurchased(payToPurchase);
-            PlayerOwnsSpace(playerIndex, spaceIndex);
-            Debug.Log("Purchased");
+            onNotYetPurchaseSpace.Invoke();
         }
         else
         {
@@ -177,5 +174,16 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         Debug.Log("Cost-method runs from TriggerSpaceService");
         inputs.playerService.SetCurrentCoin(lesseeIndex, -inputs.assetService.GetRentCost(assetIndex));
         inputs.playerService.SetCurrentCoin(lessorIndex, inputs.assetService.GetRentCost(assetIndex));
+    }
+
+    public void PurchaseSpace(int playerIndex, int spaceIndex)
+    {
+        Debug.Log("PurchaseSpace-method runs from TriggerSpaceService");
+        inputs.propertyService.SetCurrentPropertyIndex(spaceIndex);
+        inputs.assetService.PickTheService(
+            spaceIndex, inputs.propertyService, inputs.stationService, inputs.companyService
+            ).BePurchased(payToPurchase);
+        PlayerOwnsSpace(playerIndex, spaceIndex);
+        Debug.Log("Purchased");
     }
 }
