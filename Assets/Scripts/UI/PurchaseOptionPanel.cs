@@ -1,10 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PurchaseOptionPanel : MonoBehaviour
+public class PurchaseOptionPanel : MonoBehaviour, INeedDriver
 {
-    [SerializeField]
-    DataManager dataManager;
+    public Driver driver { get; set; }
 
     [SerializeField]
     Button noOption;
@@ -15,7 +14,7 @@ public class PurchaseOptionPanel : MonoBehaviour
     {
         yesOption.onClick.AddListener(() =>
         {
-            dataManager.PurchaseTheSpace();
+            driver.PurchaseTheSpace();
             gameObject.SetActive(false);
         });
         noOption.onClick.AddListener(() =>

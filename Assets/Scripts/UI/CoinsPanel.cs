@@ -1,10 +1,9 @@
 using UnityEngine;
 using TMPro;
 
-public class CoinsPanel : MonoBehaviour
+public class CoinsPanel : MonoBehaviour, INeedDriver
 {
-    [SerializeField]
-    DataManager dataManager;
+    public Driver driver { get; set; }
 
     [SerializeField]
     TextMeshProUGUI[] playersCoin;
@@ -13,9 +12,9 @@ public class CoinsPanel : MonoBehaviour
     {
         for (int i = 0; i < playersCoin.Length; i++)
         {
-            UpdateCoin(i, dataManager.PlayersInitialCoin());
+            UpdateCoin(i, driver.PlayersInitialCoin());
         }
-        dataManager.OnPlayerCoinChange(UpdateCoin);
+        driver.OnPlayerCoinChange(UpdateCoin);
     }
 
     void UpdateCoin(int playerIndex, int value)

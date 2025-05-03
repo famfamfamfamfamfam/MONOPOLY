@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PopupManager : MonoBehaviour
+public class PopupManager : MonoBehaviour, INeedDriver
 {
-    [SerializeField]
-    DataManager dataManager;
+    public Driver driver { get; set; }
 
     [SerializeField]
     NotifsPanel notifsPanel;
@@ -14,7 +11,7 @@ public class PopupManager : MonoBehaviour
 
     private void Start()
     {
-        dataManager.AskToPurchaseSpace(() => Show(purchaseOptionPanel.gameObject));
+        driver.AskToPurchaseSpace(() => Show(purchaseOptionPanel.gameObject));
     }
 
     void Pop(GameObject panel, string content, float duration)
