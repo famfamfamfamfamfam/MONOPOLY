@@ -5,6 +5,14 @@ public class CompositionRoot : MonoBehaviour
     [SerializeField]
     DataManager dataManager;
     [SerializeField]
+    InputManager inputManager;
+    [SerializeField]
+    CommunityChestHandler communityChestHandler;
+    [SerializeField]
+    ChanceCardHandler chanceCardHandler;
+    [SerializeField]
+    BusTickerHandler busTickerHandler;
+    [SerializeField]
     GameObject[] needDriverUI;
 
     ConfigInitializer configInitializer;
@@ -77,9 +85,6 @@ public class CompositionRoot : MonoBehaviour
             surtaxConfig = configs.surtaxConfig,
             theJailPosition = Vector3.one,
             moveToJail = position => Debug.Log($"Move to jail at {position}"),
-            communityService = communityService,
-            chanceService = chanceService,
-            busService = busService,
             propertyService = propertyService,
             companyService = companyService,
             stationService = stationService,
@@ -91,6 +96,10 @@ public class CompositionRoot : MonoBehaviour
         #endregion
 
         dataManager.Init(configs, triggerSpaceService);
+        inputManager.Init(triggerSpaceService);
+        communityChestHandler.Init(communityService);
+        chanceCardHandler.Init(chanceService);
+        busTickerHandler.Init(busService);
         Driver driver = new Driver(dataManager, playerService, triggerSpaceService, configs.playersConfig.initialCoin);
         for (int i = 0; i < needDriverUI.Length; i++)
         {

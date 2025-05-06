@@ -35,6 +35,11 @@ public class Driver
         triggerSpaceService.PurchaseSpace(0, dataManager.curPosIndex % 52);
     }
 
+    public void Notif(Action<string> notif)
+    {
+        triggerSpaceService.hasNotif = notif;
+    }
+
 }
 
 public interface INeedDriver

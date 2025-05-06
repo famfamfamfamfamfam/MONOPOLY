@@ -43,3 +43,9 @@ public class NotifsPanel : MonoBehaviour, ITransientPopup
         fadeDuration = -1f;
     }
 }
+
+public interface ITransientPopup
+{
+    void SetFadeDuration(float duration);
+    void DisplayContent(string content);
+}

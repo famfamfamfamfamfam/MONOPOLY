@@ -12,6 +12,7 @@ public class PopupManager : MonoBehaviour, INeedDriver
     private void Start()
     {
         driver.AskToPurchaseSpace(() => Show(purchaseOptionPanel.gameObject));
+        driver.Notif(notifContent => Pop(notifsPanel.gameObject, notifContent, 2f));
     }
 
     void Pop(GameObject panel, string content, float duration)
@@ -26,10 +27,4 @@ public class PopupManager : MonoBehaviour, INeedDriver
     {
         panel.SetActive(true);
     }
-}
-
-public interface ITransientPopup
-{
-    void SetFadeDuration(float duration);
-    void DisplayContent(string content);
 }

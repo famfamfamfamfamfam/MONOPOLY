@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class TriggerSpaceService // có thể cần tách thành các composition
+public class TriggerSpaceService // some low cohesion, có thể cần tách thành các composition
 {
     public struct ConstructorParams
     {
@@ -15,9 +15,6 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         public Vector3 theJailPosition;
         public Action<Vector3> moveToJail;
 
-        public CommunityChestService communityService;
-        public ChanceService chanceService;
-        public BusTicketService busService;
         public PropertyDataService propertyService;
         public CompanyDataService companyService;
         public StationDataService stationService;
@@ -27,6 +24,8 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
     }
 
     public Action onNotYetPurchaseSpace;
+    public Action<string> hasNotif;
+    public Action<int, EventType> waitForTriggerCard;
 
     ConstructorParams inputs;
     Action<int>[] actionOnEventSpaces;
@@ -37,10 +36,22 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         this.inputs = inputs;
         actionOnEventSpaces = new Action<int>[Enum.GetValues(typeof(EventType)).Length];
         actionOnEventSpaces[(byte)EventType.Nontrigger] = _ => Debug.Log("Nontrigger-action runs from TriggerSpaceService");
-        actionOnEventSpaces[(byte)EventType.CommunityChest] = index => inputs.communityService.TriggerACard(index);
-        actionOnEventSpaces[(byte)EventType.Chance] = index => inputs.chanceService.TriggerACard(index);
-        actionOnEventSpaces[(byte)EventType.BusTicket] = index => inputs.busService.TriggerACard(index);
-        actionOnEventSpaces[(byte)EventType.GotoJail] = index => GoToJail(index);
+        actionOnEventSpaces[(byte)EventType.CommunityChest] = index => 
+        {
+            hasNotif.Invoke(EventType.CommunityChest.ToString());
+            waitForTriggerCard.Invoke(index, EventType.CommunityChest);
+        };
+        actionOnEventSpaces[(byte)EventType.Chance] = index =>
+        {
+            hasNotif.Invoke(EventType.Chance.ToString());
+            waitForTriggerCard.Invoke(index, EventType.Chance);
+        };
+        actionOnEventSpaces[(byte)EventType.BusTicket] = index =>
+        {
+            hasNotif.Invoke(EventType.BusTicket.ToString());
+            waitForTriggerCard.Invoke(index, EventType.BusTicket);
+        };
+        actionOnEventSpaces[(byte)EventType.GotoJail] = index => GoToJail(index, EventType.GotoJail.ToString());
         actionOnEventSpaces[(byte)EventType.Tax] = index => inputs.playerService.SetCurrentCoin(index, -inputs.taxConfig.cost);
         actionOnEventSpaces[(byte)EventType.Surtax] = index => inputs.playerService.SetCurrentCoin(index, -inputs.surtaxConfig.cost);
         actionOnEventSpaces[(byte)EventType.GiftReceive] = index => ReceiveGift(index);
@@ -62,11 +73,12 @@ public class TriggerSpaceService // có thể cần tách thành các compositio
         payToPurchase = cost => inputs.playerService.SetCurrentCoin(0, -cost);
     }
 
-    void GoToJail(int prisonerIndex)
+    void GoToJail(int prisonerIndex, string theNotif)
     {
         Debug.Log("GoToJail-method runs from TriggerSpaceService");
         inputs.moveToJail.Invoke(inputs.theJailPosition);
         inputs.playerService.BeInJail(prisonerIndex);
+        hasNotif.Invoke(theNotif);
     }
 
     void ReceiveGift(int receiverIndex)

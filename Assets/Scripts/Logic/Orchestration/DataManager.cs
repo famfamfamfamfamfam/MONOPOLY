@@ -11,12 +11,11 @@ public class DataManager : MonoBehaviour
         this.triggerSpaceService = triggerSpaceService;
     }
 
-    public void TriggerSpace(int playerIndex, int spaceIndex)
+    void TriggerSpace(int playerIndex, int spaceIndex)
     {
         triggerSpaceService.TriggerSpace(playerIndex, spaceIndex);
     }
 
-    #region Test
     [SerializeField]
     Transform tempPlayer;
     public int curPosIndex;
@@ -59,5 +58,4 @@ public class DataManager : MonoBehaviour
             }
         }
     }
-    #endregion
 }
