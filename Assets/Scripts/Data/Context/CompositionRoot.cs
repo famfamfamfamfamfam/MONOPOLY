@@ -72,7 +72,7 @@ public class CompositionRoot : MonoBehaviour
         };
         ChanceService chanceService = new ChanceService(inputForChanceService);
 
-        AssetAccessor assetService = new AssetAccessor(assetsData); //assetsData đã được tạo ở dòng 26
+        AssetAccessor assetService = new AssetAccessor(assetsData); //assetsData được tạo ở dòng 26
         PropertyDataService propertyService = new PropertyDataService(configs.propertySpaces, assetsData);
         CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, assetsData);
         StationDataService stationService = new StationDataService(configs.stationsConfig);

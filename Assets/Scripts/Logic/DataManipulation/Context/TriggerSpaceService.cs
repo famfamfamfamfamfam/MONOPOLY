@@ -135,7 +135,7 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
         inputs.playerService.IterateAllPlayers(
             currentIndex => ActionOnAssetOwnership(playerIndex, spaceIndex, ref isPurchased, currentIndex, ref canBreak),
             () => canBreak);
-        if (!isPurchased)
+        if (!isPurchased)//cần xem lại, biến bool này có thể đang bị đổi quá sớm
         {
             onNotYetPurchaseSpace.Invoke();
         }
