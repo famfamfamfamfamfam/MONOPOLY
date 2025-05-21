@@ -8,6 +8,8 @@ public class InfoDisplayManager : MonoBehaviour
     TMP_Dropdown optionsDropdown;
     [SerializeField]
     GameObject[] assetsLists; // kéo vào theo đúng thứ tự của options trong dropdown
+    string closeLabel = "Close";
+    string lookUpLabel = "Look up";
 
     public void PrepareToUnfold(Action<GameObject> activePanels)
     {
@@ -15,7 +17,12 @@ public class InfoDisplayManager : MonoBehaviour
             {
                 DeactiveAll();
                 if (optionIndex == 0)
+                {
+                    optionsDropdown.options[0].text = lookUpLabel;
+                    optionsDropdown.RefreshShownValue();
                     return;
+                }
+                optionsDropdown.options[0].text = closeLabel;
                 //trừ chỉ số option đi 1 vì option đầu tiên được dùng làm tiêu đề
                 activePanels(assetsLists[optionIndex - 1]);
             }

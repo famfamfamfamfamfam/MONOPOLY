@@ -1,25 +1,27 @@
+using System;
 using UnityEngine;
 
-public class ChanceCardHandler : MonoBehaviour
+public class ChanceCardHandler : CardHandler
 {
-    [SerializeField]
-    LayerMask chanceCardsMask;
-    [SerializeField]
-    float maxDistanceOfRaycast;
     ChanceService chanceService;
-    int currentPlayerIndex;
+
+    RaycastHit[] _hit;
+    protected override RaycastHit[] hits => _hit;
+
     public void Init(ChanceService chanceSv)
     {
         chanceService = chanceSv;
+        _hit = new RaycastHit[1];
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), maxDistanceOfRaycast, chanceCardsMask))
+            if (HasClickedOn())
             {
                 chanceService.TriggerACard(currentPlayerIndex);
+                onFinishCardTrigger.Invoke();
                 gameObject.SetActive(false);
             }
         }

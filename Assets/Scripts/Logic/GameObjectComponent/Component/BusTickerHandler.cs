@@ -1,27 +1,27 @@
+using System;
 using UnityEngine;
 
-public class BusTickerHandler : MonoBehaviour
+public class BusTickerHandler : CardHandler
 {
-    [SerializeField]
-    LayerMask busTicketsMask;
-    [SerializeField]
-    float maxDistanceOfRaycast;
-
     BusTicketService busTicketService;
-    int currentPlayerIndex;
+
+    RaycastHit[] _hit;
+    protected override RaycastHit[] hits => _hit;
 
     public void Init(BusTicketService busSv)
     {
         busTicketService = busSv;
+        _hit = new RaycastHit[1];
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), maxDistanceOfRaycast, busTicketsMask))
+            if (HasClickedOn())
             {
                 busTicketService.TriggerACard(currentPlayerIndex);
+                onFinishCardTrigger.Invoke();
                 gameObject.SetActive(false);
             }
         }

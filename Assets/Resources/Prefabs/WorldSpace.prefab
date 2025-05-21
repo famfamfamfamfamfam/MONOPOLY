@@ -1144,7 +1144,7 @@ GameObject:
   - component: {fileID: 5559681603583699738}
   - component: {fileID: 8713234800519086742}
   - component: {fileID: 7368427268827106334}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Die
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1232,6 +1232,9 @@ MonoBehaviour:
   dieDotsMask:
     serializedVersion: 2
     m_Bits: 128
+  _dieType:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!1 &414504210870146442
 GameObject:
   m_ObjectHideFlags: 0
@@ -1664,6 +1667,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2464160607679439935}
+  - component: {fileID: 4800930171935920288}
   m_Layer: 0
   m_Name: WorldSpace
   m_TagString: Untagged
@@ -1690,6 +1694,22 @@ Transform:
   - {fileID: 6954736761620797620}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4800930171935920288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670287824088936888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66c68246c94c63742957f0bb083aaf15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  theRefs:
+  - {fileID: 397307070133225600}
+  - {fileID: 4182106859068068748}
+  - {fileID: 6315419781543469863}
 --- !u!1 &704541718533497324
 GameObject:
   m_ObjectHideFlags: 0
@@ -9352,7 +9372,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6954736761620797620}
-  - component: {fileID: 1113164350186364755}
   m_Layer: 0
   m_Name: Interactable
   m_TagString: Untagged
@@ -9378,18 +9397,6 @@ Transform:
   - {fileID: 8385315393787578359}
   m_Father: {fileID: 2464160607679439935}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1113164350186364755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2165636875293572060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e7b0776bdca4b2439e77eb93f2847c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2169429117705108966
 GameObject:
   m_ObjectHideFlags: 0
@@ -17758,7 +17765,7 @@ GameObject:
   - component: {fileID: 1445530233098340712}
   - component: {fileID: 1714540528752678391}
   - component: {fileID: 3686703828734078522}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Die (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17846,6 +17853,9 @@ MonoBehaviour:
   dieDotsMask:
     serializedVersion: 2
     m_Bits: 128
+  _dieType:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!1 &4211126047975003889
 GameObject:
   m_ObjectHideFlags: 0
@@ -27825,7 +27835,7 @@ GameObject:
   - component: {fileID: 2988182670286909661}
   - component: {fileID: 5645860212497746670}
   - component: {fileID: 9038513307427527754}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ThirdDie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27921,6 +27931,9 @@ MonoBehaviour:
   dieDotsMask:
     serializedVersion: 2
     m_Bits: 128
+  _dieType:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &6321729031748411953
 GameObject:
   m_ObjectHideFlags: 0

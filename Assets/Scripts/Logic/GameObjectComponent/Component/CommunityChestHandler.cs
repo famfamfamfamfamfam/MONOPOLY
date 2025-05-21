@@ -1,26 +1,26 @@
 using UnityEngine;
 
-public class CommunityChestHandler : MonoBehaviour
+public class CommunityChestHandler : CardHandler
 {
-    [SerializeField]
-    LayerMask communityChestsMask;
-    [SerializeField]
-    float maxDistanceOfRaycast;
-
     CommunityChestService communityChestService;
-    int currentPlayerIndex;
+
+    RaycastHit[] _hit;
+    protected override RaycastHit[] hits => _hit;
+
     public void Init(CommunityChestService communitySv)
     {
         communityChestService = communitySv;
+        _hit = new RaycastHit[1];
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), maxDistanceOfRaycast, communityChestsMask))
+            if (HasClickedOn())
             {
                 communityChestService.TriggerACard(currentPlayerIndex);
+                onFinishCardTrigger.Invoke();
                 gameObject.SetActive(false);
             }
         }
