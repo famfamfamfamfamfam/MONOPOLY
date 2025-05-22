@@ -147,6 +147,8 @@ public class BusTicketService : CardService<BusTicketsConfig>
         public Action rollThirdDieAndStepAction;
     }
 
+    public Action<BusTicketsConfig.KeepToUseTicket> onKeepTicket;
+
     CompaniesConfig companies;
     StationsConfig stations;
     BoardDataService boardService;
@@ -209,39 +211,40 @@ public class BusTicketService : CardService<BusTicketsConfig>
     public override void TriggerACard(int accessorIndex)
     {
         UnityEngine.Debug.Log("TriggerACard-method runs from BusTicketService");
-        boardService.GiveBusTicket(out int ticketIndex);
-        if (ticketIndex < cardsConfig.instantUseTickets.Length)
+        boardService.GiveBusTicket(out int ticket);
+        // ticket ở đây không phải index mà là chính giá trị phần tử
+        if (Enum.IsDefined(typeof(BusTicketsConfig.InstantUseTicket),
+            (BusTicketsConfig.InstantUseTicket)ticket))
         {
-            TriggerTicket(accessorIndex, ticketIndex, true);
+            TriggerTicket(accessorIndex, ticket, true);
         }
         else
         {
-            playerService.KeepTicket(accessorIndex, ticketIndex);
+            playerService.KeepTicket(accessorIndex, ticket);
+            onKeepTicket.Invoke((BusTicketsConfig.KeepToUseTicket)ticket);
             latestActionAccessKey = -1;
         }
     }
 
-    public void BusTicketInKeepNowBeUsed(int userIndex, int ticketIndex)
+    public void BusTicketInKeepNowBeUsed(int userIndex, int ticket)
     {
-        TriggerTicket(userIndex, ticketIndex);
+        TriggerTicket(userIndex, ticket);
     }
 
-    void TriggerTicket(int accessorIndex, int ticketIndex, bool isInstantUseTicket = false)
+    void TriggerTicket(int accessorIndex, int ticket, bool isInstantUseTicket = false)
     {
         if (isInstantUseTicket)
         {
-            UnityEngine.Debug.Log($"Got a bus ticket : {cardsConfig.instantUseTickets[ticketIndex]}");
-            latestActionAccessKey = (byte)cardsConfig.instantUseTickets[ticketIndex];
-            busTicketActions[latestActionAccessKey].Invoke();
+            UnityEngine.Debug.Log($"Got a bus ticket : {(BusTicketsConfig.InstantUseTicket)ticket}");
+            busTicketActions[ticket].Invoke();
         }
         else
         {
-            UnityEngine.Debug.Log($"Got a bus ticket : {cardsConfig.instantUseTickets[ticketIndex]}");
-            latestActionAccessKey = (byte)cardsConfig.keepToUseTickets[ticketIndex % cardsConfig.instantUseTickets.Length];
-            busTicketActions[latestActionAccessKey].Invoke();
-            playerService.GiveBackTicket(accessorIndex, ticketIndex);
+            UnityEngine.Debug.Log($"Got a bus ticket : {(BusTicketsConfig.KeepToUseTicket)ticket}");
+            busTicketActions[ticket].Invoke();
+            playerService.GiveBackTicket(accessorIndex, ticket);
         }
-        boardService.TakeBackBusTicket(ticketIndex);
+        boardService.TakeBackBusTicket(ticket);
     }
 
     public bool TryGetTheLatestAccessKey(out int key)

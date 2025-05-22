@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 public class DataInitializer
 {
     public struct ConstructorParams
@@ -7,6 +5,7 @@ public class DataInitializer
         public GlobalConfig gameConfig;
         public PlayerGeneralConfig playersConfig;
         public SpaceGroupConfig eventSpaces;
+        public BusTicketsConfig busTicketsConfig;
         public CompaniesConfig companies;
         public StationsConfig stations;
         public PropertyConfig[] properties;
@@ -41,6 +40,6 @@ public class DataInitializer
             }
         }
 
-        boardData = new BoardData(configs.gameConfig, configs.eventSpaces);
+        boardData = new BoardData(configs.gameConfig, configs.eventSpaces, configs.busTicketsConfig);
     }
 }

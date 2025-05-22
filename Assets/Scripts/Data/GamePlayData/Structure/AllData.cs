@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public interface IAsset
 {
@@ -64,12 +66,16 @@ public class BoardData
     public List<int> currentTakableBusTickets { get; }
     public List<int> currentPurchasableSpaces { get; }
 
-    public BoardData(GlobalConfig config, SpaceGroupConfig eventSpaces)
+    public BoardData(GlobalConfig config, SpaceGroupConfig eventSpaces, BusTicketsConfig bus)
     {
         currentTakableBusTickets = new List<int>();
-        for (int i = 0; i < config.busTicket; i++)
+        for (int i = 0; i < bus.instantUseTickets.Length; i++)
         {
-            currentTakableBusTickets.Add(i);
+            currentTakableBusTickets.Add((int)bus.instantUseTickets[i]);
+        }
+        for (int i = 0; i < bus.keepToUseTickets.Length; i++)
+        {
+            currentTakableBusTickets.Add((int)bus.keepToUseTickets[i]);
         }
 
         currentPurchasableSpaces = new List<int>();

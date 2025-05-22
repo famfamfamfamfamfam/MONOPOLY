@@ -42,7 +42,7 @@ public class DataManager : MonoBehaviour
                 tempPlayer.position = configs.propertySpaces[curPosIndex % 52].position;
             }
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             TriggerSpace(0, curPosIndex % 52);
         }

@@ -160,6 +160,7 @@ MonoBehaviour:
   - {fileID: 1796373237}
   - {fileID: 672753517}
   - {fileID: 1728413516}
+  - {fileID: 347033728}
 --- !u!4 &58722200
 Transform:
   m_ObjectHideFlags: 0
@@ -1376,11 +1377,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e46ffc9d2ead5a04286676715d972052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quitFromJailTicket: {fileID: 2912266341309417152}
+  quitFromJailTicket: {fileID: 5254049007813138357}
   thirdDieRollTickets:
-  - {fileID: 1821848489}
-  - {fileID: 563263918}
-  - {fileID: 1825959501}
+  - {fileID: 1821848491}
+  - {fileID: 563263920}
+  - {fileID: 1825959503}
+  ticketsPool: {fileID: 439433620}
+  ticketList: {fileID: 1724150299}
 --- !u!1 &439433620
 GameObject:
   m_ObjectHideFlags: 0
@@ -1990,6 +1993,7 @@ MonoBehaviour:
   notifsPanel: {fileID: 8327019983896570527}
   purchaseOptionPanel: {fileID: 1728413520}
   infoManager: {fileID: 1086833708}
+  ticketsShowButton: {fileID: 1952194994}
 --- !u!1 &681065575
 GameObject:
   m_ObjectHideFlags: 0
@@ -6519,6 +6523,7 @@ GameObject:
   - component: {fileID: 1952194993}
   - component: {fileID: 1952194992}
   - component: {fileID: 1952194991}
+  - component: {fileID: 1952194994}
   m_Layer: 5
   m_Name: Tickets
   m_TagString: Untagged
@@ -6628,6 +6633,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1952194989}
   m_CullTransparentMesh: 1
+--- !u!114 &1952194994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952194989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31013f732afaa4844aa46257c23aa2b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ticketList: {fileID: 347033728}
 --- !u!1 &1967598085
 GameObject:
   m_ObjectHideFlags: 0

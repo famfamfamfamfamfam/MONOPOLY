@@ -9,9 +9,9 @@ public class BoardDataService
         this.data = data;
     }
 
-    public void GiveBusTicket(out int ticketIndex)
+    public void GiveBusTicket(out int ticket)
     {
-        SetUpToGive(data.currentTakableBusTickets, out ticketIndex);
+        SetUpToGive(data.currentTakableBusTickets, out ticket);
     }
     public bool GiftASpace(out int spaceIndex)
     {
@@ -31,9 +31,9 @@ public class BoardDataService
         holder.RemoveAt(randomIndex);
     }
 
-    public void TakeBackBusTicket(int ticketIndex)
+    public void TakeBackBusTicket(int ticket)
     {
-        data.currentTakableBusTickets.Add(ticketIndex);
+        data.currentTakableBusTickets.Add(ticket);
     }
 
     public void GrantSpace(int spaceIndex)

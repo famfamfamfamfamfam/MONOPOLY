@@ -44,18 +44,18 @@ public class PlayerDataService
         UnityEngine.Debug.Log("Added a company");
     }
 
-    public void KeepTicket(int playerIndex, int ticketIndex)
+    public void KeepTicket(int playerIndex, int ticket)
     {
         UnityEngine.Debug.Log("KeepTicket-method runs from PlayerDataService");
-        allPlayersData[playerIndex].busTickets.Add(ticketIndex);
-        UnityEngine.Debug.Log($"The player at index {playerIndex} kept the ticket at index {ticketIndex} in total 2 arrays");
+        allPlayersData[playerIndex].busTickets.Add(ticket);
+        UnityEngine.Debug.Log($"The player at index {playerIndex} kept the ticket {(BusTicketsConfig.KeepToUseTicket)ticket}");
     }
 
-    public void GiveBackTicket(int playerIndex, int ticketIndex)
+    public void GiveBackTicket(int playerIndex, int ticket)
     {
         UnityEngine.Debug.Log("GiveBackTicket-method runs from PlayerDataService");
-        allPlayersData[playerIndex].busTickets.Remove(ticketIndex);
-        UnityEngine.Debug.Log($"The player at index {playerIndex} gave back the ticket at index {ticketIndex} in total 2 arrays");
+        allPlayersData[playerIndex].busTickets.Remove(ticket);
+        UnityEngine.Debug.Log($"The player at index {playerIndex} gave back the ticket {(BusTicketsConfig.KeepToUseTicket)ticket}");
     }
 
     public bool IsOwner(int playerIndex, IAsset asset)

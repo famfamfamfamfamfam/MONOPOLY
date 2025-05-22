@@ -10,12 +10,15 @@ public class PopupManager : MonoBehaviour, INeedDriver
     PurchaseOptionPanel purchaseOptionPanel;
     [SerializeField]
     InfoDisplayManager infoManager;
+    [SerializeField]
+    ShowTicketListButton ticketsShowButton;
 
     private void Start()
     {
-        driver.AskToPurchaseSpace(() => Show(purchaseOptionPanel.gameObject));
+        driver.AskToPurchaseSpace(() => ShowHideToggle(purchaseOptionPanel.gameObject));
         driver.Notif(notifContent => Pop(notifsPanel.gameObject, notifContent, 2f));
-        infoManager.PrepareToUnfold(Show);
+        infoManager.PrepareToUnfold(ShowHideToggle);
+        ticketsShowButton.OnInteract(ShowHideToggle);
     }
 
     void Pop(GameObject panel, string content, float duration)
@@ -26,8 +29,8 @@ public class PopupManager : MonoBehaviour, INeedDriver
         panel.SetActive(true);
     }
 
-    void Show(GameObject panel)
+    void ShowHideToggle(GameObject panel)
     {
-        panel.SetActive(true);
+        panel.SetActive(!panel.activeSelf);
     }
 }

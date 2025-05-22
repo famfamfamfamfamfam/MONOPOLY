@@ -33,6 +33,7 @@ public class CompositionRoot : MonoBehaviour
             gameConfig = configs.gameConfig,
             playersConfig = configs.playersConfig,
             eventSpaces = configs.eventSpaceGroup,
+            busTicketsConfig = configs.busTickets,
             companies = configs.companiesConfig,
             stations = configs.stationsConfig,
             properties = configs.propertySpaces
@@ -100,7 +101,17 @@ public class CompositionRoot : MonoBehaviour
         communityChestHandler.Init(communityService);
         chanceCardHandler.Init(chanceService);
         busTickerHandler.Init(busService);
-        Driver driver = new Driver(dataManager, playerService, triggerSpaceService, configs.playersConfig.initialCoin);
+
+        Driver.ConstructorParams driverInput = new Driver.ConstructorParams()
+        {
+            manager = dataManager,
+            playerService = this.playerService,
+            triggerSpaceService = this.triggerSpaceService,
+            busTicketService = busService,
+            playersInitialCoin = configs.playersConfig.initialCoin
+        };
+
+        Driver driver = new Driver(driverInput);
         for (int i = 0; i < needDriverUI.Length; i++)
         {
             if (needDriverUI[i].TryGetComponent(out INeedDriver needer))
