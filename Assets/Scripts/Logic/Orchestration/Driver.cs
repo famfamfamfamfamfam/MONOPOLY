@@ -61,6 +61,11 @@ public class Driver
         busTicketService.BusTicketInKeepNowBeUsed(userIndex, ticket);
     }
 
+    public void AddPurchasedSpaceToAssetList(Action<int, string> addToAssetList)
+    {
+        triggerSpaceService.onAlreadyPurchasedSpace = addToAssetList;
+    }
+
 }
 
 public interface INeedDriver

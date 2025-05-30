@@ -6,7 +6,7 @@ public class Creator : MonoBehaviour
     GameObject[] objsNeedRefRuntime;
 
     readonly string worldPath = "Prefabs/WorldSpace";
-    //readonly string playerFolderPath = "Prefabs/Players";
+    readonly string playerFolderPath = "Prefabs/Players";
     private void Awake()
     {
         GameObject world = Resources.Load<GameObject>(worldPath);
@@ -16,8 +16,8 @@ public class Creator : MonoBehaviour
             objsNeedRefRuntime[i].GetComponent<INeedRefRuntime>().Init(wrapper);
         }
     }
-    //public void CreatePlayers(Vector3 goSpaceCenter, float spaceHeight, float spaceWidth)
-    //{
-    //    GameObject[] players = Resources.LoadAll<GameObject>(playerFolderPath);
-    //}
+    void CreatePlayers(Vector3 goSpaceCenter, float spaceHeight, float spaceWidth)
+    {
+        GameObject[] players = Resources.LoadAll<GameObject>(playerFolderPath);
+    }
 }

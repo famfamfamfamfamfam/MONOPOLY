@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2ad0e9087c9aa4384e104a02a0aaa9, type: 3}
   m_Name: ReceiveGiftSpace
   m_EditorClassIdentifier: 
+  spaceName: Gif
   indexFromGoSpace: 47
   position: {x: -0.4, y: 0.01, z: -1.23}
   eventType: 7

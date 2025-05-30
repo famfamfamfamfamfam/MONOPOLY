@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9761bd61d87b04aa6d629944c1c4f0, type: 3}
   m_Name: LessingStreet
   m_EditorClassIdentifier: 
+  spaceName: Lessing Street (1stYellow)
   indexFromGoSpace: 34
   position: {x: 0.29, y: 0.01, z: -0.803}
   purchaseCost: 260

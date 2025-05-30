@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7c7a8335ef304d4ca5f7b66d9797409, type: 3}
   m_Name: TaxSpace
   m_EditorClassIdentifier: 
+  spaceName: Tax
   indexFromGoSpace: 5
   position: {x: -0.836, y: 0.01, z: -0.8}
   eventType: 5

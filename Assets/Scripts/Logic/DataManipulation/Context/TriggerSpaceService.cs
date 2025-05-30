@@ -9,6 +9,8 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
         public CompaniesConfig companies;
         public StationsConfig stations;
 
+        public PropertyConfig[] properties;
+
         public TaxConfig taxConfig;
         public TaxConfig surtaxConfig;
 
@@ -26,6 +28,7 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
     public Action onNotYetPurchaseSpace;
     public Action<string> hasNotif;
     public Action<int, EventType> waitForTriggerCard;
+    public Action<int, string> onAlreadyPurchasedSpace;
 
     ConstructorParams inputs;
     Action<int>[] actionOnEventSpaces;
@@ -135,7 +138,7 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
         inputs.playerService.IterateAllPlayers(
             currentIndex => ActionOnAssetOwnership(playerIndex, spaceIndex, ref isPurchased, currentIndex, ref canBreak),
             () => canBreak);
-        if (!isPurchased)//cần xem lại, biến bool này có thể đang bị đổi quá sớm
+        if (!isPurchased)
         {
             onNotYetPurchaseSpace.Invoke();
         }
@@ -196,6 +199,24 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
             spaceIndex, inputs.propertyService, inputs.stationService, inputs.companyService
             ).BePurchased(payToPurchase);
         PlayerOwnsSpace(playerIndex, spaceIndex);
+        onAlreadyPurchasedSpace.Invoke(playerIndex, PurchasedSpaceName(spaceIndex));
         Debug.Log("Purchased");
     }
+
+    string PurchasedSpaceName(int spaceIndex)
+    {
+        if (inputs.stations.spacesIndices.Contains(spaceIndex))
+        {
+            return inputs.stations.spaces[spaceIndex].spaceName;
+        }
+        else if (inputs.companies.spacesIndices.Contains(spaceIndex))
+        {
+            return inputs.companies.spaces[spaceIndex].spaceName;
+        }
+        else
+        {
+            return inputs.properties[spaceIndex].spaceName;
+        }
+    }
+
 }

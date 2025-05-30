@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Space", menuName = "Scriptable Objects/Space Config")]
 public class SpaceConfig : ScriptableObject
 {
+    public string spaceName;
     public int indexFromGoSpace;
     public Vector3 position;
 }

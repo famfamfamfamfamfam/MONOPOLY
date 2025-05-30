@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9761bd61d87b04aa6d629944c1c4f0, type: 3}
   m_Name: Vienna
   m_EditorClassIdentifier: 
+  spaceName: Vienna (2ndOrange)
   indexFromGoSpace: 23
   position: {x: 0.0075, y: 0.01, z: -0.11}
   purchaseCost: 180

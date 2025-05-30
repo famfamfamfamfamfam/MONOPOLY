@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2ad0e9087c9aa4384e104a02a0aaa9, type: 3}
   m_Name: OrangeChance
   m_EditorClassIdentifier: 
+  spaceName: East Chance
   indexFromGoSpace: 46
   position: {x: -0.318, y: 0.01, z: -1.24}
   eventType: 2

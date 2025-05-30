@@ -82,6 +82,7 @@ public class CompositionRoot : MonoBehaviour
             eventSpaces = configs.eventSpaceGroup,
             companies = configs.companiesConfig,
             stations = configs.stationsConfig,
+            properties = configs.propertySpaces,
             taxConfig = configs.taxConfig,
             surtaxConfig = configs.surtaxConfig,
             theJailPosition = Vector3.one,

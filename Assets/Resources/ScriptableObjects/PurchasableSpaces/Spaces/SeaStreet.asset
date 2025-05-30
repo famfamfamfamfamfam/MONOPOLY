@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9761bd61d87b04aa6d629944c1c4f0, type: 3}
   m_Name: SeaStreet
   m_EditorClassIdentifier: 
+  spaceName: Sea Street (1stPink)
   indexFromGoSpace: 15
   position: {x: -0.644, y: 0.01, z: -0.11}
   purchaseCost: 140

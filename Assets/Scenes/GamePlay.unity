@@ -161,6 +161,7 @@ MonoBehaviour:
   - {fileID: 672753517}
   - {fileID: 1728413516}
   - {fileID: 347033728}
+  - {fileID: 1086833703}
 --- !u!4 &58722200
 Transform:
   m_ObjectHideFlags: 0
@@ -3861,6 +3862,11 @@ MonoBehaviour:
   - {fileID: 2088061956}
   - {fileID: 64933393}
   - {fileID: 340577656}
+  assetListsContents:
+  - {fileID: 2000489552}
+  - {fileID: 2039424599}
+  - {fileID: 1200716856}
+  - {fileID: 950114689}
 --- !u!1 &1097255890
 GameObject:
   m_ObjectHideFlags: 0

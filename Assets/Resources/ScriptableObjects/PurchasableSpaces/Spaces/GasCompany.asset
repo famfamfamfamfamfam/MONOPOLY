@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 062509db82b054d48ac361f1a2ddaca6, type: 3}
   m_Name: GasCompany
   m_EditorClassIdentifier: 
+  spaceName: Gas Company
   indexFromGoSpace: 10
   position: {x: -0.84, y: 0.01, z: -0.39}

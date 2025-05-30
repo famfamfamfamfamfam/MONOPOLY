@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2ad0e9087c9aa4384e104a02a0aaa9, type: 3}
   m_Name: BlueChance
   m_EditorClassIdentifier: 
+  spaceName: North Chance
   indexFromGoSpace: 28
   position: {x: 0.285, y: 0.01, z: -0.314}
   eventType: 2
