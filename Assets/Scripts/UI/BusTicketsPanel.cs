@@ -26,8 +26,9 @@ public class BusTicketsPanel : MonoBehaviour, INeedDriver
         for (int i = 0; i < thirdDieRollTickets.Length; i++)
         {
             int index = i;
-            //func và action lưu biến không phải tham số theo chữ ký dưới dạng tham chiếu nên
-            //khởi tạo mới sau mỗi lần lặp để giữ các tham chiếu đến các biến index khác nhau
+            //func và action lưu biến không-phải-tham-số-theo-chữ-ký dưới dạng tham chiếu
+            //biến i được khởi tạo một lần từ trước nên nếu truyền i, chỉ lấy được giá trị cuối được lưu của i
+            //phải khởi tạo mới sau mỗi lần lặp để giữ các tham chiếu đến các biến index khác nhau
             thirdDieRollTickets[i].onClick.AddListener(
                 () => UseCard(thirdDieRollTickets[index].gameObject,
                     (int)BusTicketsConfig.KeepToUseTicket.ThirdDieRoll)

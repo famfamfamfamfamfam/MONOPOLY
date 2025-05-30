@@ -12,7 +12,7 @@ public class ShowTicketListButton : MonoBehaviour
         gameObject.GetComponent<Button>().onClick.AddListener(() => toggle.Invoke(ticketList));
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
     }

@@ -153,7 +153,7 @@ public class BusTicketService : CardService<BusTicketsConfig>
     StationsConfig stations;
     BoardDataService boardService;
     Action[] busTicketActions;
-    int latestActionAccessKey; // để kích hoạt hành động sau khi di chuyển vì action của bus ticket chỉ di chuyển
+
     public BusTicketService(ConstructorParams inputs) : base(inputs.config, inputs.playerService)
     {
         companies = inputs.companies;
@@ -222,7 +222,6 @@ public class BusTicketService : CardService<BusTicketsConfig>
         {
             playerService.KeepTicket(accessorIndex, ticket);
             onKeepTicket.Invoke((BusTicketsConfig.KeepToUseTicket)ticket);
-            latestActionAccessKey = -1;
         }
     }
 
@@ -247,9 +246,4 @@ public class BusTicketService : CardService<BusTicketsConfig>
         boardService.TakeBackBusTicket(ticket);
     }
 
-    public bool TryGetTheLatestAccessKey(out int key)
-    {
-        key = latestActionAccessKey;
-        return latestActionAccessKey >= 0 && latestActionAccessKey < busTicketActions.Length;
-    }
 }
