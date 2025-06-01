@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class Driver
 {
@@ -9,14 +10,20 @@ public class Driver
         public TriggerSpaceService triggerSpaceService;
         public BusTicketService busTicketService;
         public int playersInitialCoin;
+        public AssetAccessor assetAccessor;
+        public PropertyConfig[] properties;
     }
 
     DataManager dataManager;
+
+    int gamerPlayIndex;
 
     int playersInitialCoin;
     PlayerDataService playerService;
     TriggerSpaceService triggerSpaceService;
     BusTicketService busTicketService;
+    Dictionary<string, int> propertiesDictionary;
+    AssetAccessor assetAccessor;
     public Driver(ConstructorParams inputs)
     {
         dataManager = inputs.manager;
@@ -24,6 +31,16 @@ public class Driver
         triggerSpaceService = inputs.triggerSpaceService;
         playersInitialCoin = inputs.playersInitialCoin;
         busTicketService = inputs.busTicketService;
+        assetAccessor = inputs.assetAccessor;
+        propertiesDictionary = new();
+        for (int i = 0; i < inputs.properties.Length; i++)
+        {
+            if (inputs.properties[i] != null)
+            {
+                propertiesDictionary.Add(inputs.properties[i].spaceName, i);
+            }
+        }
+        propertiesDictionary.TrimExcess();
     }
 
     public int PlayersInitialCoin()
@@ -64,6 +81,13 @@ public class Driver
     public void AddPurchasedSpaceToAssetList(Action<int, string> addToAssetList)
     {
         triggerSpaceService.onAlreadyPurchasedSpace = addToAssetList;
+    }
+
+    public bool IsValidPropertyName(string name)
+    {
+        return propertiesDictionary.ContainsKey(name)
+            && playerService.IsOwner(
+                gamerPlayIndex, assetAccessor.GetAsset(propertiesDictionary[name]));
     }
 
 }

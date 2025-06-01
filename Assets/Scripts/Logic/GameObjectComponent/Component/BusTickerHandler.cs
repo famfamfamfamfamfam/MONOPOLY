@@ -20,7 +20,7 @@ public class BusTickerHandler : CardHandler
         {
             if (HasClickedOn())
             {
-                busTicketService.TriggerACard(currentPlayerIndex);
+                busTicketService.TriggerACard(gamerPlayIndex);
                 onFinishCardTrigger.Invoke();
                 gameObject.SetActive(false);
             }

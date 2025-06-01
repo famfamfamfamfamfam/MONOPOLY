@@ -2,14 +2,14 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShowTicketListButton : MonoBehaviour
+public class ShowButton : MonoBehaviour
 {
     [SerializeField]
-    GameObject ticketList;
+    GameObject shownObj;
 
     public void OnInteract(Action<GameObject> toggle)
     {
-        gameObject.GetComponent<Button>().onClick.AddListener(() => toggle.Invoke(ticketList));
+        gameObject.GetComponent<Button>().onClick.AddListener(() => toggle.Invoke(shownObj));
     }
 
     void OnDisable()

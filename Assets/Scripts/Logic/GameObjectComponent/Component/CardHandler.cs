@@ -9,7 +9,7 @@ public abstract class CardHandler : MonoBehaviour
     protected LayerMask cardsMask;
     [SerializeField]
     protected float maxDistanceOfRaycast;
-    protected int currentPlayerIndex;
+    protected int gamerPlayIndex;
 
     protected abstract RaycastHit[] hits { get; }
 

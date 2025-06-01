@@ -19,7 +19,7 @@ public class CommunityChestHandler : CardHandler
         {
             if (HasClickedOn())
             {
-                communityChestService.TriggerACard(currentPlayerIndex);
+                communityChestService.TriggerACard(gamerPlayIndex);
                 onFinishCardTrigger.Invoke();
                 gameObject.SetActive(false);
             }

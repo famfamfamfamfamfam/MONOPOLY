@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class ChanceCardHandler : CardHandler
@@ -20,7 +19,7 @@ public class ChanceCardHandler : CardHandler
         {
             if (HasClickedOn())
             {
-                chanceService.TriggerACard(currentPlayerIndex);
+                chanceService.TriggerACard(gamerPlayIndex);
                 onFinishCardTrigger.Invoke();
                 gameObject.SetActive(false);
             }

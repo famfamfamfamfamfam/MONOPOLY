@@ -109,7 +109,9 @@ public class CompositionRoot : MonoBehaviour
             playerService = this.playerService,
             triggerSpaceService = this.triggerSpaceService,
             busTicketService = busService,
-            playersInitialCoin = configs.playersConfig.initialCoin
+            playersInitialCoin = configs.playersConfig.initialCoin,
+            assetAccessor = assetService,
+            properties = configs.propertySpaces
         };
 
         Driver driver = new Driver(driverInput);
