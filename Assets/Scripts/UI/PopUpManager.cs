@@ -13,18 +13,14 @@ public class PopupManager : MonoBehaviour, INeedDriver
     [SerializeField]
     PropertyNameHandler propertyNameHandler;
     [SerializeField]
-    ShowButton[] showButtons;
+    ShowToggle toggle;
 
     private void Start()
     {
-        driver.AskToPurchaseSpace(() => ShowHideToggle(purchaseOptionPanel.gameObject));
+        driver.AskToPurchaseSpace(() => toggle.ShowHideToggle(purchaseOptionPanel.gameObject));
         driver.Notif(notifContent => Pop(notifsPanel.gameObject, notifContent, 2f));
-        infoManager.PrepareToUnfold(ShowHideToggle);
-        propertyNameHandler.OnFindNameSuccess(ShowHideToggle);
-        for (int i = 0; i < showButtons.Length; i++)
-        {
-            showButtons[i].OnInteract(ShowHideToggle);
-        }
+        infoManager.PrepareToUnfold(toggle.ShowHideToggle);
+        propertyNameHandler.OnFindNameSuccess(toggle.ShowHideToggle);
     }
 
     void Pop(GameObject panel, string content, float duration)
@@ -35,8 +31,4 @@ public class PopupManager : MonoBehaviour, INeedDriver
         panel.SetActive(true);
     }
 
-    void ShowHideToggle(GameObject panel)
-    {
-        panel.SetActive(!panel.activeSelf);
-    }
 }

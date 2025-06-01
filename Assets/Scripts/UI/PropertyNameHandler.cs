@@ -8,7 +8,7 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
     TMP_InputField inputField;
 
     [SerializeField]
-    GameObject buildOptionPanel;
+    GameObject buildOptionPanelObj;
 
     public Driver driver { get; set; }
 
@@ -17,20 +17,20 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
     public void OnFindNameSuccess(Action<GameObject> showHideToggle)
     {
         activeToggle = showHideToggle;
-        inputField.onEndEdit.AddListener(Handler);
+        inputField.onEndEdit.AddListener(Handle);
     }
 
-    void Handler(string input)
+    void Handle(string input)
     {
         if (driver.IsValidPropertyName(input))
         {
-            activeToggle.Invoke(buildOptionPanel);
+            activeToggle.Invoke(buildOptionPanelObj);
         }
     }
 
     void OnDisable()
     {
-        buildOptionPanel.SetActive(false);
+        buildOptionPanelObj.SetActive(false);
     }
 
     void OnDestroy()
