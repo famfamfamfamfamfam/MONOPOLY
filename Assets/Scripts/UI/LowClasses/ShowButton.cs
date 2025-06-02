@@ -15,7 +15,7 @@ public class ShowButton : MonoBehaviour
         button.onClick.AddListener(() => toggle.Invoke(shownObj));
     }
 
-    void OnDisable()
+    void OnDestroy()
     {
         button.onClick.RemoveAllListeners();
     }

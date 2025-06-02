@@ -2,6 +2,24 @@
 
 public class DataManager : MonoBehaviour
 {
+    public static DataManager instance { get; private set; }
+
+    void Start()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+            //nếu không return thì dòng sau vẫn được thực thi vì lệnh Destroy chỉ đánh dấu để hủy,
+            //không hủy ngay mà hủy vào cuối frame (gọi OnDestroy() sau LateUpdate() và trước khi render)
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    int gamerPlayIndex;
+    //int currentPlayerIndex;
+
     ConfigInitializer.ConstructorParams configs;
     TriggerSpaceService triggerSpaceService;
 
@@ -11,12 +29,28 @@ public class DataManager : MonoBehaviour
         this.triggerSpaceService = triggerSpaceService;
     }
 
+    public void SetGamerPlayIndex(ref int index, int optionCount)
+    {
+        if (index >= optionCount)
+        {
+            index = 0;
+        }
+        else if (index < 0)
+        {
+            index = optionCount - 1;
+        }
+        gamerPlayIndex = index;
+    }
+
     void TriggerSpace(int playerIndex, int spaceIndex)
     {
         triggerSpaceService.TriggerSpace(playerIndex, spaceIndex);
     }
 
-    [SerializeField]
+    public void Init(Transform tempPlayer)
+    {
+        this.tempPlayer = tempPlayer;
+    }
     Transform tempPlayer;
     public int curPosIndex;
     private void Update()

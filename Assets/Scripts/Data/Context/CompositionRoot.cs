@@ -3,8 +3,6 @@
 public class CompositionRoot : MonoBehaviour
 {
     [SerializeField]
-    DataManager dataManager;
-    [SerializeField]
     InputManager inputManager;
     [SerializeField]
     CommunityChestHandler communityChestHandler;
@@ -97,7 +95,7 @@ public class CompositionRoot : MonoBehaviour
         triggerSpaceService = new TriggerSpaceService(inputForTriggerService);
         #endregion
 
-        dataManager.Init(configs, triggerSpaceService);
+        DataManager.instance.Init(configs, triggerSpaceService);
         inputManager.Init(triggerSpaceService);
         communityChestHandler.Init(communityService);
         chanceCardHandler.Init(chanceService);
@@ -105,7 +103,7 @@ public class CompositionRoot : MonoBehaviour
 
         Driver.ConstructorParams driverInput = new Driver.ConstructorParams()
         {
-            manager = dataManager,
+            manager = DataManager.instance,
             playerService = this.playerService,
             triggerSpaceService = this.triggerSpaceService,
             busTicketService = busService,
@@ -122,8 +120,11 @@ public class CompositionRoot : MonoBehaviour
                 needer.driver = driver;
             }
         }
-    }
 
+        DataManager.instance.Init(tempPlayer);
+    }
+    [SerializeField]
+    Transform tempPlayer;
     private void OnDisable()
     {
         configInitializer.UnloadAssets(configs);
