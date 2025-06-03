@@ -36,7 +36,7 @@ public class CompositionRoot : MonoBehaviour
             stations = configs.stationsConfig,
             properties = configs.propertySpaces
         };
-        DataInitializer dataInitializer = new DataInitializer(inputForData, out playersData, out assetsData, out BoardData boardData);
+        DataInitializer dataInitializer = new DataInitializer(inputForData, out GameData commonData, out playersData, out assetsData, out BoardData boardData);
         #endregion
         #region Create Services
         playerService = new PlayerDataService(playersData);
@@ -95,7 +95,7 @@ public class CompositionRoot : MonoBehaviour
         triggerSpaceService = new TriggerSpaceService(inputForTriggerService);
         #endregion
 
-        DataManager.instance.Init(configs, triggerSpaceService);
+        DataManager.instance.Init(configs, commonData, triggerSpaceService);
         inputManager.Init(triggerSpaceService);
         communityChestHandler.Init(communityService);
         chanceCardHandler.Init(chanceService);

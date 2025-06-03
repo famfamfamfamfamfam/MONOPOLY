@@ -17,14 +17,15 @@ public class DataManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public GameData gameData { get; private set; }
     int gamerPlayIndex;
-    //int currentPlayerIndex;
 
     ConfigInitializer.ConstructorParams configs;
     TriggerSpaceService triggerSpaceService;
 
-    public void Init(ConfigInitializer.ConstructorParams configs, TriggerSpaceService triggerSpaceService)
+    public void Init(ConfigInitializer.ConstructorParams configs, GameData commonData, TriggerSpaceService triggerSpaceService)
     {
+        gameData = commonData;
         this.configs = configs;
         this.triggerSpaceService = triggerSpaceService;
     }

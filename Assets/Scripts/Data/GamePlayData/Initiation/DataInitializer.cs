@@ -11,8 +11,9 @@ public class DataInitializer
         public PropertyConfig[] properties;
     }
 
-    public DataInitializer(ConstructorParams configs, out PlayerData[] playersData, out AssetData[] assetsData, out BoardData boardData)
+    public DataInitializer(ConstructorParams configs, out GameData commonData, out PlayerData[] playersData, out AssetData[] assetsData, out BoardData boardData)
     {
+        commonData = new GameData();
         playersData = new PlayerData[configs.gameConfig.playerCount];
         for (int i = 0; i < playersData.Length; i++)
         {

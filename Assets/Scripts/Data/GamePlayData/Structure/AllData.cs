@@ -86,3 +86,9 @@ public class BoardData
         }
     }
 }
+
+public class GameData
+{
+    public int gamerPlayIndex { get; set; }
+    public int currentTurnPlayerIndex { get; set; }
+}
