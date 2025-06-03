@@ -1,11 +1,15 @@
+using System;
 using UnityEngine;
 
-public class CursorOptionUpdater : MonoBehaviour
+public class CursorOptionUpdater : MonoBehaviour, ISound
 {
     [SerializeField]
     CursorMover mover;
 
     int currentOption;
+
+    public Action makeSound { get; set; }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -13,6 +17,7 @@ public class CursorOptionUpdater : MonoBehaviour
             mover.MoveToRight();
             currentOption++;
             DataManager.instance.SetGamerPlayIndex(ref currentOption, mover.optionCount);
+            makeSound();
             return;
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -20,6 +25,7 @@ public class CursorOptionUpdater : MonoBehaviour
             mover.MoveToLeft();
             currentOption--;
             DataManager.instance.SetGamerPlayIndex(ref currentOption, mover.optionCount);
+            makeSound();
         }
     }
 }
