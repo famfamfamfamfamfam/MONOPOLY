@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 
 public class DataManager : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class DataManager : MonoBehaviour
 
     public GameData gameData { get; private set; }
     int gamerPlayIndex;
+    
+    bool shuffleMusicsPlay;
+    float backSoundsVolume;
+    float SFX_volume;
 
     ConfigInitializer.ConstructorParams configs;
     TriggerSpaceService triggerSpaceService;
@@ -42,6 +47,21 @@ public class DataManager : MonoBehaviour
         }
         gamerPlayIndex = index;
     }
+
+    #region Inspector UnityEvents
+    public void ShuffleMusicsPlaying(bool value)
+    {
+        shuffleMusicsPlay = value;
+    }
+    public void SetBackSoundsVolume(float value)
+    {
+        backSoundsVolume = value;
+    }
+    public void SetSoundEffectsVolume(float value)
+    {
+        SFX_volume = value;
+    }
+    #endregion
 
     void TriggerSpace(int playerIndex, int spaceIndex)
     {
