@@ -11,36 +11,45 @@ public class DataInitializer
         public PropertyConfig[] properties;
     }
 
-    public DataInitializer(ConstructorParams configs, out GameData commonData, out PlayerData[] playersData, out AssetData[] assetsData, out BoardData boardData)
+    public struct ConstructorOuputs
     {
-        commonData = new GameData();
-        playersData = new PlayerData[configs.gameConfig.playerCount];
-        for (int i = 0; i < playersData.Length; i++)
+        public GameData commonData;
+        public PlayerData[] playersData;
+        public AssetData[] assetsData;
+        public BoardData boardData;
+    }
+
+    public DataInitializer(ConstructorParams configs, out ConstructorOuputs outputs)
+    {
+        outputs = new ConstructorOuputs();
+        outputs.commonData = new GameData();
+        outputs.playersData = new PlayerData[configs.gameConfig.playerCount];
+        for (int i = 0; i < outputs.playersData.Length; i++)
         {
-            playersData[i] = new PlayerData(configs.playersConfig);
+            outputs.playersData[i] = new PlayerData(configs.playersConfig);
         }
 
-        assetsData = new AssetData[configs.gameConfig.spaceCount];
+        outputs.assetsData = new AssetData[configs.gameConfig.spaceCount];
         for (int i = 0; i < configs.properties.Length; i++)
         {
             if (configs.properties[i] == null)
             {
                 continue;
             }
-            assetsData[i] = new PropertyData(configs.properties[i]);
+            outputs.assetsData[i] = new PropertyData(configs.properties[i]);
         }
-        for (int i = 0; i < assetsData.Length; i++)
+        for (int i = 0; i < outputs.assetsData.Length; i++)
         {
             if (configs.companies.spacesIndices.Contains(i))
             {
-                assetsData[i] = new CompanyData();
+                outputs.assetsData[i] = new CompanyData();
             }
             else if (configs.stations.spacesIndices.Contains(i))
             {
-                assetsData[i] = new StationData(configs.stations);
+                outputs.assetsData[i] = new StationData(configs.stations);
             }
         }
 
-        boardData = new BoardData(configs.gameConfig, configs.eventSpaces, configs.busTicketsConfig);
+        outputs.boardData = new BoardData(configs.gameConfig, configs.eventSpaces, configs.busTicketsConfig);
     }
 }

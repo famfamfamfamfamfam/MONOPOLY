@@ -22,10 +22,7 @@ public class CompositionRoot : MonoBehaviour
         #region Create Configs
         configInitializer = new ConfigInitializer(out configs);
         #endregion
-        #region Create Datas
-        PlayerData[] playersData;
-        AssetData[] assetsData;
-
+        #region Create Data
         DataInitializer.ConstructorParams inputForData = new DataInitializer.ConstructorParams()
         {
             gameConfig = configs.gameConfig,
@@ -36,12 +33,13 @@ public class CompositionRoot : MonoBehaviour
             stations = configs.stationsConfig,
             properties = configs.propertySpaces
         };
-        DataInitializer dataInitializer = new DataInitializer(inputForData, out GameData commonData, out playersData, out assetsData, out BoardData boardData);
+
+        DataInitializer dataInitializer = new DataInitializer(inputForData, out DataInitializer.ConstructorOuputs dataOutputs);
         #endregion
         #region Create Services
-        playerService = new PlayerDataService(playersData);
+        playerService = new PlayerDataService(dataOutputs.playersData);
 
-        BoardDataService boardService = new BoardDataService(boardData);
+        BoardDataService boardService = new BoardDataService(dataOutputs.boardData);
 
         CommunityChestService communityService = new CommunityChestService(configs.communityCards, configs.gameConfig, playerService);
 
@@ -71,9 +69,9 @@ public class CompositionRoot : MonoBehaviour
         };
         ChanceService chanceService = new ChanceService(inputForChanceService);
 
-        AssetAccessor assetService = new AssetAccessor(assetsData); //assetsData được tạo ở dòng 26
-        PropertyDataService propertyService = new PropertyDataService(configs.propertySpaces, assetsData);
-        CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, assetsData);
+        AssetAccessor assetService = new AssetAccessor(dataOutputs.assetsData);
+        PropertyDataService propertyService = new PropertyDataService(configs.propertySpaces, dataOutputs.assetsData);
+        CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, dataOutputs.assetsData);
         StationDataService stationService = new StationDataService(configs.stationsConfig);
         TriggerSpaceService.ConstructorParams inputForTriggerService = new TriggerSpaceService.ConstructorParams()
         {
@@ -95,7 +93,7 @@ public class CompositionRoot : MonoBehaviour
         triggerSpaceService = new TriggerSpaceService(inputForTriggerService);
         #endregion
 
-        DataManager.instance.Init(configs, commonData, triggerSpaceService);
+        DataManager.instance.Init(configs, dataOutputs, triggerSpaceService);
         inputManager.Init(triggerSpaceService);
         communityChestHandler.Init(communityService);
         chanceCardHandler.Init(chanceService);
