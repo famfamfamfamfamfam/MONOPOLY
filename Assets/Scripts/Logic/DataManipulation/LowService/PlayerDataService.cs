@@ -54,7 +54,10 @@ public class PlayerDataService
     public void GiveBackTicket(int playerIndex, int ticket)
     {
         UnityEngine.Debug.Log("GiveBackTicket-method runs from PlayerDataService");
-        allPlayersData[playerIndex].busTickets.Remove(ticket);
+        int ticketIndex = allPlayersData[playerIndex].busTickets.IndexOf(ticket);
+        int lastIndex = allPlayersData[playerIndex].busTickets.Count - 1;
+        allPlayersData[playerIndex].busTickets[ticket] = allPlayersData[playerIndex].busTickets[lastIndex];
+        allPlayersData[playerIndex].busTickets.RemoveAt(lastIndex);
         UnityEngine.Debug.Log($"The player at index {playerIndex} gave back the ticket {(BusTicketsConfig.KeepToUseTicket)ticket}");
     }
 
@@ -107,6 +110,13 @@ public class PlayerDataService
         UnityEngine.Debug.Log("SetDicePoint-method runs from PlayerDataService");
         allPlayersData[playerIndex].currentDicePoint = point;
         UnityEngine.Debug.Log("Set current dice point to " + point);
+    }
+
+    public void SetCurrentStaySpaceIndex(int playerIndex, int spaceIndex)
+    {
+        UnityEngine.Debug.Log("SetCurrentStaySpaceIndex-method runs from PlayerDataService");
+        allPlayersData[playerIndex].currentStaySpaceIndex = spaceIndex;
+        UnityEngine.Debug.Log($"The player at index {playerIndex} are in the space at index {spaceIndex}");
     }
 
     public int GetCurrentCompanyCount(int playerIndex)

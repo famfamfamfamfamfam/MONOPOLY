@@ -126,5 +126,6 @@ public class CompositionRoot : MonoBehaviour
     private void OnDisable()
     {
         configInitializer.UnloadAssets(configs);
+        Resources.UnloadUnusedAssets();
     }
 }

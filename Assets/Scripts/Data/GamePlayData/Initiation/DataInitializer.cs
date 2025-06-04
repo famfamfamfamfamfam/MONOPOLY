@@ -1,4 +1,4 @@
-public class DataInitializer
+﻿public class DataInitializer
 {
     public struct ConstructorParams
     {

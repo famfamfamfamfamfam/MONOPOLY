@@ -26,7 +26,7 @@ public class DataManager : MonoBehaviour
 
     public bool newGameSelected { get; private set; }
 
-    bool shuffleMusicsPlay;
+    public bool shuffleMusicsPlay { get; private set; }
     float backSoundsVolume;
     float SFX_volume;
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class BoardDataService
@@ -28,7 +28,8 @@ public class BoardDataService
     {
         int randomIndex = Random.Range(0, holder.Count);
         output = holder[randomIndex];
-        holder.RemoveAt(randomIndex);
+        holder[randomIndex] = holder[holder.Count - 1];
+        holder.RemoveAt(holder.Count - 1);
     }
 
     public void TakeBackBusTicket(int ticket)
@@ -38,6 +39,12 @@ public class BoardDataService
 
     public void GrantSpace(int spaceIndex)
     {
-        data.currentPurchasableSpaces.Remove(spaceIndex);
+        //lấy index của index-của-space trong list
+        //sau đó ghi đè giá trị cuối của list vào phần tử có index đã lấy
+        //độ phức tạp O(n) nhưng thực tế nhanh hơn so với phương thức Remove (ít hoán đổi hơn)
+        data.currentPurchasableSpaces[data.currentPurchasableSpaces.IndexOf(spaceIndex)]
+            = data.currentPurchasableSpaces[data.currentPurchasableSpaces.Count - 1];
+        //xóa phần tử cuối để đạt độ phức tạp O(1)
+        data.currentPurchasableSpaces.RemoveAt(data.currentPurchasableSpaces.Count - 1);
     }
 }

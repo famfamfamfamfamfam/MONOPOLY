@@ -21,9 +21,21 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        if (scene == CurrentScene.Menu)
+        switch (scene)
         {
-            backSourceSetter.SetUpTheAudio(backSounds[UnityEngine.Random.Range(0, backSounds.Length)]);
+            case CurrentScene.Menu:
+                SetAudioAtStart(UnityEngine.Random.Range(0, backSounds.Length));
+                break;
+            case CurrentScene.GamePlay:
+                if (DataManager.instance.shuffleMusicsPlay)
+                {
+                    SetAudioAtStart(UnityEngine.Random.Range(0, backSounds.Length));
+                }
+                else
+                {
+                    SetAudioAtStart(0);
+                }
+                break;
         }
         for (int i = 0; i < makeSoundInvokers.Length; i++)
         {
@@ -33,7 +45,10 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
-
+    void SetAudioAtStart(int index)
+    {
+        backSourceSetter.SetUpTheAudio(backSounds[index]);
+    }
 
 
 }

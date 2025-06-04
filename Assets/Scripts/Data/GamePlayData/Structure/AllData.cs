@@ -32,6 +32,8 @@ public class PlayerData
     public int currentCompanyCount { get; set; }
     [Key(6)]
     public int currentStationCount { get; set; }
+    [Key(7)]
+    public int currentStaySpaceIndex { get; set; }
 
     public PlayerData() { }
 
