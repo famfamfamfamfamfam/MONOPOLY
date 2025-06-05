@@ -19,22 +19,19 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     MonoBehaviour[] makeSoundInvokers;
 
+    int currentSongIndex = -1;
+    AudioClip tmp;
+
     void Start()
     {
         switch (scene)
         {
             case CurrentScene.Menu:
-                SetAudioAtStart(UnityEngine.Random.Range(0, backSounds.Length));
+                SetUpAudio(UnityEngine.Random.Range(0, backSounds.Length));
                 break;
             case CurrentScene.GamePlay:
-                if (DataManager.instance.shuffleMusicsPlay)
-                {
-                    SetAudioAtStart(UnityEngine.Random.Range(0, backSounds.Length));
-                }
-                else
-                {
-                    SetAudioAtStart(0);
-                }
+                SetVolumes();
+                PlayAudioOnModes(true);
                 break;
         }
         for (int i = 0; i < makeSoundInvokers.Length; i++)
@@ -45,11 +42,58 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
-    void SetAudioAtStart(int index)
+
+    void SetUpAudio(int index)
     {
         backSourceSetter.SetUpTheAudio(backSounds[index]);
     }
 
+    void SetVolumes()
+    {
+        SoundAdjustor[] volumeAdjustors = gameObject.GetComponentsInChildren<SoundAdjustor>();
+        for (int i = 0; i < volumeAdjustors.Length; i++)
+        {
+            if (volumeAdjustors[i].gameObject == backSourceSetter.gameObject)
+            {
+                volumeAdjustors[i].ChangeVolumeTo(DataManager.instance.backSoundsVolume);
+                continue;
+            }
+            if (volumeAdjustors[i].gameObject == clickSFX_setter.gameObject)
+            {
+                volumeAdjustors[i].ChangeVolumeTo(DataManager.instance.SFX_volume);
+            }
+        }
+    }
+
+    public void PlayAudioOnModes(bool atStart)
+    {
+        if (DataManager.instance.shuffleMusicsPlay)
+        {
+            currentSongIndex = atStart ? UnityEngine.Random.Range(0, backSounds.Length) : UnityEngine.Random.Range(1, backSounds.Length);
+            tmp = backSounds[0];
+            backSounds[0] = backSounds[currentSongIndex];
+            backSounds[currentSongIndex] = tmp;
+            currentSongIndex = 0;
+        }
+        else
+        {
+            currentSongIndex = currentSongIndex >= backSounds.Length ? 0 : currentSongIndex + 1;
+        }
+        SetUpAudio(currentSongIndex);
+    }
+
+    void Update()
+    {
+        if (scene == CurrentScene.Menu)
+        {
+            return;
+        }
+
+        if (!backSourceSetter.IsPlaying())
+        {
+            PlayAudioOnModes(false);
+        }
+    }
 
 }
 

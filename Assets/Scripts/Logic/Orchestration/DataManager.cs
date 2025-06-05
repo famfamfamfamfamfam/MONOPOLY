@@ -20,15 +20,14 @@ public class DataManager : MonoBehaviour
     }
 
 
-
     public GameData gameData { get; private set; }
     int gamerPlayIndex;
 
     public bool newGameSelected { get; private set; }
 
     public bool shuffleMusicsPlay { get; private set; }
-    float backSoundsVolume;
-    float SFX_volume;
+    public float backSoundsVolume { get; private set; }
+    public float SFX_volume { get; private set; }
 
     ConfigInitializer.ConstructorParams configs;
     DataInitializer.ConstructorOuputs data;

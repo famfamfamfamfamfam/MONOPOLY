@@ -792,7 +792,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -2147,7 +2147,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -2416,12 +2416,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 8300000, guid: 9b60f33fdada8ef4dbd343538e3a64e2, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -2821,13 +2821,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 8300000, guid: 9b60f33fdada8ef4dbd343538e3a64e2, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1140782017}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlayAudioOnModes
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4936,6 +4948,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1086833704}
   - component: {fileID: 1086833707}
+  - component: {fileID: 1086833709}
   - component: {fileID: 1086833706}
   - component: {fileID: 1086833705}
   - component: {fileID: 1086833708}
@@ -5037,7 +5050,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -5111,6 +5124,18 @@ MonoBehaviour:
   - {fileID: 2039424599}
   - {fileID: 1200716856}
   - {fileID: 950114689}
+--- !u!114 &1086833709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086833703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd2045bb511a6b94e92d20f0f798db9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1097255890
 GameObject:
   m_ObjectHideFlags: 0
@@ -5278,7 +5303,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -5487,7 +5512,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1140782016}
-  - component: {fileID: 1140782019}
   - component: {fileID: 1140782017}
   m_Layer: 0
   m_Name: AudioManager
@@ -5526,107 +5550,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scene: 1
-  backSounds: []
-  backSourceSetter: {fileID: 0}
-  clickSFX_setter: {fileID: 0}
-  makeSoundInvokers: []
---- !u!82 &1140782019
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1140782015}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  backSounds:
+  - {fileID: 8300000, guid: 8347d3facb9aaba45a608f948c463148, type: 3}
+  - {fileID: 8300000, guid: 3102a167d5396ac418a094cd07b69f46, type: 3}
+  - {fileID: 8300000, guid: 812b5550e7b982c4a945ef2c27d1447a, type: 3}
+  - {fileID: 8300000, guid: 72f08ee6157f3b1488b860ebdbaef2ad, type: 3}
+  backSourceSetter: {fileID: 1515297092}
+  clickSFX_setter: {fileID: 1991147005}
+  makeSoundInvokers:
+  - {fileID: 1086833709}
 --- !u!1 &1153113629
 GameObject:
   m_ObjectHideFlags: 0
@@ -5710,7 +5642,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -6530,6 +6462,7 @@ GameObject:
   - component: {fileID: 1413660114}
   - component: {fileID: 1413660113}
   - component: {fileID: 1413660112}
+  - component: {fileID: 1413660115}
   m_Layer: 5
   m_Name: PlayAgain
   m_TagString: Untagged
@@ -6601,7 +6534,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -6651,6 +6584,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1413660110}
   m_CullTransparentMesh: 1
+--- !u!114 &1413660115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413660110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 540d00f0b52cee6448f5f090ae1ce8cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSceneIndex: 1
 --- !u!1 &1443104974
 GameObject:
   m_ObjectHideFlags: 0
@@ -7346,6 +7292,7 @@ GameObject:
   - component: {fileID: 1515297091}
   - component: {fileID: 1515297093}
   - component: {fileID: 1515297092}
+  - component: {fileID: 1515297094}
   m_Layer: 0
   m_Name: BackMusics
   m_TagString: Untagged
@@ -7477,6 +7424,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1515297094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515297090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08d6f89e7bc73564c94463c5b91cca8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  source: {fileID: 1515297093}
 --- !u!1 &1516813493
 GameObject:
   m_ObjectHideFlags: 0
@@ -7668,7 +7628,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -8262,7 +8222,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -8777,7 +8737,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -9267,12 +9227,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 8300000, guid: 9b60f33fdada8ef4dbd343538e3a64e2, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -9400,12 +9360,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 8300000, guid: 9b60f33fdada8ef4dbd343538e3a64e2, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -10015,7 +9975,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -10138,6 +10098,7 @@ GameObject:
   - component: {fileID: 1991147004}
   - component: {fileID: 1991147006}
   - component: {fileID: 1991147005}
+  - component: {fileID: 1991147007}
   m_Layer: 0
   m_Name: SFX
   m_TagString: Untagged
@@ -10182,8 +10143,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 1679a73001c78834995d6f879a1b138d, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1679a73001c78834995d6f879a1b138d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -10269,6 +10230,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1991147007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991147003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08d6f89e7bc73564c94463c5b91cca8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  source: {fileID: 1991147006}
 --- !u!1 &2000489550
 GameObject:
   m_ObjectHideFlags: 0
@@ -11011,7 +10985,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
@@ -11392,12 +11366,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1991147005}
         m_TargetAssemblyTypeName: AudioResourceSetter, Assembly-CSharp
         m_MethodName: SetUpTheAudio
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 8300000, guid: 9b60f33fdada8ef4dbd343538e3a64e2, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0

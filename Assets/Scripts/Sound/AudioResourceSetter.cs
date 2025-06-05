@@ -16,4 +16,9 @@ public class AudioResourceSetter : MonoBehaviour
         }
         source.Play();
     }
+
+    public bool IsPlaying()
+    {
+        return source.isPlaying;
+    }
 }
