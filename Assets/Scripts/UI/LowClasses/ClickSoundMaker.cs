@@ -2,11 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ClickSoundMaker : MonoBehaviour, IPointerDownHandler, ISound
+public class ClickSoundMaker : MonoBehaviour, IPointerClickHandler, ISound
 {
     public Action makeSound { get; set; }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         makeSound();
     }

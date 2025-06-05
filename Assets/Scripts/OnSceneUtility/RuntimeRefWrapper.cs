@@ -4,12 +4,12 @@ using UnityEngine;
 public class RuntimeRefWrapper : MonoBehaviour
 {
     [SerializeField]
-    GameObject[] theRefs;
+    List<GameObject> theRefs;
 
     public bool GetReference<T>(out List<T> result)
     {
         result = new List<T>();
-        for (int i = 0; i < theRefs.Length; i++)
+        for (int i = 0; i < theRefs.Count; i++)
         {
             if (theRefs[i].TryGetComponent(out T component))
             {
@@ -17,6 +17,11 @@ public class RuntimeRefWrapper : MonoBehaviour
             }
         }
         return result.Count > 0;
+    }
+
+    public void AddRefToWrapper(GameObject obj)
+    {
+        theRefs.Add(obj);
     }
 }
 

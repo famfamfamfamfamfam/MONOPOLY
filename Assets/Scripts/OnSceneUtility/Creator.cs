@@ -6,6 +6,8 @@ public class Creator : MonoBehaviour
     GameObject[] objsNeedRefRuntime;
 
     [SerializeField]
+    RuntimeRefWrapper playersWrapper;
+    [SerializeField]
     Vector3 startPositionCenter;
     [SerializeField]
     float deltaFromStartPositionCenter = 0.025f;
@@ -29,7 +31,9 @@ public class Creator : MonoBehaviour
             .GetThePositions(startPositionCenter, players.Length, deltaFromStartPositionCenter);
         for (int i = 0; i < players.Length; i++)
         {
-            Instantiate(players[i], playersPositions[i], Quaternion.identity);
+            playersWrapper.AddRefToWrapper(
+                Instantiate(players[i], playersPositions[i], Quaternion.identity, playersWrapper.transform)
+            );
         }
     }
 
