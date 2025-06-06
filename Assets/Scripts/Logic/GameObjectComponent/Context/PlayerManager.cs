@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    ConfigInitializer.ConstructorParams configs;
+    PlayerDataService dataService;
+
     List<PlayerController> players;
 
     public void AddRef(int playerIndex, PlayerController controller)
@@ -21,5 +24,26 @@ public class PlayerManager : MonoBehaviour
         players[playerIndex] = controller;
     }
 
+    public void Init(ConfigInitializer.ConstructorParams configs, PlayerDataService playerDataSv)
+    {
+        this.configs = configs;
+        dataService = playerDataSv;
+    }
+
+    void Start()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            players[i].Init(configs, dataService.SetCurrentCoin);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            players[0].StartStep(4);
+        }
+    }
 
 }

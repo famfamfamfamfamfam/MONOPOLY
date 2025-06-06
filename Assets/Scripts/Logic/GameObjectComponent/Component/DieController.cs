@@ -14,7 +14,7 @@ public class DieController : MonoBehaviour
 
     public LayerMask dieType { get => _dieType; }
     public Action onBeginRoll { get; set; }
-    public Action<int> onFinishRoll { get; set; }
+    public Action<int, LayerMask> onFinishRoll { get; set; }
 
     float minBounceForce = 3f;
     float maxBounceForce = 5f;
@@ -58,7 +58,7 @@ public class DieController : MonoBehaviour
             }
         }
         CountPointIfDieHasStopped(out int point);
-        onFinishRoll.Invoke(point);
+        onFinishRoll.Invoke(point, _dieType);
         ResetToRoll();
     }
 

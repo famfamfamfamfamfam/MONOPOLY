@@ -25,10 +25,10 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
         public PlayerDataService playerService;
     }
 
-    public Action onNotYetPurchaseSpace;
-    public Action<string> hasNotif;
-    public Action<int, EventType> waitForTriggerCard;
-    public Action<int, string> onAlreadyPurchasedSpace;
+    public Action onNotYetPurchaseSpace { get; set; }
+    public Action<string> hasNotif { get; set; }
+    public Action<int, EventType> waitForTriggerCard { get; set; }
+    public Action<int, string> onAlreadyPurchasedSpace { get; set; }
 
     ConstructorParams inputs;
     Action<int>[] actionOnEventSpaces;

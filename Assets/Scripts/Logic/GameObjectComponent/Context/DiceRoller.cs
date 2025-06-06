@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,8 @@ public class DiceRoller : MonoBehaviour, INeedRefRuntime
     List<DieController> normalDice;
     DieController thirdDie;
 
-    int currentTotalDicePoint;
+    int currentDicePoint;
+    public Action<int> onFinishRoll { get; set; }
 
     public void Init(RuntimeRefWrapper refProvider)
     {
@@ -27,9 +29,37 @@ public class DiceRoller : MonoBehaviour, INeedRefRuntime
     {
         for (int i = 0; i < dice.Count; i++)
         {
-            dice[i].onBeginRoll = () => currentTotalDicePoint = 0;
-            dice[i].onFinishRoll = point => currentTotalDicePoint += point;
+            dice[i].onBeginRoll = () => currentDicePoint = 0;
+            dice[i].onFinishRoll = OnFinishRoll;
         }
+    }
+
+    void OnFinishRoll(int point, LayerMask dieType)
+    {
+        currentDicePoint += point;
+        if (dieType == normalDieMask)
+        {
+            if (NormalDiceHasFinishRoll())
+            {
+                onFinishRoll.Invoke(currentDicePoint);
+            }
+        }
+        else
+        {
+            onFinishRoll.Invoke(currentDicePoint);
+        }
+    }
+
+    bool NormalDiceHasFinishRoll()
+    {
+        for (int i = 0; i < normalDice.Count; i++)
+        {
+            if (normalDice[i].enabled)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     void SeparateDice(List<DieController> dice)

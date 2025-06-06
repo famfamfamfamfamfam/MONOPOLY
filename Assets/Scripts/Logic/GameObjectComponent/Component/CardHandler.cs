@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class CardHandler : MonoBehaviour
 {
-    public Action onFinishCardTrigger;
+    public Action onFinishCardTrigger { get; set; }
 
     [SerializeField]
     protected LayerMask cardsMask;
@@ -16,5 +16,10 @@ public abstract class CardHandler : MonoBehaviour
     protected bool HasClickedOn()
     {
         return Physics.RaycastNonAlloc(Camera.main.ScreenPointToRay(Input.mousePosition), hits, maxDistanceOfRaycast, cardsMask) > 0;
+    }
+
+    public void SetGamerIndex(int index)
+    {
+        gamerPlayIndex = index;
     }
 }

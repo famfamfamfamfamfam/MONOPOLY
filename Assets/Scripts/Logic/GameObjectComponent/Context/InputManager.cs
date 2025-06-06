@@ -11,17 +11,23 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     GameObject busTicketHandler;
 
-    public void Init(TriggerSpaceService triggerSv)
+    public void Init(TriggerSpaceService triggerSv, GameData data)
     {
         triggerSv.waitForTriggerCard = ListenToTriggerCard;
 
         DiceRoller roller = rollHandler.GetComponent<DiceRoller>();
-        communityCardHandler.GetComponent<CommunityChestHandler>()
-            .onFinishCardTrigger = () => roller.ActiveRoll(true);
-        chanceCardHandler.GetComponent<ChanceCardHandler>()
-            .onFinishCardTrigger = () => roller.ActiveRoll(true);
-        busTicketHandler.GetComponent<BusTickerHandler>()
-            .onFinishCardTrigger = () => roller.ActiveRoll(true);
+        CommunityChestHandler community = communityCardHandler.GetComponent<CommunityChestHandler>();
+        ChanceCardHandler chance = chanceCardHandler.GetComponent<ChanceCardHandler>();
+        BusTickerHandler bus = busTicketHandler.GetComponent<BusTickerHandler>();
+
+        community.SetGamerIndex(data.gamerPlayIndex);
+        chance.SetGamerIndex(data.gamerPlayIndex);
+        bus.SetGamerIndex(data.gamerPlayIndex);
+
+        community.onFinishCardTrigger = () => roller.ActiveRoll(true);
+        chance.onFinishCardTrigger = () => roller.ActiveRoll(true);
+        bus.onFinishCardTrigger = () => roller.ActiveRoll(true);
+
     }
 
     void ListenToTriggerCard(int playerIndex, EventType cardType)

@@ -6,6 +6,7 @@ public class Driver
     public struct ConstructorParams
     {
         public DataManager manager;
+        public GameData commonData;
         public PlayerDataService playerService;
         public TriggerSpaceService triggerSpaceService;
         public BusTicketService busTicketService;
@@ -16,7 +17,7 @@ public class Driver
 
     DataManager dataManager;
 
-    int gamerPlayIndex;
+    public GameData commonData;
 
     int playersInitialCoin;
     PlayerDataService playerService;
@@ -60,7 +61,7 @@ public class Driver
 
     public void PurchaseTheSpace()
     {
-        triggerSpaceService.PurchaseSpace(0, dataManager.curPosIndex % 52);
+        triggerSpaceService.PurchaseSpace(commonData.gamerPlayIndex, 52);
     }
 
     public void Notif(Action<string> notif)
@@ -87,7 +88,7 @@ public class Driver
     {
         return propertiesDictionary.ContainsKey(name)
             && playerService.IsOwner(
-                gamerPlayIndex, assetAccessor.GetAsset(propertiesDictionary[name]));
+                commonData.gamerPlayIndex, assetAccessor.GetAsset(propertiesDictionary[name]));
     }
 
 }
