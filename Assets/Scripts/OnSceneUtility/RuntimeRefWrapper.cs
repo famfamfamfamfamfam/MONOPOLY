@@ -18,11 +18,6 @@ public class RuntimeRefWrapper : MonoBehaviour
         }
         return result.Count > 0;
     }
-
-    public void AddRefToWrapper(GameObject obj)
-    {
-        theRefs.Add(obj);
-    }
 }
 
 public interface INeedRefRuntime

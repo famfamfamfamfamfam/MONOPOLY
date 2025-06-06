@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public class DieController : MonoBehaviour
     LayerMask _dieType;
 
     public LayerMask dieType { get => _dieType; }
+    public Action onBeginRoll { get; set; }
+    public Action<int> onFinishRoll { get; set; }
 
     float minBounceForce = 3f;
     float maxBounceForce = 5f;
@@ -55,6 +58,7 @@ public class DieController : MonoBehaviour
             }
         }
         CountPointIfDieHasStopped(out int point);
+        onFinishRoll.Invoke(point);
         ResetToRoll();
     }
 
@@ -62,9 +66,10 @@ public class DieController : MonoBehaviour
     {
         if (isOnGround)
         {
+            onBeginRoll.Invoke();
             rb.isKinematic = false;
-            rb.AddForce(Random.Range(minBounceForce, maxBounceForce) * Vector3.up, ForceMode.Impulse);
-            rb.AddTorque(Random.Range(minTorqueForce, maxTorqueForce) * Random.onUnitSphere, ForceMode.Impulse);
+            rb.AddForce(UnityEngine.Random.Range(minBounceForce, maxBounceForce) * Vector3.up, ForceMode.Impulse);
+            rb.AddTorque(UnityEngine.Random.Range(minTorqueForce, maxTorqueForce) * UnityEngine.Random.onUnitSphere, ForceMode.Impulse);
         }
     }
 

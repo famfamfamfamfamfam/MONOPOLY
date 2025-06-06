@@ -11,12 +11,24 @@ public class DiceRoller : MonoBehaviour, INeedRefRuntime
     List<DieController> normalDice;
     DieController thirdDie;
 
+    int currentTotalDicePoint;
+
     public void Init(RuntimeRefWrapper refProvider)
     {
         if (refProvider.GetReference(out List<DieController> allDice))
         {
+            AssignTheActions(allDice);
             normalDice = new List<DieController>();
             SeparateDice(allDice);
+        }
+    }
+
+    void AssignTheActions(List<DieController> dice)
+    {
+        for (int i = 0; i < dice.Count; i++)
+        {
+            dice[i].onBeginRoll = () => currentTotalDicePoint = 0;
+            dice[i].onFinishRoll = point => currentTotalDicePoint += point;
         }
     }
 

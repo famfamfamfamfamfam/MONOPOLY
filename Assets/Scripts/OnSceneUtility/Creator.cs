@@ -3,14 +3,15 @@ using UnityEngine;
 public class Creator : MonoBehaviour
 {
     [SerializeField]
-    GameObject[] objsNeedRefRuntime;
-
+    GameObject objNeedDiceRef;
     [SerializeField]
-    RuntimeRefWrapper playersWrapper;
+    GameObject[] objsNeedPlayerRef;
+    [SerializeField]
+    Transform playersParent;
     [SerializeField]
     Vector3 startPositionCenter;
     [SerializeField]
-    float deltaFromStartPositionCenter = 0.025f;
+    float deltaForPositions = 0.025f;
 
     readonly string worldPath = "Prefabs/WorldSpace";
     readonly string playerFolderPath = "Prefabs/Players";
@@ -18,22 +19,19 @@ public class Creator : MonoBehaviour
     {
         GameObject world = Resources.Load<GameObject>(worldPath);
         RuntimeRefWrapper wrapper = Instantiate(world).GetComponent<RuntimeRefWrapper>();
-        for (int i = 0; i < objsNeedRefRuntime.Length; i++)
-        {
-            objsNeedRefRuntime[i].GetComponent<INeedRefRuntime>().Init(wrapper);
-        }
+        objNeedDiceRef.GetComponent<INeedRefRuntime>().Init(wrapper);
         CreatePlayers();
     }
     void CreatePlayers()
     {
         GameObject[] players = Resources.LoadAll<GameObject>(playerFolderPath);
         Vector3[] playersPositions = PositionArranger.Instance
-            .GetThePositions(startPositionCenter, players.Length, deltaFromStartPositionCenter);
+            .GetThePositions(startPositionCenter, players.Length, deltaForPositions);
         for (int i = 0; i < players.Length; i++)
         {
-            playersWrapper.AddRefToWrapper(
-                Instantiate(players[i], playersPositions[i], Quaternion.identity, playersWrapper.transform)
-            );
+            RuntimeRefWrapper wrapper = Instantiate(players[i], playersPositions[i], Quaternion.identity, playersParent)
+                .GetComponent<RuntimeRefWrapper>();
+            objsNeedPlayerRef[i].GetComponent<INeedRefRuntime>().Init(wrapper);
         }
     }
 
