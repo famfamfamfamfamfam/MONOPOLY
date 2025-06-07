@@ -7,8 +7,8 @@ public class PositionArranger
     float delta;
 
     static PositionArranger instance;
-    public static PositionArranger Instance{
-        get{
+    public static PositionArranger Instance {
+        get {
             if (instance == null)
             {
                 instance = new PositionArranger();

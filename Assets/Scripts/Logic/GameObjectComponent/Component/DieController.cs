@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class DieController : MonoBehaviour
@@ -58,8 +59,7 @@ public class DieController : MonoBehaviour
             }
         }
         CountPointIfDieHasStopped(out int point);
-        onFinishRoll.Invoke(point, _dieType);
-        ResetToRoll();
+        ResetToRoll(point);
     }
 
     void Roll()
@@ -103,10 +103,11 @@ public class DieController : MonoBehaviour
         }
     }
 
-    void ResetToRoll()
+    void ResetToRoll(int point)
     {
         if (rb.IsSleeping() && rb.isKinematic && !isOnGround)
         {
+            onFinishRoll.Invoke(point, _dieType);
             isOnGround = true;
             enabled = false;
         }

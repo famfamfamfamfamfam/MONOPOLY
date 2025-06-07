@@ -61,7 +61,7 @@ public class Driver
 
     public void PurchaseTheSpace()
     {
-        triggerSpaceService.PurchaseSpace(commonData.gamerPlayIndex, 52);
+        triggerSpaceService.PurchaseSpace(commonData.gamerPlayIndex, playerService.GetCurrentStaySpaceIndex(commonData.gamerPlayIndex));
     }
 
     public void Notif(Action<string> notif)

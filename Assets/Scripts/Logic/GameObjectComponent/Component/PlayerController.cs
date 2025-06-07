@@ -9,19 +9,28 @@ public class PlayerController : MonoBehaviour
     public int playerIndex { get => _playerIndex; }
     Action<int, int> bonusAction;
     Action<int, int> finishSteps;
+    Action<int, int> changingCurrentSpace;
 
-    int currentSpaceIndex;
+    int _currentSpaceIndex;
+    int currentSpaceIndex { get => _currentSpaceIndex;
+        set {
+            changingCurrentSpace.Invoke(_playerIndex, value);
+            _currentSpaceIndex = value;
+        }
+    }
     float intervalOfSteps = 0.375f;
     bool canGiveBonus;
 
     ConfigInitializer.ConstructorParams configs;
 
-    public void Init(ConfigInitializer.ConstructorParams configs, Action<int, int> onPassGoSpace, Action<int, int> onFinishSteps)
+    public void Init(ConfigInitializer.ConstructorParams configs,
+        Action<int, int> onPassGoSpace, Action<int, int> onFinishSteps, Action<int, int> onChangeCurrentSpaceIndex)
     {
         this.configs = configs;
 
         bonusAction = onPassGoSpace;
         finishSteps = onFinishSteps;
+        changingCurrentSpace = onChangeCurrentSpaceIndex;
     }
 
     public void StartStep(int step)
@@ -42,7 +51,7 @@ public class PlayerController : MonoBehaviour
             }
             if (currentSpaceIndex > 0 && canGiveBonus)
             {
-                bonusAction.Invoke(playerIndex, configs.gameConfig.passGoSpaceBonus);
+                bonusAction.Invoke(_playerIndex, configs.gameConfig.passGoSpaceBonus);
                 canGiveBonus = false;
             }
 
@@ -64,7 +73,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(intervalOfSteps);
-        finishSteps.Invoke(playerIndex, currentSpaceIndex);
+        finishSteps.Invoke(_playerIndex, currentSpaceIndex);
     }
 
     void FindPositionAndMove(SpaceConfig[] spaces, int start)

@@ -5694,8 +5694,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scene: 1
   backSounds:
-  - {fileID: 8300000, guid: 8347d3facb9aaba45a608f948c463148, type: 3}
   - {fileID: 8300000, guid: 3102a167d5396ac418a094cd07b69f46, type: 3}
+  - {fileID: 8300000, guid: 8347d3facb9aaba45a608f948c463148, type: 3}
   - {fileID: 8300000, guid: 812b5550e7b982c4a945ef2c27d1447a, type: 3}
   - {fileID: 8300000, guid: 72f08ee6157f3b1488b860ebdbaef2ad, type: 3}
   backSourceSetter: {fileID: 1515297092}
@@ -7955,6 +7955,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34bc253a09a4d642894e5ccbe7041a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  diceRoller: {fileID: 335360705}
+  playersManager: {fileID: 857818298}
 --- !u!1 &1582797257
 GameObject:
   m_ObjectHideFlags: 0

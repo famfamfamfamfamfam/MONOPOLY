@@ -112,6 +112,13 @@ public class PlayerDataService
         UnityEngine.Debug.Log("Set current dice point to " + point);
     }
 
+    public int GetCurrentStaySpaceIndex(int playerIndex)
+    {
+        UnityEngine.Debug.Log("GetCurrentStaySpaceIndex-method runs from PlayerDataService");
+        UnityEngine.Debug.Log($"Be getting space index that the player at {playerIndex} index is staying: {allPlayersData[playerIndex].currentStaySpaceIndex}");
+        return allPlayersData[playerIndex].currentStaySpaceIndex;
+    }
+
     public void SetCurrentStaySpaceIndex(int playerIndex, int spaceIndex)
     {
         UnityEngine.Debug.Log("SetCurrentStaySpaceIndex-method runs from PlayerDataService");

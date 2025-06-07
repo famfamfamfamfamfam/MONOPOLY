@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,16 +50,16 @@ public class DiceRoller : MonoBehaviour, INeedRefRuntime
         }
     }
 
-    bool NormalDiceHasFinishRoll()
+    bool NormalDiceHasFinishRoll()//check trước khi tắt
     {
         for (int i = 0; i < normalDice.Count; i++)
         {
-            if (normalDice[i].enabled)
+            if (!normalDice[i].enabled)
             {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     void SeparateDice(List<DieController> dice)

@@ -45,6 +45,10 @@ public class AudioManager : MonoBehaviour
 
     void SetUpAudio(int index)
     {
+        if (index >= backSounds.Length)
+        {
+            index = index % backSounds.Length;
+        }
         backSourceSetter.SetUpTheAudio(backSounds[index]);
     }
 

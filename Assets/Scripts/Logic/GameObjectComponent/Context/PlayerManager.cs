@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     ConfigInitializer.ConstructorParams configs;
-    PlayerDataService dataService;
+    PlayerDataService playerService;
     TriggerSpaceService triggerSpaceService;
 
     List<PlayerController> players;
@@ -28,7 +28,7 @@ public class PlayerManager : MonoBehaviour
     public void Init(ConfigInitializer.ConstructorParams configs, PlayerDataService playerDataSv, TriggerSpaceService triggerSv)
     {
         this.configs = configs;
-        dataService = playerDataSv;
+        playerService = playerDataSv;
         triggerSpaceService = triggerSv;
     }
 
@@ -36,7 +36,13 @@ public class PlayerManager : MonoBehaviour
     {
         for (int i = 0; i < players.Count; i++)
         {
-            players[i].Init(configs, dataService.SetCurrentCoin, triggerSpaceService.TriggerSpace);
+            players[i].Init(configs, playerService.SetCurrentCoin, triggerSpaceService.TriggerSpace, playerService.SetCurrentStaySpaceIndex);
         }
+    }
+
+    public void OperateThePlayer(int playerIndex, int step)
+    {
+        Debug.LogWarning(playerIndex+" "+step);
+        players[playerIndex].StartStep(step);
     }
 }
