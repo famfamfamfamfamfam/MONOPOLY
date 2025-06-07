@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.VersionControl.Asset;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,36 +9,21 @@ public class PlayerController : MonoBehaviour
     int _playerIndex;
     public int playerIndex { get => _playerIndex; }
     Action<int, int> passGoSpace;
+    Action<int, int> finishSteps;
 
     int currentSpaceIndex;
     float intervalOfSteps = 0.375f;
 
     ConfigInitializer.ConstructorParams configs;
 
-    List<SpaceConfig> eventSpaces;
-    List<SpaceConfig> sub_eventSpaces;
-    List<SpaceConfig> companies;
-    List<SpaceConfig> sub_companies;
-    List<SpaceConfig> stations;
-    List<SpaceConfig> sub_stations;
-    List<PropertyConfig> properties;
-    List<PropertyConfig> sub_properties;
+    int latestStayProperty;
 
-    bool firtsTime = true;
-
-    public void Init(ConfigInitializer.ConstructorParams configs, Action<int, int> onPassGoSpace)
+    public void Init(ConfigInitializer.ConstructorParams configs, Action<int, int> onPassGoSpace, Action<int, int> onFinishSteps)
     {
-        eventSpaces = configs.eventSpaceGroup.spaces.ToList();
-        sub_eventSpaces = new List<SpaceConfig>();
-        companies = configs.companiesConfig.spaces.ToList();
-        sub_companies = new List<SpaceConfig>();
-        stations = configs.stationsConfig.spaces.ToList();
-        sub_stations = new List<SpaceConfig>();
-        properties = configs.propertySpaces.ToList();
-        sub_properties = new List<PropertyConfig>();
         this.configs = configs;
 
         passGoSpace = onPassGoSpace;
+        finishSteps = onFinishSteps;
     }
 
     public void StartStep(int step)
@@ -50,75 +33,64 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Step(int step)
     {
+        bool firstTime = true;
         for (int i = 0; i < step; i++)
         {
             yield return new WaitForSeconds(intervalOfSteps);
-            if (currentSpaceIndex == 0 && !firtsTime)
-            {
-                passGoSpace.Invoke(playerIndex, configs.gameConfig.passGoSpaceBonus);
-            }
             currentSpaceIndex++;
-            firtsTime = false;
             if (currentSpaceIndex == configs.gameConfig.spaceCount)
             {
-                TransferElement(eventSpaces, sub_eventSpaces, 0);
-                SwitchTheList(ref eventSpaces, ref sub_eventSpaces);
-                SwitchTheList(ref companies, ref sub_companies);
-                SwitchTheList(ref stations, ref sub_stations);
-                SwitchTheList(ref properties, ref sub_properties);
+                latestStayProperty = 0;
                 currentSpaceIndex = 0;
+                firstTime = false;
+            }
+            else if (currentSpaceIndex > 0 && !firstTime)
+            {
+                passGoSpace.Invoke(playerIndex, configs.gameConfig.passGoSpaceBonus);
             }
 
             if (configs.eventSpaceGroup.spacesIndices.Contains(currentSpaceIndex))
             {
-                FindPositionAndMove(eventSpaces, sub_eventSpaces);
+                FindPositionAndMove(configs.eventSpaceGroup.spaces);
             }
             else if (configs.companiesConfig.spacesIndices.Contains(currentSpaceIndex))
             {
-                FindPositionAndMove(companies, sub_companies);
+                FindPositionAndMove(configs.companiesConfig.spaces);
             }
             else if (configs.stationsConfig.spacesIndices.Contains(currentSpaceIndex))
             {
-                FindPositionAndMove(stations, sub_stations);
+                FindPositionAndMove(configs.stationsConfig.spaces);
             }
             else
             {
-                FindPositionAndMove(properties, sub_properties);
+                FindPositionAndMove(configs.propertySpaces, latestStayProperty, SetTheLatestPropertyIndex);
             }
         }
-
+        yield return new WaitForSeconds(intervalOfSteps);
+        finishSteps.Invoke(playerIndex, currentSpaceIndex);
     }
 
-    void TransferElement<T>(List<T> origin, List<T> target, int elementIndex)
+    void FindPositionAndMove(SpaceConfig[] spaces, int start = 0, Action<int> afterMove = null)
     {
-        if (origin.Count == 0)
-        {
-            return;
-        }
-        target.Add(origin[elementIndex]);
-        origin[elementIndex] = origin[origin.Count - 1];
-        origin.RemoveAt(origin.Count - 1);
-    }
-
-    private void SwitchTheList<T>(ref List<T> spaces, ref List<T> subSpaces)
-    {
-        List<T> tmp;
-        tmp = spaces;
-        spaces = subSpaces;
-        subSpaces = tmp;
-    }
-
-    void FindPositionAndMove<T>(List<T> spaces, List<T> subSpaces) where T : SpaceConfig
-    {
-        for (int i = 0; i < spaces.Count; i++)
+        for (int i = start; i < spaces.Length; i++)
         {
             if (spaces[i]?.indexFromGoSpace == currentSpaceIndex)
             {
-                transform.root.position = PositionArranger.Instance.GetThePositions(spaces[i].position)[playerIndex];
-                TransferElement(spaces, subSpaces, i);
+                Move(spaces[i]);
+                afterMove?.Invoke(i);
                 return;
             }
         }
+    }
+
+    void SetTheLatestPropertyIndex(int i)
+    {
+        latestStayProperty = i;
+    }
+
+    void Move(SpaceConfig space)
+    {
+        transform.root.position = PositionArranger.Instance.GetThePositions(space.position)[playerIndex];
     }
 
     void OnDisable()

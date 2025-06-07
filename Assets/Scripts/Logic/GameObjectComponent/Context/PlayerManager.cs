@@ -5,6 +5,7 @@ public class PlayerManager : MonoBehaviour
 {
     ConfigInitializer.ConstructorParams configs;
     PlayerDataService dataService;
+    TriggerSpaceService triggerSpaceService;
 
     List<PlayerController> players;
 
@@ -24,17 +25,18 @@ public class PlayerManager : MonoBehaviour
         players[playerIndex] = controller;
     }
 
-    public void Init(ConfigInitializer.ConstructorParams configs, PlayerDataService playerDataSv)
+    public void Init(ConfigInitializer.ConstructorParams configs, PlayerDataService playerDataSv, TriggerSpaceService triggerSv)
     {
         this.configs = configs;
         dataService = playerDataSv;
+        triggerSpaceService = triggerSv;
     }
 
     void Start()
     {
         for (int i = 0; i < players.Count; i++)
         {
-            players[i].Init(configs, dataService.SetCurrentCoin);
+            players[i].Init(configs, dataService.SetCurrentCoin, triggerSpaceService.TriggerSpace);
         }
     }
 
@@ -45,5 +47,4 @@ public class PlayerManager : MonoBehaviour
             players[0].StartStep(4);
         }
     }
-
 }

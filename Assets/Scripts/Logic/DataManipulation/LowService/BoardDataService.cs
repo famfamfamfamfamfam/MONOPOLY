@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class BoardDataService
 {
     BoardData data;
+    bool hasRemovedFromPurchasableSpaces;
     public BoardDataService(BoardData data)
     {
         this.data = data;
@@ -22,6 +23,7 @@ public class BoardDataService
             return false;
         }
         SetUpToGive(data.currentPurchasableSpaces, out spaceIndex);
+        hasRemovedFromPurchasableSpaces = true;
         return true;
     }
     void SetUpToGive(List<int> holder, out int output)
@@ -42,6 +44,11 @@ public class BoardDataService
         //lấy index của index-của-space trong list
         //sau đó ghi đè giá trị cuối của list vào phần tử có index đã lấy
         //độ phức tạp O(n) nhưng thực tế nhanh hơn so với phương thức Remove (ít hoán đổi hơn)
+        if (hasRemovedFromPurchasableSpaces)
+        {
+            hasRemovedFromPurchasableSpaces = false;
+            return;
+        }
         data.currentPurchasableSpaces[data.currentPurchasableSpaces.IndexOf(spaceIndex)]
             = data.currentPurchasableSpaces[data.currentPurchasableSpaces.Count - 1];
         //xóa phần tử cuối để đạt độ phức tạp O(1)

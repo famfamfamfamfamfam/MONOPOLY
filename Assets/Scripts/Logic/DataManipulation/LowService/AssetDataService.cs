@@ -16,7 +16,7 @@ public class AssetAccessor
     public IAsset GetAsset(int assetIndex)
     {
         Debug.Log("GetAsset(interface)-method runs from AssetAccessor");
-        return assetsData[assetIndex] as IAsset;
+        return assetsData[assetIndex];
     }
     public T GetAsset<T>(int assetIndex) where T : AssetData
     {

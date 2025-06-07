@@ -116,8 +116,4 @@ public class DataManager : MonoBehaviour
     }
     #endregion
 
-    void TriggerSpace(int playerIndex, int spaceIndex)
-    {
-        triggerSpaceService.TriggerSpace(playerIndex, spaceIndex);
-    }
 }

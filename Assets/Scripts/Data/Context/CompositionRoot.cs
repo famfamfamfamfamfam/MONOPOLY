@@ -96,7 +96,7 @@ public class CompositionRoot : MonoBehaviour
         #endregion
 
         DataManager.instance.Init(configs, dataOutputs, triggerSpaceService);
-        playerManager.Init(configs, playerService);
+        playerManager.Init(configs, playerService, triggerSpaceService);
         inputManager.Init(triggerSpaceService, dataOutputs.commonData);
         communityChestHandler.Init(communityService);
         chanceCardHandler.Init(chanceService);
