@@ -39,12 +39,4 @@ public class PlayerManager : MonoBehaviour
             players[i].Init(configs, dataService.SetCurrentCoin, triggerSpaceService.TriggerSpace);
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            players[0].StartStep(4);
-        }
-    }
 }

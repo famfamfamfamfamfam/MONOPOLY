@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,21 +7,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     int _playerIndex;
     public int playerIndex { get => _playerIndex; }
-    Action<int, int> passGoSpace;
+    Action<int, int> bonusAction;
     Action<int, int> finishSteps;
 
     int currentSpaceIndex;
     float intervalOfSteps = 0.375f;
+    bool canGiveBonus;
 
     ConfigInitializer.ConstructorParams configs;
-
-    int latestStayProperty;
 
     public void Init(ConfigInitializer.ConstructorParams configs, Action<int, int> onPassGoSpace, Action<int, int> onFinishSteps)
     {
         this.configs = configs;
 
-        passGoSpace = onPassGoSpace;
+        bonusAction = onPassGoSpace;
         finishSteps = onFinishSteps;
     }
 
@@ -33,59 +31,57 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Step(int step)
     {
-        bool firstTime = true;
         for (int i = 0; i < step; i++)
         {
             yield return new WaitForSeconds(intervalOfSteps);
             currentSpaceIndex++;
             if (currentSpaceIndex == configs.gameConfig.spaceCount)
             {
-                latestStayProperty = 0;
                 currentSpaceIndex = 0;
-                firstTime = false;
+                canGiveBonus = true;
             }
-            else if (currentSpaceIndex > 0 && !firstTime)
+            if (currentSpaceIndex > 0 && canGiveBonus)
             {
-                passGoSpace.Invoke(playerIndex, configs.gameConfig.passGoSpaceBonus);
+                bonusAction.Invoke(playerIndex, configs.gameConfig.passGoSpaceBonus);
+                canGiveBonus = false;
             }
 
             if (configs.eventSpaceGroup.spacesIndices.Contains(currentSpaceIndex))
             {
-                FindPositionAndMove(configs.eventSpaceGroup.spaces);
+                FindPositionAndMove(configs.eventSpaceGroup.spaces, 0);
             }
             else if (configs.companiesConfig.spacesIndices.Contains(currentSpaceIndex))
             {
-                FindPositionAndMove(configs.companiesConfig.spaces);
+                FindPositionAndMove(configs.companiesConfig.spaces, 0);
             }
             else if (configs.stationsConfig.spacesIndices.Contains(currentSpaceIndex))
             {
-                FindPositionAndMove(configs.stationsConfig.spaces);
+                FindPositionAndMove(configs.stationsConfig.spaces, 0);
             }
             else
             {
-                FindPositionAndMove(configs.propertySpaces, latestStayProperty, SetTheLatestPropertyIndex);
+                FindPositionAndMove(configs.propertySpaces, currentSpaceIndex);
             }
         }
         yield return new WaitForSeconds(intervalOfSteps);
         finishSteps.Invoke(playerIndex, currentSpaceIndex);
     }
 
-    void FindPositionAndMove(SpaceConfig[] spaces, int start = 0, Action<int> afterMove = null)
+    void FindPositionAndMove(SpaceConfig[] spaces, int start)
     {
+        if (spaces is PropertyConfig[])
+        {
+            Move(spaces[currentSpaceIndex]);
+            return;
+        }
         for (int i = start; i < spaces.Length; i++)
         {
-            if (spaces[i]?.indexFromGoSpace == currentSpaceIndex)
+            if (spaces[i].indexFromGoSpace == currentSpaceIndex)
             {
                 Move(spaces[i]);
-                afterMove?.Invoke(i);
                 return;
             }
         }
-    }
-
-    void SetTheLatestPropertyIndex(int i)
-    {
-        latestStayProperty = i;
     }
 
     void Move(SpaceConfig space)
