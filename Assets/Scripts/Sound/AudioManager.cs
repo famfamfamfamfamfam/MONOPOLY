@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AudioManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     CurrentScene scene;
     [SerializeField]
-    AudioClip[] backSounds;
+    Sound[] backSounds;
     [SerializeField]
     AudioResourceSetter backSourceSetter;
     [SerializeField]
@@ -19,8 +20,11 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     MonoBehaviour[] makeSoundInvokers;
 
+    [SerializeField]
+    UnityEvent<string> onUpdateSong;
+
     int currentSongIndex = -1;
-    AudioClip tmp;
+    Sound tmp;
 
     void Start()
     {
@@ -45,11 +49,7 @@ public class AudioManager : MonoBehaviour
 
     void SetUpAudio(int index)
     {
-        if (index >= backSounds.Length)
-        {
-            index = index % backSounds.Length;
-        }
-        backSourceSetter.SetUpTheAudio(backSounds[index]);
+        backSourceSetter.SetUpTheAudio(backSounds[index].theSound);
     }
 
     void SetVolumes()
@@ -83,7 +83,12 @@ public class AudioManager : MonoBehaviour
         {
             currentSongIndex = currentSongIndex >= backSounds.Length ? 0 : currentSongIndex + 1;
         }
+        if (currentSongIndex >= backSounds.Length)
+        {
+            currentSongIndex %= backSounds.Length;
+        }
         SetUpAudio(currentSongIndex);
+        onUpdateSong?.Invoke(backSounds[currentSongIndex].soundName);
     }
 
     void Update()

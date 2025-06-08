@@ -11,13 +11,7 @@ public class PlayerController : MonoBehaviour
     Action<int, int> finishSteps;
     Action<int, int> changingCurrentSpace;
 
-    int _currentSpaceIndex;
-    int currentSpaceIndex { get => _currentSpaceIndex;
-        set {
-            changingCurrentSpace.Invoke(_playerIndex, value);
-            _currentSpaceIndex = value;
-        }
-    }
+    int currentSpaceIndex;
     float intervalOfSteps = 0.375f;
     bool canGiveBonus;
 
@@ -72,6 +66,7 @@ public class PlayerController : MonoBehaviour
                 FindPositionAndMove(configs.propertySpaces, currentSpaceIndex);
             }
         }
+        changingCurrentSpace.Invoke(_playerIndex, currentSpaceIndex);
         yield return new WaitForSeconds(intervalOfSteps);
         finishSteps.Invoke(_playerIndex, currentSpaceIndex);
     }

@@ -168,13 +168,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scene: 0
   backSounds:
-  - {fileID: 8300000, guid: aaf0b07f8db888149a36517a80a9ae41, type: 3}
-  - {fileID: 8300000, guid: 274d8bab8d2dab14d9509b1225c70afa, type: 3}
-  - {fileID: 8300000, guid: 5ef8f0062225ffc4e87ebfe30384d857, type: 3}
+  - {fileID: 11400000, guid: f1f0b3d2b8ae49245960109cc309dc3e, type: 2}
+  - {fileID: 11400000, guid: 192da4ae6b5c4a94e9ab70fc1f5ccd07, type: 2}
+  - {fileID: 11400000, guid: 3247eb9f101e0cc40907766980f3e693, type: 2}
   backSourceSetter: {fileID: 1353858954}
   clickSFX_setter: {fileID: 324234245}
   makeSoundInvokers:
   - {fileID: 615702713}
+  onUpdateSong:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &47804193
 GameObject:
   m_ObjectHideFlags: 0
