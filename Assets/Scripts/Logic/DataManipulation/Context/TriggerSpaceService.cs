@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class TriggerSpaceService // some low cohesion, có thể cần tách thành các composition
+public class TriggerSpaceService // low cohesion, có thể cần tách thành các composition
 {
     public struct ConstructorParams
     {
@@ -29,6 +29,7 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
     public Action<string> hasNotif { get; set; }
     public Action<int, EventType> waitForTriggerCard { get; set; }
     public Action<int, string> onAlreadyPurchasedSpace { get; set; }
+    public Action onAlreadyTriggedEventSpace { get; set; }
 
     ConstructorParams inputs;
     Action<int>[] actionOnEventSpaces;
@@ -113,6 +114,7 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
         TriggerEventSpaces(playerIndex, spaceIndex, out bool hasTriggered);
         if (hasTriggered)
         {
+            onAlreadyTriggedEventSpace.Invoke();
             return;
         }
         TriggerPurchasableSpaces(playerIndex, spaceIndex);
@@ -207,16 +209,27 @@ public class TriggerSpaceService // some low cohesion, có thể cần tách th�
     {
         if (inputs.stations.spacesIndices.Contains(spaceIndex))
         {
-            return inputs.stations.spaces[spaceIndex].spaceName;
+            return inputs.stations.spaces[FindIndexOfSpaceIndex(inputs.stations.spaces, spaceIndex)].spaceName;
         }
         else if (inputs.companies.spacesIndices.Contains(spaceIndex))
         {
-            return inputs.companies.spaces[spaceIndex].spaceName;
+            return inputs.companies.spaces[FindIndexOfSpaceIndex(inputs.companies.spaces, spaceIndex)].spaceName;
         }
         else
         {
             return inputs.properties[spaceIndex].spaceName;
         }
+    }
+    int FindIndexOfSpaceIndex(SpaceConfig[] spaces, int spaceIndex)
+    {
+        for (int i = 0; i < spaces.Length; i++)
+        {
+            if (spaces[i].indexFromGoSpace == spaceIndex)
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

@@ -7,6 +7,7 @@ public class Driver
     {
         public DataManager manager;
         public GameData commonData;
+        public DiceRoller diceRoller;
         public PlayerDataService playerService;
         public TriggerSpaceService triggerSpaceService;
         public BusTicketService busTicketService;
@@ -17,7 +18,9 @@ public class Driver
 
     DataManager dataManager;
 
-    public GameData commonData;
+    DiceRoller diceRoller;
+
+    GameData commonData;
 
     int playersInitialCoin;
     PlayerDataService playerService;
@@ -28,6 +31,8 @@ public class Driver
     public Driver(ConstructorParams inputs)
     {
         dataManager = inputs.manager;
+        commonData = inputs.commonData;
+        diceRoller = inputs.diceRoller;
         playerService = inputs.playerService;
         triggerSpaceService = inputs.triggerSpaceService;
         playersInitialCoin = inputs.playersInitialCoin;
@@ -62,6 +67,11 @@ public class Driver
     public void PurchaseTheSpace()
     {
         triggerSpaceService.PurchaseSpace(commonData.gamerPlayIndex, playerService.GetCurrentStaySpaceIndex(commonData.gamerPlayIndex));
+    }
+
+    public void AfterPurchaseDecision()
+    {
+        diceRoller.ActiveRoll();
     }
 
     public void Notif(Action<string> notif)

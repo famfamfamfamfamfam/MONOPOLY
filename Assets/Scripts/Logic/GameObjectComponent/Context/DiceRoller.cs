@@ -8,6 +8,7 @@ public class DiceRoller : MonoBehaviour, INeedRefRuntime
     LayerMask normalDieMask;
     [SerializeField]
     LayerMask thirdDieMask;
+    LayerMask currentDieType;
 
     List<DieController> normalDice;
     DieController thirdDie;
@@ -37,6 +38,7 @@ public class DiceRoller : MonoBehaviour, INeedRefRuntime
     void OnFinishRoll(int point, LayerMask dieType)
     {
         currentDicePoint += point;
+        currentDieType = dieType;
         if (dieType == normalDieMask)
         {
             if (NormalDiceHasFinishRoll())
@@ -75,9 +77,9 @@ public class DiceRoller : MonoBehaviour, INeedRefRuntime
         }
     }
 
-    public void ActiveRoll(bool normalRolling)
+    public void ActiveRoll()
     {
-        if (normalRolling)
+        if (currentDieType == normalDieMask)
         {
             for (int i = 0; i < normalDice.Count; i++)
             {

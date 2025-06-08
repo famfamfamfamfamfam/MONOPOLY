@@ -7,6 +7,8 @@ public class CompositionRoot : MonoBehaviour
     [SerializeField]
     InputManager inputManager;
     [SerializeField]
+    DiceRoller diceRoller;
+    [SerializeField]
     CommunityChestHandler communityChestHandler;
     [SerializeField]
     ChanceCardHandler chanceCardHandler;
@@ -105,6 +107,7 @@ public class CompositionRoot : MonoBehaviour
         Driver.ConstructorParams driverInput = new Driver.ConstructorParams()
         {
             manager = DataManager.instance,
+            diceRoller = this.diceRoller,
             commonData = dataOutputs.commonData,
             playerService = this.playerService,
             triggerSpaceService = this.triggerSpaceService,

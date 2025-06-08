@@ -15,11 +15,13 @@ public class PurchaseOptionPanel : MonoBehaviour, INeedDriver
         yesOption.onClick.AddListener(() =>
         {
             driver.PurchaseTheSpace();
+            driver.AfterPurchaseDecision();
             gameObject.SetActive(false);
         });
         noOption.onClick.AddListener(() =>
         {
             Debug.Log("No purchase");
+            driver.AfterPurchaseDecision();
             gameObject.SetActive(false);
         });
     }

@@ -42,7 +42,6 @@ public class PlayerManager : MonoBehaviour
 
     public void OperateThePlayer(int playerIndex, int step)
     {
-        Debug.LogWarning(playerIndex+" "+step);
         players[playerIndex].StartStep(step);
     }
 }

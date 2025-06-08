@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 public class DieController : MonoBehaviour
@@ -16,6 +15,7 @@ public class DieController : MonoBehaviour
     public LayerMask dieType { get => _dieType; }
     public Action onBeginRoll { get; set; }
     public Action<int, LayerMask> onFinishRoll { get; set; }
+    int point;
 
     float minBounceForce = 3f;
     float maxBounceForce = 5f;
@@ -58,8 +58,8 @@ public class DieController : MonoBehaviour
                 Roll();
             }
         }
-        CountPointIfDieHasStopped(out int point);
-        ResetToRoll(point);
+        CountPointIfDieHasStopped();
+        ResetToRoll();
     }
 
     void Roll()
@@ -73,17 +73,16 @@ public class DieController : MonoBehaviour
         }
     }
 
-    void CountPointIfDieHasStopped(out int point)
+    void CountPointIfDieHasStopped()
     {
-        point = 0;
         if (rb.IsSleeping() && !rb.isKinematic)
         {
             rb.isKinematic = true;
-            GetPoint(ref point);
+            GetPoint();
         }
     }
 
-    void GetPoint(ref int point)
+    void GetPoint()
     {
         if (Physics.RaycastNonAlloc(
             transform.position, Vector3.up, dotsHit, maxDistanceToCheckDots,
@@ -103,7 +102,7 @@ public class DieController : MonoBehaviour
         }
     }
 
-    void ResetToRoll(int point)
+    void ResetToRoll()
     {
         if (rb.IsSleeping() && rb.isKinematic && !isOnGround)
         {

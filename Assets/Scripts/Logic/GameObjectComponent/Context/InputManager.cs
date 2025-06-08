@@ -24,9 +24,10 @@ public class InputManager : MonoBehaviour
         chance.SetGamerIndex(data.gamerPlayIndex);
         bus.SetGamerIndex(data.gamerPlayIndex);
 
-        community.onFinishCardTrigger = () => roller.ActiveRoll(true);
-        chance.onFinishCardTrigger = () => roller.ActiveRoll(true);
-        bus.onFinishCardTrigger = () => roller.ActiveRoll(true);
+        triggerSv.onAlreadyTriggedEventSpace = roller.ActiveRoll;
+        community.onFinishCardTrigger = roller.ActiveRoll;
+        chance.onFinishCardTrigger = roller.ActiveRoll;
+        bus.onFinishCardTrigger = roller.ActiveRoll;
 
     }
 
