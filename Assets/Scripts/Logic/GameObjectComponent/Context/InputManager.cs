@@ -24,7 +24,7 @@ public class InputManager : MonoBehaviour
         chance.SetGamerIndex(data.gamerPlayIndex);
         bus.SetGamerIndex(data.gamerPlayIndex);
 
-        triggerSv.onAlreadyTriggedEventSpace = roller.ActiveRoll;
+        triggerSv.onAlreadyTriggeredSpace = roller.ActiveRoll;
         community.onFinishCardTrigger = roller.ActiveRoll;
         chance.onFinishCardTrigger = roller.ActiveRoll;
         bus.onFinishCardTrigger = roller.ActiveRoll;

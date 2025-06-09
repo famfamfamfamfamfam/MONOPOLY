@@ -29,7 +29,7 @@ public class TriggerSpaceService // low cohesion, có thể cần tách thành c
     public Action<string> hasNotif { get; set; }
     public Action<int, EventType> waitForTriggerCard { get; set; }
     public Action<int, string> onAlreadyPurchasedSpace { get; set; }
-    public Action onAlreadyTriggedEventSpace { get; set; }
+    public Action onAlreadyTriggeredSpace { get; set; }
 
     ConstructorParams inputs;
     Action<int>[] actionOnEventSpaces;
@@ -114,7 +114,6 @@ public class TriggerSpaceService // low cohesion, có thể cần tách thành c
         TriggerEventSpaces(playerIndex, spaceIndex, out bool hasTriggered);
         if (hasTriggered)
         {
-            onAlreadyTriggedEventSpace.Invoke();
             return;
         }
         TriggerPurchasableSpaces(playerIndex, spaceIndex);
@@ -127,10 +126,18 @@ public class TriggerSpaceService // low cohesion, có thể cần tách thành c
         {
             Debug.Log("This is an event space");
             actionOnEventSpaces[(byte)theEvent].Invoke(playerIndex);
+            TryTriggeredSpaceNotCardEvent(theEvent);
             hasTriggered = true;
             return;
         }
         Debug.Log("This is not an event space");
+    }
+    void TryTriggeredSpaceNotCardEvent(EventType eventType)
+    {
+        if (eventType != EventType.CommunityChest && eventType != EventType.Chance && eventType != EventType.BusTicket)
+        {
+            onAlreadyTriggeredSpace.Invoke();
+        }
     }
     void TriggerPurchasableSpaces(int playerIndex, int spaceIndex)
     {
@@ -146,6 +153,7 @@ public class TriggerSpaceService // low cohesion, có thể cần tách thành c
         }
         else
         {
+            onAlreadyTriggeredSpace.Invoke();
             Debug.Log("Costed");
         }
     }
