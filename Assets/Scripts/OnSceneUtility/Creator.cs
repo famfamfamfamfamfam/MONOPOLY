@@ -3,6 +3,8 @@ using UnityEngine;
 public class Creator : MonoBehaviour
 {
     [SerializeField]
+    GameObject objNeedJailPosition;
+    [SerializeField]
     GameObject objNeedDiceRef;
     [SerializeField]
     GameObject[] objsNeedPlayerRef;
@@ -20,6 +22,7 @@ public class Creator : MonoBehaviour
         GameObject world = Resources.Load<GameObject>(worldPath);
         RuntimeRefWrapper wrapper = Instantiate(world).GetComponent<RuntimeRefWrapper>();
         objNeedDiceRef.GetComponent<INeedRefRuntime>().Init(wrapper);
+        objNeedJailPosition.GetComponent<INeedRefRuntime>().Init(wrapper);
         CreatePlayers();
     }
     void CreatePlayers()

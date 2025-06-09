@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TriggerSpaceService // low cohesion, có thể cần tách thành các composition
 {
-    public struct ConstructorParams
+    public class ConstructorParams
     {
         public SpaceGroupConfig eventSpaces;
         public CompaniesConfig companies;
@@ -15,7 +15,7 @@ public class TriggerSpaceService // low cohesion, có thể cần tách thành c
         public TaxConfig surtaxConfig;
 
         public Vector3 theJailPosition;
-        public Action<Vector3> moveToJail;
+        public Action<int, Vector3> moveToJail;
 
         public PropertyDataService propertyService;
         public CompanyDataService companyService;
@@ -80,7 +80,7 @@ public class TriggerSpaceService // low cohesion, có thể cần tách thành c
     void GoToJail(int prisonerIndex, string theNotif)
     {
         Debug.Log("GoToJail-method runs from TriggerSpaceService");
-        inputs.moveToJail.Invoke(inputs.theJailPosition);
+        inputs.moveToJail.Invoke(prisonerIndex, PositionArranger.Instance.GetThePositions(inputs.theJailPosition)[prisonerIndex]);
         inputs.playerService.BeInJail(prisonerIndex);
         hasNotif.Invoke(theNotif);
     }

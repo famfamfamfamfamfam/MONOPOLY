@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MessagePack;
+using UnityEditor.Networking.PlayerConnection;
 
 [Union(0, typeof(PropertyData))]
 [Union(1, typeof(StationData))]
@@ -23,16 +24,18 @@ public class PlayerData
     [Key(1)]
     public bool isInJail { get; set; }
     [Key(2)]
-    public HashSet<IAsset> assets { get; }
+    public int timeLeftToQuitJail { get; set; }
     [Key(3)]
-    public List<int> busTickets { get; }
+    public HashSet<IAsset> assets { get; }
     [Key(4)]
-    public int currentDicePoint { get; set; }
+    public List<int> busTickets { get; }
     [Key(5)]
-    public int currentCompanyCount { get; set; }
+    public int currentDicePoint { get; set; }
     [Key(6)]
-    public int currentStationCount { get; set; }
+    public int currentCompanyCount { get; set; }
     [Key(7)]
+    public int currentStationCount { get; set; }
+    [Key(8)]
     public int currentStaySpaceIndex { get; set; }
 
     public PlayerData() { }

@@ -3,10 +3,12 @@ using System;
 public class PlayerDataService
 {
     public Action<int, int> coinChanged { get; set; }
+    int jailTerm;
     PlayerData[] allPlayersData;
-    public PlayerDataService(PlayerData[] playersData)
+    public PlayerDataService(PlayerData[] playersData, PlayerGeneralConfig config)
     {
         allPlayersData = playersData;
+        jailTerm = config.timeToBeInJail;
     }
 
     public void AddAsset(int playerIndex, IAsset asset, Action<int> stationCostUpdate)
@@ -151,13 +153,26 @@ public class PlayerDataService
     {
         UnityEngine.Debug.Log("BeInJail-method runs from PlayerDataService");
         allPlayersData[playerIndex].isInJail = true;
+        allPlayersData[playerIndex].timeLeftToQuitJail = jailTerm;
         UnityEngine.Debug.Log($"The player at index {playerIndex} is in jail currently");
+    }
+
+    public void CoutdownToQuitJail(int playerIndex)
+    {
+        UnityEngine.Debug.Log("CoutdownToQuitJail-method runs from PlayerDataService");
+        allPlayersData[playerIndex].timeLeftToQuitJail--;
+        if (allPlayersData[playerIndex].timeLeftToQuitJail == 0)
+        {
+            QuitFromJail(playerIndex);
+        }
+        UnityEngine.Debug.Log($"The player at index {playerIndex} need more {allPlayersData[playerIndex].timeLeftToQuitJail} roll to quit from jail");
     }
 
     public void QuitFromJail(int playerIndex)
     {
         UnityEngine.Debug.Log("QuitFromJail-method runs from PlayerDataService");
         allPlayersData[playerIndex].isInJail = false;
+        allPlayersData[playerIndex].timeLeftToQuitJail = 0;
         UnityEngine.Debug.Log($"The player at index {playerIndex} quitted from jail");
     }
 

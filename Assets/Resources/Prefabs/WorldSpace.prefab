@@ -1761,6 +1761,7 @@ MonoBehaviour:
   - {fileID: 397307070133225600}
   - {fileID: 4182106859068068748}
   - {fileID: 6315419781543469863}
+  - {fileID: 7537430192201175028}
 --- !u!1 &704541718533497324
 GameObject:
   m_ObjectHideFlags: 0
@@ -6719,8 +6720,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637450114416202296}
   serializedVersion: 2
-  m_LocalRotation: {x: -1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -0.34578162, y: -0.004999998, z: -0.3396612}
+  m_LocalRotation: {x: -1, y: -0, z: -0, w: 0}
+  m_LocalPosition: {x: -0.34578162, y: -0.037499998, z: -0.33966118}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -36057,6 +36058,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3009123814974915004}
+  - component: {fileID: 5969281541857846214}
   m_Layer: 0
   m_Name: Jail
   m_TagString: Untagged
@@ -36073,13 +36075,25 @@ Transform:
   m_GameObject: {fileID: 7537430192201175028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.17922989, z: -0, w: 0.98380727}
-  m_LocalPosition: {x: 0.61, y: 0, z: -0.1}
+  m_LocalPosition: {x: 0.61, y: 0.0325, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3043656177979227056}
   m_Father: {fileID: 3637412487861660271}
   m_LocalEulerAnglesHint: {x: 0, y: -20.65, z: 0}
+--- !u!114 &5969281541857846214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7537430192201175028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1b50f0042360b24e8a4208428e83ebc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7575728819962627853
 GameObject:
   m_ObjectHideFlags: 0

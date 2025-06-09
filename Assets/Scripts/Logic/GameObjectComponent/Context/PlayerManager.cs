@@ -44,4 +44,10 @@ public class PlayerManager : MonoBehaviour
     {
         players[playerIndex].StartStep(step);
     }
+
+    public void MovePlayerTo(int playerIndex, Vector3 targetPosition)
+    {
+        players[playerIndex].MoveTo(targetPosition);
+    }
+
 }

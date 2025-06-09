@@ -4,4 +4,5 @@ using UnityEngine;
 public class PlayerGeneralConfig : ScriptableObject
 {
     public int initialCoin = 1500;
+    public int timeToBeInJail = 3;
 }

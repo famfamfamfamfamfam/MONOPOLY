@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -91,6 +92,11 @@ public class PlayerController : MonoBehaviour
     void Move(SpaceConfig space)
     {
         transform.root.position = PositionArranger.Instance.GetThePositions(space.position)[playerIndex];
+    }
+
+    public void MoveTo(Vector3 targetPosition)
+    {
+        transform.root.position = targetPosition;
     }
 
     void OnDisable()

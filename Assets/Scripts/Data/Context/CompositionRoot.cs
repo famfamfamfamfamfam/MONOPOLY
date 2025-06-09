@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class CompositionRoot : MonoBehaviour
+public class CompositionRoot : MonoBehaviour, INeedRefRuntime
 {
     [SerializeField]
     PlayerManager playerManager;
@@ -20,7 +21,9 @@ public class CompositionRoot : MonoBehaviour
     ConfigInitializer configInitializer;
     ConfigInitializer.ConstructorParams configs;
     TriggerSpaceService triggerSpaceService;
+    TriggerSpaceService.ConstructorParams inputForTriggerService;
     PlayerDataService playerService;
+
     void Awake()
     {
         #region Create Configs
@@ -41,7 +44,7 @@ public class CompositionRoot : MonoBehaviour
         DataInitializer dataInitializer = new DataInitializer(inputForData, out DataInitializer.ConstructorOuputs dataOutputs);
         #endregion
         #region Create Services
-        playerService = new PlayerDataService(dataOutputs.playersData);
+        playerService = new PlayerDataService(dataOutputs.playersData, configs.playersConfig);
 
         BoardDataService boardService = new BoardDataService(dataOutputs.boardData);
 
@@ -58,7 +61,11 @@ public class CompositionRoot : MonoBehaviour
             prison = configs.prisonVisitSpace,
             playerService = playerService,
             boardService = boardService,
-            moveAction = (position, index) => Debug.Log($"Move to the {index} space at {position}"),
+            moveAction = (position, index) =>
+            {
+                Debug.Log($"Move to the {index} space at {position}");
+                playerManager.MovePlayerTo(index, position);
+            },
             rollThirdDieAndStepAction = () => Debug.Log("Roll third die and step")
         };
         BusTicketService busService = new BusTicketService(inputForBusService);
@@ -77,23 +84,29 @@ public class CompositionRoot : MonoBehaviour
         PropertyDataService propertyService = new PropertyDataService(configs.propertySpaces, dataOutputs.assetsData);
         CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, dataOutputs.assetsData);
         StationDataService stationService = new StationDataService(configs.stationsConfig);
-        TriggerSpaceService.ConstructorParams inputForTriggerService = new TriggerSpaceService.ConstructorParams()
+
+        if (inputForTriggerService == null)
         {
-            eventSpaces = configs.eventSpaceGroup,
-            companies = configs.companiesConfig,
-            stations = configs.stationsConfig,
-            properties = configs.propertySpaces,
-            taxConfig = configs.taxConfig,
-            surtaxConfig = configs.surtaxConfig,
-            theJailPosition = Vector3.one,
-            moveToJail = position => Debug.Log($"Move to jail at {position}"),
-            propertyService = propertyService,
-            companyService = companyService,
-            stationService = stationService,
-            assetService = assetService,
-            boardService = boardService,
-            playerService = playerService
+            inputForTriggerService = new TriggerSpaceService.ConstructorParams();
+        }
+        inputForTriggerService.eventSpaces = configs.eventSpaceGroup;
+        inputForTriggerService.companies = configs.companiesConfig;
+        inputForTriggerService.stations = configs.stationsConfig;
+        inputForTriggerService.properties = configs.propertySpaces;
+        inputForTriggerService.taxConfig = configs.taxConfig;
+        inputForTriggerService.surtaxConfig = configs.surtaxConfig;
+        inputForTriggerService.moveToJail = (index, position) =>
+        {
+            Debug.Log($"Move to jail at {position}");
+            playerManager.MovePlayerTo(index, position);
         };
+        inputForTriggerService.propertyService = propertyService;
+        inputForTriggerService.companyService = companyService;
+        inputForTriggerService.stationService = stationService;
+        inputForTriggerService.assetService = assetService;
+        inputForTriggerService.boardService = boardService;
+        inputForTriggerService.playerService = this.playerService;
+
         triggerSpaceService = new TriggerSpaceService(inputForTriggerService);
         #endregion
 
@@ -126,6 +139,23 @@ public class CompositionRoot : MonoBehaviour
             }
         }
     }
+
+    public void Init(RuntimeRefWrapper refProvider)
+    {
+        if (inputForTriggerService == null)
+        {
+            inputForTriggerService = new TriggerSpaceService.ConstructorParams();
+        }
+        if (refProvider.GetReference(out List<JailPositionProperty> listHasOneElement))
+        {
+            inputForTriggerService.theJailPosition = listHasOneElement[0].position;
+        }
+        else
+        {
+            Debug.LogError("Cannot get jail position");
+        }
+    }
+
 
     private void OnDisable()
     {

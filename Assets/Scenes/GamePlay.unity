@@ -5333,6 +5333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b7e471b8758cc4ab656f195d2b5785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objNeedJailPosition: {fileID: 58722198}
   objNeedDiceRef: {fileID: 335360703}
   objsNeedPlayerRef:
   - {fileID: 725964835}
