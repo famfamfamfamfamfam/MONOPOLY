@@ -5,7 +5,6 @@ public class Driver
 {
     public struct ConstructorParams
     {
-        public DataManager manager;
         public GameData commonData;
         public DiceRoller diceRoller;
         public PlayerDataService playerService;
@@ -16,8 +15,6 @@ public class Driver
         public PropertyConfig[] properties;
     }
 
-    DataManager dataManager;
-
     DiceRoller diceRoller;
 
     GameData commonData;
@@ -27,10 +24,12 @@ public class Driver
     TriggerSpaceService triggerSpaceService;
     BusTicketService busTicketService;
     Dictionary<string, int> propertiesDictionary;
+    Dictionary<string, List<string>> propertiesNamesDictionary;
     AssetAccessor assetAccessor;
+    Func<int, bool> isUppercased;
+    int latestRetrievedPropertyIndex;
     public Driver(ConstructorParams inputs)
     {
-        dataManager = inputs.manager;
         commonData = inputs.commonData;
         diceRoller = inputs.diceRoller;
         playerService = inputs.playerService;
@@ -38,15 +37,69 @@ public class Driver
         playersInitialCoin = inputs.playersInitialCoin;
         busTicketService = inputs.busTicketService;
         assetAccessor = inputs.assetAccessor;
+        isUppercased = num => num >= 65 && num <= 90;
         propertiesDictionary = new();
+        propertiesNamesDictionary = new();
         for (int i = 0; i < inputs.properties.Length; i++)
         {
             if (inputs.properties[i] != null)
             {
                 propertiesDictionary.Add(inputs.properties[i].spaceName, i);
+                HandleStringsToInitNameDict(inputs.properties[i].spaceName);
             }
         }
         propertiesDictionary.TrimExcess();
+        propertiesNamesDictionary.TrimExcess();
+    }
+    void HandleStringsToInitNameDict(string s)
+    {
+        int c = 0;
+        bool hasJustCheckedSpecialChar = false;
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (!isUppercased(s[i]) && (s[i] < 97 || s[i] > 122) && (s[i] < 48 || s[i] > 57))
+            {
+                HandleSpecialChar(hasJustCheckedSpecialChar, s, ref c, i);
+                hasJustCheckedSpecialChar = true;
+            }
+            else
+            {
+                HandleUppercase(hasJustCheckedSpecialChar, s, ref c, i);
+                hasJustCheckedSpecialChar = false;
+            }
+        }
+    }
+    void HandleSpecialChar(bool hasJustCheckedSpecialChar, string s, ref int startOfCut, int cutPoint)
+    {
+        if (hasJustCheckedSpecialChar)
+        {
+            startOfCut++;
+            return;
+        }
+        AddTokenToDictionary(s, startOfCut, cutPoint);
+        startOfCut = cutPoint + 1;
+    }
+    void AddTokenToDictionary(string s, int first, int last)
+    {
+        string token = s.Substring(first, last - first);
+        if (propertiesNamesDictionary.ContainsKey(token))
+        {
+            propertiesNamesDictionary[token].Add(s);
+        }
+        else
+        {
+            propertiesNamesDictionary.Add(token, new List<string>() { s });
+        }
+    }
+    void HandleUppercase(bool hasJustCheckedSpecialChar, string s, ref int startOfCut, int cutPoint)
+    {
+        if (!hasJustCheckedSpecialChar
+            && cutPoint != 0
+            && isUppercased(s[cutPoint]))
+        {
+            AddTokenToDictionary(s, startOfCut, cutPoint);
+            startOfCut = cutPoint;
+        }
     }
 
     public int PlayersInitialCoin()
@@ -96,9 +149,31 @@ public class Driver
 
     public bool IsValidPropertyName(string name)
     {
-        return propertiesDictionary.ContainsKey(name)
-            && playerService.IsOwner(
-                commonData.gamerPlayIndex, assetAccessor.GetAsset(propertiesDictionary[name]));
+        bool contain = propertiesDictionary.TryGetValue(name, out int index);
+        if (contain)
+        {
+            latestRetrievedPropertyIndex = index;
+        }
+        return contain && playerService.IsOwner(commonData.gamerPlayIndex,
+            assetAccessor.GetAsset(latestRetrievedPropertyIndex));
+    }
+
+    public bool HasExistedInPropertiesNames(string partOfName, out List<int> propertyIndices)
+    {
+        bool result = propertiesNamesDictionary.TryGetValue(partOfName, out List<string> keys);
+        if (result)
+        {
+            propertyIndices = new List<int>();
+            for (int i = 0; i < keys.Count; i++)
+            {
+                propertyIndices.Add(propertiesDictionary[keys[i]]);
+            }
+        }
+        else
+        {
+            propertyIndices = null;
+        }
+        return result;
     }
 
 }

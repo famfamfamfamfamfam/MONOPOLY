@@ -110,7 +110,7 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
         triggerSpaceService = new TriggerSpaceService(inputForTriggerService);
         #endregion
 
-        DataManager.instance.Init(configs, dataOutputs, triggerSpaceService);
+        DataManager.instance.Init(dataOutputs);
         playerManager.Init(configs, playerService, triggerSpaceService);
         inputManager.Init(triggerSpaceService, dataOutputs.commonData);
         communityChestHandler.Init(communityService);
@@ -119,7 +119,6 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
 
         Driver.ConstructorParams driverInput = new Driver.ConstructorParams()
         {
-            manager = DataManager.instance,
             diceRoller = this.diceRoller,
             commonData = dataOutputs.commonData,
             playerService = this.playerService,

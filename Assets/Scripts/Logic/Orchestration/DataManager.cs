@@ -29,22 +29,18 @@ public class DataManager : MonoBehaviour
     public float backSoundsVolume { get; private set; }
     public float SFX_volume { get; private set; }
 
-    ConfigInitializer.ConstructorParams configs;
     DataInitializer.ConstructorOuputs data;
-    TriggerSpaceService triggerSpaceService;
 
     readonly string commonDataKey = "CommonData";
     readonly string playersDataKey = "PlayersData";
     readonly string assetsDataKey = "AssetsData";
     readonly string boardDataKey = "BoardData";
 
-    public void Init(ConfigInitializer.ConstructorParams configs, DataInitializer.ConstructorOuputs dataOutputs, TriggerSpaceService triggerSpaceService)
+    public void Init(DataInitializer.ConstructorOuputs dataOutputs)
     {
         gameData = dataOutputs.commonData;
         data = dataOutputs;
         gameData.gamerPlayIndex = gamerPlayIndex;
-        this.configs = configs;
-        this.triggerSpaceService = triggerSpaceService;
     }
 
     public void SetGamerPlayIndex(ref int index, int optionCount)

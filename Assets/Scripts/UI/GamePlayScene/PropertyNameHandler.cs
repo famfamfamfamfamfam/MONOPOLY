@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
 
     [SerializeField]
     GameObject buildOptionPanelObj;
+    [SerializeField]
+    GameObject pricesPresenter;
 
     public Driver driver { get; set; }
 
@@ -25,12 +28,23 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
         if (driver.IsValidPropertyName(input))
         {
             activeToggle.Invoke(buildOptionPanelObj);
+            activeToggle.Invoke(pricesPresenter);
+        }
+        else if (driver.HasExistedInPropertiesNames(input, out List<int> indices))
+        {
+            
+        }
+        else
+        {
+            buildOptionPanelObj.SetActive(false);
+            pricesPresenter.SetActive(false);
         }
     }
 
     void OnDisable()
     {
         buildOptionPanelObj.SetActive(false);
+        pricesPresenter.SetActive(false);
     }
 
     void OnDestroy()

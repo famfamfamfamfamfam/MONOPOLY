@@ -79,7 +79,7 @@ public class PropertyDataService : AssetDataService<PropertyConfig[]>
         Upgrade
     }
 
-    public void AddBuilding(int propertyIndex, BuildType type)
+    public void AddBuilding(int propertyIndex, BuildType buildType)
     {
         Debug.Log("AddBuilding-method runs from PropertyDataService");
         PropertyData data = assetsData[propertyIndex] as PropertyData;
@@ -90,24 +90,33 @@ public class PropertyDataService : AssetDataService<PropertyConfig[]>
         }
         if (data.currentBuildingCount == config[propertyIndex].maxBuildingInSpace)
         {
-            Debug.LogError("No build cause of reaching max");
+            Debug.LogWarning("No build cause of reaching max");
             return;
         }
+
         data.currentBuildingCount++;
-        switch (type)
+        switch (buildType)
         {
             case BuildType.BuildNew:
-                SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterBuild);
-                Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterBuild);
-                Debug.Log($"There are {data.currentBuildingCount} in property currently");
+                BuildNew(data, propertyIndex);
                 return;
             case BuildType.Upgrade:
-                data.currentBuildingCount -= config[propertyIndex].upgradeThreshold - 1;
-                SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterUpgrade);
-                Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterUpgrade);
-                Debug.Log($"There are {data.currentBuildingCount} in property currently");
+                Upgrade(data, propertyIndex);
                 return;
         }
+    }
+    void BuildNew(PropertyData data, int propertyIndex)
+    {
+        SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterBuild);
+        Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterBuild);
+        Debug.Log($"There are {data.currentBuildingCount} in property currently");
+    }
+    void Upgrade(PropertyData data, int propertyIndex)
+    {
+        data.currentBuildingCount -= config[propertyIndex].upgradeThreshold;
+        SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterUpgrade);
+        Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterUpgrade);
+        Debug.Log($"There are {data.currentBuildingCount} in property currently");
     }
 
     public void SetCurrentPropertyIndex(int propertyIndex)

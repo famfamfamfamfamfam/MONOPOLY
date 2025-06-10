@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using MessagePack;
-using UnityEditor.Networking.PlayerConnection;
 
 [Union(0, typeof(PropertyData))]
 [Union(1, typeof(StationData))]
