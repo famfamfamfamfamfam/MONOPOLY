@@ -27,24 +27,43 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
     {
         if (driver.IsValidPropertyName(input))
         {
-            activeToggle.Invoke(buildOptionPanelObj);
-            activeToggle.Invoke(pricesPresenter);
+            Show(buildOptionPanelObj);
+            Show(pricesPresenter);
         }
         else if (driver.HasExistedInPropertiesNames(input, out List<int> indices))
         {
-            
+            Show(pricesPresenter);
+            Debug.LogWarning(indices.Count);
         }
         else
         {
-            buildOptionPanelObj.SetActive(false);
-            pricesPresenter.SetActive(false);
+            HideAll();
+        }
+    }
+
+    void Show(GameObject gObj)
+    {
+        if (!gObj.activeSelf)
+        {
+            activeToggle.Invoke(gObj);
+        }
+    }
+
+    void HideAll()
+    {
+        if (buildOptionPanelObj.activeSelf)
+        {
+            activeToggle.Invoke(buildOptionPanelObj);
+        }
+        if (pricesPresenter.activeSelf)
+        {
+            activeToggle.Invoke(pricesPresenter);
         }
     }
 
     void OnDisable()
     {
-        buildOptionPanelObj.SetActive(false);
-        pricesPresenter.SetActive(false);
+        HideAll();
     }
 
     void OnDestroy()

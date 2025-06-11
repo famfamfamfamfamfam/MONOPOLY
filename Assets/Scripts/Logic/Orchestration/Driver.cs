@@ -24,9 +24,10 @@ public class Driver
     TriggerSpaceService triggerSpaceService;
     BusTicketService busTicketService;
     Dictionary<string, int> propertiesDictionary;
-    Dictionary<string, List<string>> propertiesNamesDictionary;
+    Dictionary<string, HashSet<string>> propertiesNamesDictionary;
+    List<string> inputTokens;
     AssetAccessor assetAccessor;
-    Func<int, bool> isUppercased;
+    bool isInitializingSourceDict = true;
     int latestRetrievedPropertyIndex;
     public Driver(ConstructorParams inputs)
     {
@@ -37,68 +38,37 @@ public class Driver
         playersInitialCoin = inputs.playersInitialCoin;
         busTicketService = inputs.busTicketService;
         assetAccessor = inputs.assetAccessor;
-        isUppercased = num => num >= 65 && num <= 90;
         propertiesDictionary = new();
         propertiesNamesDictionary = new();
+        inputTokens = new List<string>();
         for (int i = 0; i < inputs.properties.Length; i++)
         {
             if (inputs.properties[i] != null)
             {
                 propertiesDictionary.Add(inputs.properties[i].spaceName, i);
-                HandleStringsToInitNameDict(inputs.properties[i].spaceName);
+                InvertedIndexMachine.Instance.SplitString(inputs.properties[i].spaceName, AddTokenToCollection);
             }
         }
+        isInitializingSourceDict = false;
         propertiesDictionary.TrimExcess();
         propertiesNamesDictionary.TrimExcess();
     }
-    void HandleStringsToInitNameDict(string s)
-    {
-        int c = 0;
-        bool hasJustCheckedSpecialChar = false;
-        for (int i = 0; i < s.Length; i++)
-        {
-            if (!isUppercased(s[i]) && (s[i] < 97 || s[i] > 122) && (s[i] < 48 || s[i] > 57))
-            {
-                HandleSpecialChar(hasJustCheckedSpecialChar, s, ref c, i);
-                hasJustCheckedSpecialChar = true;
-            }
-            else
-            {
-                HandleUppercase(hasJustCheckedSpecialChar, s, ref c, i);
-                hasJustCheckedSpecialChar = false;
-            }
-        }
-    }
-    void HandleSpecialChar(bool hasJustCheckedSpecialChar, string s, ref int startOfCut, int cutPoint)
-    {
-        if (hasJustCheckedSpecialChar)
-        {
-            startOfCut++;
-            return;
-        }
-        AddTokenToDictionary(s, startOfCut, cutPoint);
-        startOfCut = cutPoint + 1;
-    }
-    void AddTokenToDictionary(string s, int first, int last)
+    void AddTokenToCollection(string s, int first, int last)
     {
         string token = s.Substring(first, last - first);
+        if (!isInitializingSourceDict)
+        {
+            inputTokens.Add(token);
+            return;
+        }
+
         if (propertiesNamesDictionary.ContainsKey(token))
         {
             propertiesNamesDictionary[token].Add(s);
         }
         else
         {
-            propertiesNamesDictionary.Add(token, new List<string>() { s });
-        }
-    }
-    void HandleUppercase(bool hasJustCheckedSpecialChar, string s, ref int startOfCut, int cutPoint)
-    {
-        if (!hasJustCheckedSpecialChar
-            && cutPoint != 0
-            && isUppercased(s[cutPoint]))
-        {
-            AddTokenToDictionary(s, startOfCut, cutPoint);
-            startOfCut = cutPoint;
+            propertiesNamesDictionary.Add(token, new HashSet<string>() { s });
         }
     }
 
@@ -160,13 +130,34 @@ public class Driver
 
     public bool HasExistedInPropertiesNames(string partOfName, out List<int> propertyIndices)
     {
-        bool result = propertiesNamesDictionary.TryGetValue(partOfName, out List<string> keys);
+        inputTokens.Clear();
+        InvertedIndexMachine.Instance.SplitString(partOfName, AddTokenToCollection);
+        HashSet<string> intersect = null;
+        bool result = false;
+        for (int i = 0; i < inputTokens.Count; i++)
+        {
+            UnityEngine.Debug.LogWarning(inputTokens[i]);
+            if (propertiesNamesDictionary.TryGetValue(inputTokens[i], out HashSet<string> keys))
+            {
+                if (intersect == null)
+                {
+                    intersect = keys;
+                    result = true;
+                }
+                else
+                {
+                    intersect.IntersectWith(keys);
+                }
+            }
+        }
+
         if (result)
         {
             propertyIndices = new List<int>();
-            for (int i = 0; i < keys.Count; i++)
+            foreach (string key in intersect)
             {
-                propertyIndices.Add(propertiesDictionary[keys[i]]);
+                UnityEngine.Debug.LogWarning(key);
+                propertyIndices.Add(propertiesDictionary[key]);
             }
         }
         else
