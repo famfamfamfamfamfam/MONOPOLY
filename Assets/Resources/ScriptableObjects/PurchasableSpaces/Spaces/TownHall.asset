@@ -16,10 +16,10 @@ MonoBehaviour:
   indexFromGoSpace: 40
   position: {x: 0.1725, y: 0.01, z: -1.25}
   purchaseCost: 300
-  buildCost: 0
-  upgradeThreshold: 0
-  upgradeCost: 0
-  maxBuildingInSpace: 0
-  rentCostAfterPurchase: 0
-  rentCostIncreaseAfterBuild: 0
-  rentCostIncreaseAfterUpgrade: 0
+  buildCost: 40
+  upgradeThreshold: 2
+  upgradeCost: 60
+  maxBuildingInSpace: 4
+  rentCostAfterPurchase: 160
+  rentCostIncreaseAfterBuild: 30
+  rentCostIncreaseAfterUpgrade: 40

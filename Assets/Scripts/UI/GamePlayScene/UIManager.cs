@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField]
+    PropertyNameHandler nameHandler;
+    [SerializeField]
+    PropertyPricesPresenter presenter;
+
+    public void Init(PropertyConfig[] propertyConfigs)
     {
-        
+        presenter.SetPropertyConfigs(propertyConfigs);
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        nameHandler.onFindAListOfPropertiesByKeyword = presenter.UpdatePricesToDisplay;    
     }
 }

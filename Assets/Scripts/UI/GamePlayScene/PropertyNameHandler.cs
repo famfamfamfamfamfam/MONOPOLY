@@ -11,7 +11,11 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
     [SerializeField]
     GameObject buildOptionPanelObj;
     [SerializeField]
-    GameObject pricesPresenter;
+    GameObject pricesSwitch;
+    [SerializeField]
+    GameObject pricesDisplay;
+
+    public Action<List<int>> onFindAListOfPropertiesByKeyword { get; set; }
 
     public Driver driver { get; set; }
 
@@ -28,11 +32,12 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
         if (driver.IsValidPropertyName(input))
         {
             Show(buildOptionPanelObj);
-            Show(pricesPresenter);
+            Show(pricesSwitch);
         }
         else if (driver.HasExistedInPropertiesNames(input, out List<int> indices))
         {
-            Show(pricesPresenter);
+            onFindAListOfPropertiesByKeyword.Invoke(indices);
+            Show(pricesSwitch);
             Debug.LogWarning(indices.Count);
         }
         else
@@ -55,9 +60,13 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
         {
             activeToggle.Invoke(buildOptionPanelObj);
         }
-        if (pricesPresenter.activeSelf)
+        if (pricesSwitch.activeSelf)
         {
-            activeToggle.Invoke(pricesPresenter);
+            activeToggle.Invoke(pricesSwitch);
+        }
+        if (pricesDisplay.activeSelf)
+        {
+            activeToggle.Invoke(pricesDisplay);
         }
     }
 

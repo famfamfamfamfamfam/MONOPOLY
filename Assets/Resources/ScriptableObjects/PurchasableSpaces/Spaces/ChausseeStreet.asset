@@ -17,7 +17,7 @@ MonoBehaviour:
   position: {x: -0.84, y: 0.01, z: -0.636}
   purchaseCost: 100
   buildCost: 75
-  upgradeThreshold: 4
+  upgradeThreshold: 2
   upgradeCost: 75
   maxBuildingInSpace: 4
   rentCostAfterPurchase: 65

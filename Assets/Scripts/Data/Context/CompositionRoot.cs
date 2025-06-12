@@ -17,6 +17,8 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
     BusTickerHandler busTickerHandler;
     [SerializeField]
     GameObject[] needDriverUI;
+    [SerializeField]
+    UIManager uiManager;
 
     ConfigInitializer configInitializer;
     ConfigInitializer.ConstructorParams configs;
@@ -111,6 +113,7 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
         #endregion
 
         DataManager.instance.Init(dataOutputs);
+        uiManager.Init(configs.propertySpaces);
         playerManager.Init(configs, playerService, triggerSpaceService);
         inputManager.Init(triggerSpaceService, dataOutputs.commonData);
         communityChestHandler.Init(communityService);
