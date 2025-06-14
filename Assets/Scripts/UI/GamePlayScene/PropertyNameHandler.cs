@@ -15,7 +15,8 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
     [SerializeField]
     GameObject pricesDisplay;
 
-    public Action<List<int>> onFindAListOfPropertiesByKeyword { get; set; }
+    public Action<int> onFoundAssetByFullName { get; set; }
+    public Action<List<int>> onFoundAListOfPropertiesByKeyword { get; set; }
 
     public Driver driver { get; set; }
 
@@ -29,16 +30,17 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
 
     void Handle(string input)
     {
-        if (driver.IsValidPropertyName(input))
+        if (driver.IsValidPropertyName(input, out int index))
         {
+            onFoundAssetByFullName.Invoke(index);
             Show(buildOptionPanelObj);
             Show(pricesSwitch);
         }
         else if (driver.HasExistedInPropertiesNames(input, out List<int> indices))
         {
-            onFindAListOfPropertiesByKeyword.Invoke(indices);
+            Hide(buildOptionPanelObj);
+            onFoundAListOfPropertiesByKeyword.Invoke(indices);
             Show(pricesSwitch);
-            Debug.LogWarning(indices.Count);
         }
         else
         {
@@ -56,17 +58,15 @@ public class PropertyNameHandler : MonoBehaviour, INeedDriver
 
     void HideAll()
     {
-        if (buildOptionPanelObj.activeSelf)
+        Hide(buildOptionPanelObj);
+        Hide(pricesSwitch);
+        Hide(pricesDisplay);
+    }
+    void Hide(GameObject gObj)
+    {
+        if (gObj.activeSelf)
         {
-            activeToggle.Invoke(buildOptionPanelObj);
-        }
-        if (pricesSwitch.activeSelf)
-        {
-            activeToggle.Invoke(pricesSwitch);
-        }
-        if (pricesDisplay.activeSelf)
-        {
-            activeToggle.Invoke(pricesDisplay);
+            activeToggle.Invoke(gObj);
         }
     }
 

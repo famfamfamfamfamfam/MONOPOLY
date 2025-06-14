@@ -27,15 +27,20 @@ public class PropertyPricesPresenter : MonoBehaviour
         for (int i = 0; i < propertyIndices.Count; i++)
         {
             int currentIndex = propertyIndices[i];
-            content.text += '\t' + propertyConfigs[currentIndex].spaceName + '\n';
-            content.text += buildCost + propertyConfigs[currentIndex].buildCost + "$\n";
-            content.text += upgradeCost + propertyConfigs[currentIndex].upgradeCost + "$\n";
-            content.text += upgradeThreshold + propertyConfigs[currentIndex].upgradeThreshold + '\n';
-            content.text += maxBuildingInSpace + propertyConfigs[currentIndex].maxBuildingInSpace + '\n';
-            content.text += rentCostAfterPurchase + 
-                ((float)propertyConfigs[currentIndex].purchaseCost / propertyConfigs[currentIndex].rentCostAfterPurchase) + '\n';
-            content.text += rentCostAfterBuild + propertyConfigs[currentIndex].rentCostIncreaseAfterBuild + "$\n";
-            content.text += rentCostAfterUpgrade + propertyConfigs[currentIndex].rentCostIncreaseAfterUpgrade + "$\n\n";
+            UpdatePricesToDisplay(currentIndex);
         }
+    }
+
+    public void UpdatePricesToDisplay(int propertyIndex)
+    {
+        content.text += '\t' + propertyConfigs[propertyIndex].spaceName + '\n';
+        content.text += buildCost + propertyConfigs[propertyIndex].buildCost + "$\n";
+        content.text += upgradeCost + propertyConfigs[propertyIndex].upgradeCost + "$\n";
+        content.text += upgradeThreshold + propertyConfigs[propertyIndex].upgradeThreshold + '\n';
+        content.text += maxBuildingInSpace + propertyConfigs[propertyIndex].maxBuildingInSpace + '\n';
+        content.text += rentCostAfterPurchase +
+            ((float)propertyConfigs[propertyIndex].purchaseCost / propertyConfigs[propertyIndex].rentCostAfterPurchase) + '\n';
+        content.text += rentCostAfterBuild + propertyConfigs[propertyIndex].rentCostIncreaseAfterBuild + "$\n";
+        content.text += rentCostAfterUpgrade + propertyConfigs[propertyIndex].rentCostIncreaseAfterUpgrade + "$\n\n";
     }
 }

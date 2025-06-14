@@ -87,6 +87,8 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
         CompanyDataService companyService = new CompanyDataService(configs.companiesConfig, dataOutputs.assetsData);
         StationDataService stationService = new StationDataService(configs.stationsConfig);
 
+        BuildService buildService = new BuildService(playerService, propertyService);
+
         if (inputForTriggerService == null)
         {
             inputForTriggerService = new TriggerSpaceService.ConstructorParams();
@@ -126,6 +128,7 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
             commonData = dataOutputs.commonData,
             playerService = this.playerService,
             triggerSpaceService = this.triggerSpaceService,
+            buildService = buildService,
             busTicketService = busService,
             playersInitialCoin = configs.playersConfig.initialCoin,
             assetAccessor = assetService,

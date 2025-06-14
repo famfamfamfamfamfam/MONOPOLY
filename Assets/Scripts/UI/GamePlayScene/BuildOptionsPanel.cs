@@ -5,13 +5,16 @@ public class BuildOptionsPanel : MonoBehaviour, INeedDriver
 {
     [SerializeField]
     Button addNewBuildingBtn;
-    [SerializeField]
-    Button upgradePropertyBtn;
-
     public Driver driver { get; set; }
 
     void Start()
     {
-        
+        addNewBuildingBtn.onClick.AddListener(driver.BuildNew);
+    }
+
+    void OnDestroy()
+    {
+        addNewBuildingBtn.onClick.RemoveAllListeners();
+
     }
 }

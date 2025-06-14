@@ -13,6 +13,7 @@ public class Driver
         public int playersInitialCoin;
         public AssetAccessor assetAccessor;
         public PropertyConfig[] properties;
+        public BuildService buildService;
     }
 
     DiceRoller diceRoller;
@@ -22,6 +23,7 @@ public class Driver
     int playersInitialCoin;
     PlayerDataService playerService;
     TriggerSpaceService triggerSpaceService;
+    BuildService buildService;
     BusTicketService busTicketService;
     Dictionary<string, int> propertiesDictionary;
     Dictionary<string, HashSet<string>> propertiesNamesDictionary;
@@ -35,6 +37,7 @@ public class Driver
         diceRoller = inputs.diceRoller;
         playerService = inputs.playerService;
         triggerSpaceService = inputs.triggerSpaceService;
+        buildService = inputs.buildService;
         playersInitialCoin = inputs.playersInitialCoin;
         busTicketService = inputs.busTicketService;
         assetAccessor = inputs.assetAccessor;
@@ -117,12 +120,13 @@ public class Driver
         triggerSpaceService.onAlreadyPurchasedSpace = addToAssetList;
     }
 
-    public bool IsValidPropertyName(string name)
+    public bool IsValidPropertyName(string name, out int propertyIndex)
     {
         bool contain = propertiesDictionary.TryGetValue(name, out int index);
+        propertyIndex = -1;
         if (contain)
         {
-            latestRetrievedPropertyIndex = index;
+            propertyIndex = latestRetrievedPropertyIndex = index;
         }
         return contain && playerService.IsOwner(commonData.gamerPlayIndex,
             assetAccessor.GetAsset(latestRetrievedPropertyIndex));
@@ -165,6 +169,15 @@ public class Driver
             propertyIndices = null;
         }
         return result;
+    }
+
+    public void BuildNew()
+    {
+        buildService.BuildNewHouse(commonData.gamerPlayIndex, latestRetrievedPropertyIndex);
+    }
+    public void UpgradeBuildings(BuildingRate materialBuildings, BuildingRate expectedBuilding)
+    {
+        buildService.UpgradeHouses(commonData.gamerPlayIndex, latestRetrievedPropertyIndex, materialBuildings, expectedBuilding);
     }
 
 }

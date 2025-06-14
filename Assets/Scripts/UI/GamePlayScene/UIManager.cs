@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        nameHandler.onFindAListOfPropertiesByKeyword = presenter.UpdatePricesToDisplay;    
+        nameHandler.onFoundAListOfPropertiesByKeyword = presenter.UpdatePricesToDisplay;
+        nameHandler.onFoundAssetByFullName = presenter.UpdatePricesToDisplay;
     }
 }
