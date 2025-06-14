@@ -21,7 +21,7 @@ public class BusTicketsPanel : MonoBehaviour, INeedDriver
 
         quitFromJailTicket.onClick.AddListener(
             () => UseCard(quitFromJailTicket.gameObject,
-                (int)BusTicketsConfig.KeepToUseTicket.QuitFromJail)
+                (byte)BusTicketsConfig.KeepToUseTicket.QuitFromJail)
         );
         for (int i = 0; i < thirdDieRollTickets.Length; i++)
         {
@@ -31,7 +31,7 @@ public class BusTicketsPanel : MonoBehaviour, INeedDriver
             //phải khởi tạo mới sau mỗi lần lặp để giữ các tham chiếu đến các biến index khác nhau
             thirdDieRollTickets[i].onClick.AddListener(
                 () => UseCard(thirdDieRollTickets[index].gameObject,
-                    (int)BusTicketsConfig.KeepToUseTicket.ThirdDieRoll)
+                    (byte)BusTicketsConfig.KeepToUseTicket.ThirdDieRoll)
             );
         }
         gameObject.SetActive(false);

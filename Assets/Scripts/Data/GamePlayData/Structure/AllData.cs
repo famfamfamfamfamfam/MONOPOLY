@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MessagePack;
 
@@ -70,10 +71,13 @@ public abstract class AssetData : IAsset
 public class PropertyData : AssetData
 {
     public PropertyData() { }
-    public PropertyData(PropertyConfig config) : base(config.rentCostAfterPurchase) { }
 
     [Key(2)]
-    public int currentBuildingCount { get; set; }
+    public int[] currentBuildingCount { get; set; }
+    public PropertyData(PropertyConfig config) : base(config.rentCostAfterPurchase)
+    {
+        currentBuildingCount = new int[Enum.GetValues(typeof(BuildingRate)).Length - 1];
+    }
 
     public override IAsset.AssetType type => IAsset.AssetType.Property;
 }
@@ -109,11 +113,11 @@ public class BoardData
         currentTakableBusTickets = new List<int>();
         for (int i = 0; i < bus.instantUseTickets.Length; i++)
         {
-            currentTakableBusTickets.Add((int)bus.instantUseTickets[i]);
+            currentTakableBusTickets.Add((byte)bus.instantUseTickets[i]);
         }
         for (int i = 0; i < bus.keepToUseTickets.Length; i++)
         {
-            currentTakableBusTickets.Add((int)bus.keepToUseTickets[i]);
+            currentTakableBusTickets.Add((byte)bus.keepToUseTickets[i]);
         }
 
         currentPurchasableSpaces = new List<int>();

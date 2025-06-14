@@ -79,7 +79,7 @@ public class PropertyDataService : AssetDataService<PropertyConfig[]>
         Upgrade
     }
 
-    public void AddBuilding(int propertyIndex, BuildType buildType)
+    public void AddBuilding(int propertyIndex, BuildType buildType, BuildingRate material = BuildingRate.None, BuildingRate expectOutcome = BuildingRate.None)
     {
         Debug.Log("AddBuilding-method runs from PropertyDataService");
         PropertyData data = assetsData[propertyIndex] as PropertyData;
@@ -88,35 +88,70 @@ public class PropertyDataService : AssetDataService<PropertyConfig[]>
             Debug.LogAssertion("Not a property");
             return;
         }
-        if (data.currentBuildingCount == config[propertyIndex].maxBuildingInSpace)
-        {
-            Debug.LogWarning("No build cause of reaching max");
-            return;
-        }
 
-        data.currentBuildingCount++;
         switch (buildType)
         {
             case BuildType.BuildNew:
                 BuildNew(data, propertyIndex);
                 return;
             case BuildType.Upgrade:
-                Upgrade(data, propertyIndex);
+                Upgrade(data, propertyIndex, material, expectOutcome);
                 return;
         }
     }
     void BuildNew(PropertyData data, int propertyIndex)
     {
+        if (GetTotalBuildingCount(data) == config[propertyIndex].maxBuildingInSpace)
+        {
+            Debug.LogWarning("No build cause of reaching max");
+            return;
+        }
+        data.currentBuildingCount[(byte)BuildingRate.D]++;
         SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterBuild);
         Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterBuild);
         Debug.Log($"There are {data.currentBuildingCount} in property currently");
     }
-    void Upgrade(PropertyData data, int propertyIndex)
+    void Upgrade(PropertyData data, int propertyIndex, BuildingRate material, BuildingRate outcome)
     {
-        data.currentBuildingCount -= config[propertyIndex].upgradeThreshold;
+        if (material == BuildingRate.None || outcome == BuildingRate.None || material > outcome)
+        {
+            Debug.LogError("Invalid BuildingRate of material buildings or expected building");
+            return;
+        }
+        if (data.currentBuildingCount[(byte)material] < config[propertyIndex].upgradeThreshold)
+        {
+            Debug.LogWarning("No upgrade cause of lack of materials");
+            return;
+        }
+        data.currentBuildingCount[(byte)material] -= config[propertyIndex].upgradeThreshold;
+        data.currentBuildingCount[(byte)outcome]++;
         SetRentCost(data, config[propertyIndex].rentCostIncreaseAfterUpgrade);
         Debug.Log("Updated property rent cost : increase " + config[propertyIndex].rentCostIncreaseAfterUpgrade);
         Debug.Log($"There are {data.currentBuildingCount} in property currently");
+    }
+
+    int GetTotalBuildingCount(PropertyData data)
+    {
+        int sum = 0;
+        for (int i = 0; i < data.currentBuildingCount.Length; i++)
+        {
+            sum += data.currentBuildingCount[i];
+        }
+        return sum;
+    }
+
+    public int GetCost(int propertyIndex, BuildType buildType)
+    {
+        switch (buildType)
+        {
+            case BuildType.BuildNew:
+                return config[propertyIndex].buildCost;
+            case BuildType.Upgrade:
+                return config[propertyIndex].upgradeCost;
+            default:
+                Debug.LogError("Cannot get cost cause invalid build");
+                return 0;
+        }
     }
 
     public void SetCurrentPropertyIndex(int propertyIndex)
