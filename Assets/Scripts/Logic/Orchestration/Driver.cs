@@ -31,6 +31,7 @@ public class Driver
     AssetAccessor assetAccessor;
     bool isInitializingSourceDict = true;
     int latestRetrievedPropertyIndex;
+    int?[] upgradeThreshold;
     public Driver(ConstructorParams inputs)
     {
         commonData = inputs.commonData;
@@ -41,6 +42,7 @@ public class Driver
         playersInitialCoin = inputs.playersInitialCoin;
         busTicketService = inputs.busTicketService;
         assetAccessor = inputs.assetAccessor;
+        upgradeThreshold = new int?[inputs.properties.Length];
         propertiesDictionary = new();
         propertiesNamesDictionary = new();
         inputTokens = new List<string>();
@@ -49,7 +51,9 @@ public class Driver
             if (inputs.properties[i] != null)
             {
                 propertiesDictionary.Add(inputs.properties[i].spaceName, i);
-                InvertedIndexMachine.Instance.SplitString(inputs.properties[i].spaceName, AddTokenToCollection);
+                InvertedIndexSupporter.SplitString(inputs.properties[i].spaceName, AddTokenToCollection);
+
+                upgradeThreshold[i] = inputs.properties[i].upgradeThreshold;
             }
         }
         isInitializingSourceDict = false;
@@ -135,7 +139,7 @@ public class Driver
     public bool HasExistedInPropertiesNames(string partOfName, out List<int> propertyIndices)
     {
         inputTokens.Clear();
-        InvertedIndexMachine.Instance.SplitString(partOfName, AddTokenToCollection);
+        InvertedIndexSupporter.SplitString(partOfName, AddTokenToCollection);
         HashSet<string> intersect = null;
         bool result = false;
         for (int i = 0; i < inputTokens.Count; i++)
@@ -178,6 +182,11 @@ public class Driver
     public void UpgradeBuildings(BuildingRate materialBuildings, BuildingRate expectedBuilding)
     {
         buildService.UpgradeHouses(commonData.gamerPlayIndex, latestRetrievedPropertyIndex, materialBuildings, expectedBuilding);
+    }
+    public bool CanUpgrade(BuildingRate materials)
+    {
+        return assetAccessor.GetAsset<PropertyData>(latestRetrievedPropertyIndex)
+            .currentBuildingCount[(byte)materials] >= upgradeThreshold[latestRetrievedPropertyIndex];
     }
 
 }

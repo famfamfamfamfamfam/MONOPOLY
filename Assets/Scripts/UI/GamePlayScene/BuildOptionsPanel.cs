@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class BuildOptionsPanel : MonoBehaviour, INeedDriver
 {
@@ -7,9 +8,10 @@ public class BuildOptionsPanel : MonoBehaviour, INeedDriver
     Button addNewBuildingBtn;
     public Driver driver { get; set; }
 
-    void Start()
+    public void Init(UnityAction onAddNewBuilding)
     {
         addNewBuildingBtn.onClick.AddListener(driver.BuildNew);
+        addNewBuildingBtn.onClick.AddListener(onAddNewBuilding);
     }
 
     void OnDestroy()

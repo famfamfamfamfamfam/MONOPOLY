@@ -436,6 +436,7 @@ MonoBehaviour:
   - {fileID: 1086833703}
   - {fileID: 1458480703}
   - {fileID: 1774177713}
+  - {fileID: 564511158}
   uiManager: {fileID: 340353388}
 --- !u!4 &58722200
 Transform:
@@ -1654,6 +1655,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameHandler: {fileID: 1458480708}
   presenter: {fileID: 180852330}
+  buildOptionsPanel: {fileID: 1774177717}
+  upgradeOptionsPanel: {fileID: 564511163}
 --- !u!1 &340577656
 GameObject:
   m_ObjectHideFlags: 0
@@ -3007,6 +3010,7 @@ GameObject:
   - component: {fileID: 564511161}
   - component: {fileID: 564511160}
   - component: {fileID: 564511162}
+  - component: {fileID: 564511163}
   m_Layer: 5
   m_Name: UpgradeOptions
   m_TagString: Untagged
@@ -3100,6 +3104,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &564511163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564511158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f3ad44ecfd8c24580d4bfc4a32cbb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeDToC: {fileID: 606359056}
+  upgradeCToB: {fileID: 1640179628}
+  upgradeBToA: {fileID: 634291781}
 --- !u!1 &606359054
 GameObject:
   m_ObjectHideFlags: 0
@@ -3118,7 +3137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &606359055
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3523,7 +3542,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &634291780
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4072,7 +4091,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8693398428086104451}
   - {fileID: 1516813494}
   - {fileID: 2088061957}
   - {fileID: 64933394}
@@ -4082,6 +4100,7 @@ RectTransform:
   - {fileID: 180852326}
   - {fileID: 564511159}
   - {fileID: 1728413517}
+  - {fileID: 8693398428086104451}
   - {fileID: 180126447}
   m_Father: {fileID: 340353387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9512,7 +9531,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1640179627
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10710,7 +10729,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addNewBuildingBtn: {fileID: 1537823787}
-  upgradePropertyBtn: {fileID: 1153113631}
 --- !u!1 &1778670804
 GameObject:
   m_ObjectHideFlags: 0
