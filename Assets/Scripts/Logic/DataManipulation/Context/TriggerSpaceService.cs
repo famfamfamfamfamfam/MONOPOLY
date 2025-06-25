@@ -80,7 +80,7 @@ public class TriggerSpaceService // low cohesion, có thể cần tách thành c
     void GoToJail(int prisonerIndex, string theNotif)
     {
         Debug.Log("GoToJail-method runs from TriggerSpaceService");
-        inputs.moveToJail.Invoke(prisonerIndex, PositionArranger.Instance.GetThePositions(inputs.theJailPosition)[prisonerIndex]);
+        inputs.moveToJail.Invoke(prisonerIndex, PositionArranger.Instance.GetCircularPositions(inputs.theJailPosition)[prisonerIndex]);
         inputs.playerService.BeInJail(prisonerIndex);
         hasNotif.Invoke(theNotif);
     }

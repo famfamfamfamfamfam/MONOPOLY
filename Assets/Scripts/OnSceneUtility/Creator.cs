@@ -29,7 +29,7 @@ public class Creator : MonoBehaviour
     {
         GameObject[] players = Resources.LoadAll<GameObject>(playerFolderPath);
         Vector3[] playersPositions = PositionArranger.Instance
-            .GetThePositions(startPositionCenter, players.Length, deltaForPositions);
+            .GetCircularPositions(startPositionCenter, players.Length, deltaForPositions);
         for (int i = 0; i < players.Length; i++)
         {
             RuntimeRefWrapper wrapper = Instantiate(players[i], playersPositions[i], Quaternion.identity, playersParent)

@@ -3,7 +3,8 @@ using UnityEngine;
 public class PositionArranger
 {
     GameObject gameObject;
-    Vector3[] result;
+    Vector3[] circularResult;
+
     float delta;
 
     static PositionArranger instance;
@@ -17,24 +18,24 @@ public class PositionArranger
         }
     }
 
-    public Vector3[] GetThePositions(Vector3 origin, int positionsArraySize, float deltaDistance)
+    public Vector3[] GetCircularPositions(Vector3 origin, int positionsArraySize, float deltaDistance)
     {
-        result = new Vector3[positionsArraySize];
+        circularResult = new Vector3[positionsArraySize];
         delta = deltaDistance;
-        CreateThePositions(origin, positionsArraySize, delta);
-        return result;
+        CreateThePositionsOnCircle(origin, positionsArraySize, delta);
+        return circularResult;
     }
-    public Vector3[] GetThePositions(Vector3 origin)
+    public Vector3[] GetCircularPositions(Vector3 origin)
     {
-        if (result == null || delta == 0)
+        if (circularResult == null || delta == 0)
         {
             Debug.LogAssertion("Not yet create necessary data to work - call the other overload");
             return null;
         }
-        CreateThePositions(origin, result.Length, delta);
-        return result;
+        CreateThePositionsOnCircle(origin, circularResult.Length, delta);
+        return circularResult;
     }
-    void CreateThePositions(Vector3 origin, int positionsArraySize, float deltaDistance)
+    void CreateThePositionsOnCircle(Vector3 origin, int positionsArraySize, float deltaDistance)
     {
         if (gameObject == null)
         {
@@ -44,7 +45,7 @@ public class PositionArranger
         for (int i = 0; i < positionsArraySize; i++)
         {
             gameObject.transform.Rotate(Vector3.up, 360f / positionsArraySize);
-            result[i] = deltaDistance * gameObject.transform.forward + gameObject.transform.position;
+            circularResult[i] = deltaDistance * gameObject.transform.forward + gameObject.transform.position;
         }
     }
 

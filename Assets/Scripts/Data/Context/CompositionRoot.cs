@@ -20,7 +20,6 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
     [SerializeField]
     UIManager uiManager;
 
-    ConfigInitializer configInitializer;
     ConfigInitializer.ConstructorParams configs;
     TriggerSpaceService triggerSpaceService;
     TriggerSpaceService.ConstructorParams inputForTriggerService;
@@ -29,7 +28,7 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
     void Awake()
     {
         #region Create Configs
-        configInitializer = new ConfigInitializer(out configs);
+        ConfigInitializer configInitializer = new ConfigInitializer(out configs);
         #endregion
         #region Create Data
         DataInitializer.ConstructorParams inputForData = new DataInitializer.ConstructorParams()
@@ -161,10 +160,4 @@ public class CompositionRoot : MonoBehaviour, INeedRefRuntime
         }
     }
 
-
-    private void OnDisable()
-    {
-        configInitializer.UnloadAssets(configs);
-        Resources.UnloadUnusedAssets();
-    }
 }

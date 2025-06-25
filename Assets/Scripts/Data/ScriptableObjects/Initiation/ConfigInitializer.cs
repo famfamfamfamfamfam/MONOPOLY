@@ -67,26 +67,4 @@ public class ConfigInitializer
             outputs.propertySpaces[property.indexFromGoSpace] = property;
         }
     }
-
-    public void UnloadAssets(ConstructorParams inputs)
-    {
-        Resources.UnloadAsset(inputs.gameConfig);
-        Resources.UnloadAsset(inputs.playersConfig);
-        Resources.UnloadAsset(inputs.companiesConfig);
-        Resources.UnloadAsset(inputs.stationsConfig);
-        Resources.UnloadAsset(inputs.eventSpaceGroup);
-        Resources.UnloadAsset(inputs.taxConfig);
-        Resources.UnloadAsset(inputs.surtaxConfig);
-        Resources.UnloadAsset(inputs.goSpace);
-        Resources.UnloadAsset(inputs.gotoJailSpace);
-        Resources.UnloadAsset(inputs.prisonVisitSpace);
-        Resources.UnloadAsset(inputs.auctionSpace);
-        Resources.UnloadAsset(inputs.communityCards);
-        Resources.UnloadAsset(inputs.chanceCards);
-        Resources.UnloadAsset(inputs.busTickets);
-        foreach (var property in inputs.propertySpaces)
-        {
-            Resources.UnloadAsset(property);
-        }
-    }
 }

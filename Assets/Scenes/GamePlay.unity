@@ -6612,7 +6612,7 @@ MonoBehaviour:
   - {fileID: 1430798475}
   - {fileID: 648518728}
   - {fileID: 1154628448}
-  playersParent: {fileID: 0}
+  playersParent: {fileID: 2086156931}
   startPositionCenter: {x: -0.833, y: 0.01, z: -1.233}
   deltaForPositions: 0.025
 --- !u!1 &1108742215
